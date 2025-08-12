@@ -1,4 +1,4 @@
-Package: qualificationEditor
+Package: ospsuite.qualificationplaneditor
 Type: Package
 Title: Convert Qualification Plan From/To Excel
 Version: 0.1.0
@@ -17,9 +17,9 @@ Authors@R:
              comment = c(ORCID = "0000-0002-0167-4774"))
       )
 Description: Convert your qualification plan to Excel for easy editing, then convert back as a qualification plan.
-URL: https://github.com/open-systems-pharmacology/qualificationEditor
+URL: https://github.com/open-systems-pharmacology/ospsuite.qualificationplaneditor
 BugReports: 
-    https://github.com/open-systems-pharmacology/qualificationEditor/issues
+    https://github.com/open-systems-pharmacology/ospsuite.qualificationplaneditor/issues
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
