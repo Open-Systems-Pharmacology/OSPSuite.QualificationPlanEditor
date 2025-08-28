@@ -32,7 +32,7 @@ excelUI <- function(fileName = "qualification.xlsx",
   # TODO: validate fileName and excelTemplate are xlsx
   # If template exists, copy/paste as fileName location
   excelTemplate <- excelTemplate %||%
-    system.file("Qualification-Template.xlsx", package = "qualificationEditor")
+    system.file("Qualification-Template.xlsx", package = "ospsuite.qualificationplaneditor")
   file.copy(from = excelTemplate, to = fileName, overwrite = TRUE)
   excelObject <- openxlsx::loadWorkbook(fileName)
   use_qualification <- !is.null(qualificationPlan)
