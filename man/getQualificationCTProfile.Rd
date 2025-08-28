@@ -10,9 +10,11 @@ getQualificationCTProfile(qualificationContent)
 \item{qualificationContent}{Content of a qualification plan}
 }
 \value{
-data.frame with columns `ID` and `Path`
+data.frame with columns
+`Title`, `Section Reference`, `Simulation Duration`, `TimeUnit` and plot settings
 }
 \description{
-Get a data.frame of project IDs and Paths/URLs
+Extract a data.frame containing comparison time (CT) profile information
+from the qualification plan content
 }
 \keyword{internal}

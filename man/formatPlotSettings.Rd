@@ -10,9 +10,9 @@ formatPlotSettings(plotSettings)
 \item{plotSettings}{Content of a qualification plan}
 }
 \value{
-data.frame with columns `ID` and `Path`
+A data.frame with plot settings information
 }
 \description{
-Get a data.frame of project IDs and Paths/URLs
+Format plot settings into a standardized data.frame for further processing or reporting
 }
 \keyword{internal}

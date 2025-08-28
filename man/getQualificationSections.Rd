@@ -10,9 +10,9 @@ getQualificationSections(qualificationContent)
 \item{qualificationContent}{Content of a qualification plan}
 }
 \value{
-data.frame with columns `ID` and `Path`
+A data.frame with `Section Reference`, `Title`, `Content` and `Parent Section` columns
 }
 \description{
-Get a data.frame of project IDs and Paths/URLs
+Get a data.frame of qualification plan sections
 }
 \keyword{internal}

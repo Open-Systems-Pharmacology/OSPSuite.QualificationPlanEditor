@@ -29,10 +29,14 @@ excelUI <- function(fileName = "qualification.xlsx",
                     excelTemplate = NULL,
                     qualificationPlan = NULL,
                     toRemove = NULL) {
-  # TODO: validate fileName and excelTemplate are xlsx
-  # If template exists, copy/paste as fileName location
+  ospsuite.utils::validateIsFileExtension(fileName, "xlsx")
   excelTemplate <- excelTemplate %||%
     system.file("Qualification-Template.xlsx", package = "ospsuite.qualificationplaneditor")
+  ospsuite.utils::validateIsFileExtension(excelTemplate, "xlsx")
+  if(!file.exists(excelTemplate)){
+    cli::cli_abort("excelTemplate: {.file {excelTemplate}} does not exist")
+  }
+  stopifnot(file.exists(excelTemplate))
   file.copy(from = excelTemplate, to = fileName, overwrite = TRUE)
   excelObject <- openxlsx::loadWorkbook(fileName)
   use_qualification <- !is.null(qualificationPlan)

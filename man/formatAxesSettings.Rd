@@ -10,9 +10,9 @@ formatAxesSettings(axesSettings)
 \item{axesSettings}{Content of a qualification plan}
 }
 \value{
-data.frame with columns `ID` and `Path`
+A data.frame with axes setting information
 }
 \description{
-Get a data.frame of project IDs and Paths/URLs
+Format axes settings for use in qualification plans or reports.
 }
 \keyword{internal}

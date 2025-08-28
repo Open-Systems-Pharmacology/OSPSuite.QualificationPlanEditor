@@ -10,10 +10,10 @@ getSimulationsObsDataFromProjects(projectData)
 \item{projectData}{A data.frame of project snapshots}
 }
 \value{
-A data.frame with columns `Project`, `Simulation` and `Output`
+A data.frame with columns `Project`, `Simulation` and `ObservedData`
 }
 \description{
-Get a data.frame of projects, simulations and outputs
+Get a data.frame of projects, simulations and observed data
 }
 \examples{
 

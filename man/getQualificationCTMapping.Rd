@@ -10,9 +10,11 @@ getQualificationCTMapping(qualificationContent)
 \item{qualificationContent}{Content of a qualification plan}
 }
 \value{
-data.frame with columns `ID` and `Path`
+A data.frame with columns 
+`Project`, `Simulation`, `Output` and relevant CT fields
 }
 \description{
-Get a data.frame of project IDs and Paths/URLs
+Extract the comparison time (CT) mapping from a qualification plan,
+returning a data.frame with mapping information for CT analysis.
 }
 \keyword{internal}

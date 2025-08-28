@@ -74,7 +74,7 @@ getBBDataFromQualification <- function(qualificationContent) {
 
 #' @title styleQualificationCells
 #' @description
-#' Write a data.frame to a specific sheet in an Excel file
+#' Apply qualification styles to cells in an Excel sheet
 #' @param qualificationStyles A vector of qualification styles including the names `"New"` and `"Deleted"`
 #' @param columnIndices Indices of the columns to apply the styles to
 #' @param sheetName Name of the sheet to write to
@@ -117,9 +117,9 @@ getQualificationStyles <- function(data, commonProjects, qualificationProjects, 
 
 #' @title getQualificationSections
 #' @description
-#' Get a data.frame of project IDs and Paths/URLs
+#' Get a data.frame of qualification plan sections
 #' @param qualificationContent Content of a qualification plan
-#' @return data.frame with columns `ID` and `Path`
+#' @return A data.frame with `Section Reference`, `Title`, `Content` and `Parent Section` columns 
 #' @keywords internal
 getQualificationSections <- function(qualificationContent) {
   return(parseSectionsToDataFrame(qualificationContent$Sections))
@@ -172,9 +172,11 @@ getQualificationSimParam <- function(qualificationContent) {
 
 #' @title getQualificationCTProfile
 #' @description
-#' Get a data.frame of project IDs and Paths/URLs
+#' Extract a data.frame containing comparison time (CT) profile information
+#' from the qualification plan content
 #' @param qualificationContent Content of a qualification plan
-#' @return data.frame with columns `ID` and `Path`
+#' @return data.frame with columns
+#' `Title`, `Section Reference`, `Simulation Duration`, `TimeUnit` and plot settings
 #' @keywords internal
 getQualificationCTProfile <- function(qualificationContent) {
   ctProfiles <- data.frame()
@@ -197,9 +199,11 @@ getQualificationCTProfile <- function(qualificationContent) {
 
 #' @title getQualificationCTMapping
 #' @description
-#' Get a data.frame of project IDs and Paths/URLs
+#' Extract the comparison time (CT) mapping from a qualification plan,
+#' returning a data.frame with mapping information for CT analysis.
 #' @param qualificationContent Content of a qualification plan
-#' @return data.frame with columns `ID` and `Path`
+#' @return A data.frame with columns 
+#' `Project`, `Simulation`, `Output` and relevant CT fields
 #' @keywords internal
 getQualificationCTMapping <- function(qualificationContent) {
   ctMappings <- data.frame()
@@ -226,9 +230,10 @@ getQualificationCTMapping <- function(qualificationContent) {
 
 #' @title getQualificationDDIRatio
 #' @description
-#' Get a data.frame of project IDs and Paths/URLs
+#' Extract DDI ratio data from a qualification plan and return it as a data.frame with relevant columns
 #' @param qualificationContent Content of a qualification plan
-#' @return data.frame with columns `ID` and `Path`
+#' @return A data.frame with following columns:
+#' `Title`, `Section Ref`, `PK-Parameter`, `Plot Type`, `Subunits`, `Artifacts` and legend settings
 #' @keywords internal
 getQualificationDDIRatio <- function(qualificationContent) {
   ddiRatios <- data.frame()
@@ -266,9 +271,10 @@ getQualificationDDIRatio <- function(qualificationContent) {
 
 #' @title getQualificationDDIRatioMapping
 #' @description
-#' Get a data.frame of project IDs and Paths/URLs
+#' Extract a data.frame mapping DDI ratio identifiers to relevant DDI Ratio fields
 #' @param qualificationContent Content of a qualification plan
-#' @return data.frame with columns `ID` and `Path`
+#' @return A data.frame with the following columns
+#' `Project`, `Simulation_Control`, `Simulation_Treatment`, `Output` and control/treatment settings
 #' @keywords internal
 getQualificationDDIRatioMapping <- function(qualificationContent) {
   ddiMappings <- data.frame()
@@ -302,9 +308,9 @@ getQualificationDDIRatioMapping <- function(qualificationContent) {
 
 #' @title formatPlotSettings
 #' @description
-#' Get a data.frame of project IDs and Paths/URLs
+#' Format plot settings into a standardized data.frame for further processing or reporting
 #' @param plotSettings Content of a qualification plan
-#' @return data.frame with columns `ID` and `Path`
+#' @return A data.frame with plot settings information
 #' @keywords internal
 formatPlotSettings <- function(plotSettings) {
   if (is.null(plotSettings)) {
@@ -331,9 +337,9 @@ formatPlotSettings <- function(plotSettings) {
 
 #' @title formatAxesSettings
 #' @description
-#' Get a data.frame of project IDs and Paths/URLs
+#' Format axes settings for use in qualification plans or reports.
 #' @param axesSettings Content of a qualification plan
-#' @return data.frame with columns `ID` and `Path`
+#' @return A data.frame with axes setting information
 #' @keywords internal
 formatAxesSettings <- function(axesSettings) {
   if (is.null(axesSettings)) {

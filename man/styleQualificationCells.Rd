@@ -21,6 +21,6 @@ styleQualificationCells(
 \item{excelObject}{An openxlsx workbook object}
 }
 \description{
-Write a data.frame to a specific sheet in an Excel file
+Apply qualification styles to cells in an Excel sheet
 }
 \keyword{internal}

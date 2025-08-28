@@ -10,6 +10,38 @@ observedDataPaths <- list(
   "A-B-DDI" = list(Path = "path/to/A-B-DDI.csv", Type = "DDIRatio")
 )
 
+test_that("excelUI stops if fileName is not Excel", {
+  expect_error(
+    excelUI(
+      fileName = "test-excel-ui.txt",
+      snapshotPaths = snapshotPaths, 
+      observedDataPaths = observedDataPaths
+    ),
+    "(Provided file has extension)*(txt)*(while)*(xlsx)*(was expected instead)"
+  )
+})
+
+test_that("excelUI stops if template does not exist or is not not Excel", {
+  expect_error(
+    excelUI(
+      fileName = testOutputFile,
+      snapshotPaths = snapshotPaths, 
+      observedDataPaths = observedDataPaths,
+      excelTemplate = "template.txt"
+    ),
+    "(Provided file has extension)*(txt)*(while)*(xlsx)*(was expected instead)"
+  )
+  expect_error(
+    excelUI(
+      fileName = testOutputFile,
+      snapshotPaths = snapshotPaths, 
+      observedDataPaths = observedDataPaths,
+      excelTemplate = "template.xlsx"
+    ),
+    "(excelTemplate)*(template\\.xlsx)*(does not exist)"
+  )
+})
+
 test_that("excelUI creates Excel workbook with appropriate tables in simple case", {
   excelUI(
     fileName = testOutputFile,

@@ -190,9 +190,9 @@ getSimulationsOutputsFromProjects <- function(projectData) {
 
 #' @title getSimulationsObsDataFromProjects
 #' @description
-#' Get a data.frame of projects, simulations and outputs
+#' Get a data.frame of projects, simulations and observed data
 #' @param projectData A data.frame of project snapshots
-#' @return A data.frame with columns `Project`, `Simulation` and `Output`
+#' @return A data.frame with columns `Project`, `Simulation` and `ObservedData`
 #' @export
 #' @examples
 #'

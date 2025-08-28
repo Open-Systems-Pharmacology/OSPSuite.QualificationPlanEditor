@@ -10,9 +10,10 @@ getQualificationDDIRatioMapping(qualificationContent)
 \item{qualificationContent}{Content of a qualification plan}
 }
 \value{
-data.frame with columns `ID` and `Path`
+A data.frame with the following columns
+`Project`, `Simulation_Control`, `Simulation_Treatment`, `Output` and control/treatment settings
 }
 \description{
-Get a data.frame of project IDs and Paths/URLs
+Extract a data.frame mapping DDI ratio identifiers to relevant DDI Ratio fields
 }
 \keyword{internal}
