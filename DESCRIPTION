@@ -17,10 +17,10 @@ Authors@R:
              comment = c(ORCID = "0000-0002-0167-4774"))
       )
 Description: Convert your qualification plan to Excel for easy editing, then convert back as a qualification plan.
+License: GPL-2 | file LICENSE
 URL: https://github.com/open-systems-pharmacology/ospsuite.qualificationplaneditor
 BugReports: 
     https://github.com/open-systems-pharmacology/ospsuite.qualificationplaneditor/issues
-License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2
@@ -28,5 +28,12 @@ Imports:
     jsonlite,
     openxlsx,
     ospsuite.utils (>= 1.7.0.9000)
-Remotes:  
+Remotes: 
     Open-Systems-Pharmacology/OSPSuite-R
+Suggests: 
+    knitr,
+    readxl,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr
