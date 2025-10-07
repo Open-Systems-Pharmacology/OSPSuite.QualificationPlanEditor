@@ -33,6 +33,7 @@ Remotes:
     ospsuite=Open-Systems-Pharmacology/OSPSuite-R,
     ospsuite.utils=Open-Systems-Pharmacology/OSPSuite.RUtils
 Suggests: 
+    devtools,
     knitr,
     readxl,
     rmarkdown,
