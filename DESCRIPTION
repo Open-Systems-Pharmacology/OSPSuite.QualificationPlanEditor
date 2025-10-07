@@ -30,7 +30,7 @@ Imports:
     openxlsx,
     ospsuite.utils (>= 1.7.0)
 Remotes: 
-    Open-Systems-Pharmacology/OSPSuite-R,
+    ospsuite=Open-Systems-Pharmacology/OSPSuite-R,
     ospsuite.utils=Open-Systems-Pharmacology/OSPSuite.RUtils
 Suggests: 
     knitr,
