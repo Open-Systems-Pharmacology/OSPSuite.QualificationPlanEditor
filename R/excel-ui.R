@@ -348,6 +348,14 @@ EXCEL_OPTIONS <- list(
   )
 )
 
+#' @title excelOptions
+#' @description
+#' Deprecated: Use `EXCEL_OPTIONS` instead.
+#' List of default Excel options
+#' @import openxlsx
+#' @export
+excelOptions <- EXCEL_OPTIONS
+
 #' @title ALL_BUILDING_BLOCKS
 #' @description
 #' Allowed Building Blocks values
@@ -360,3 +368,10 @@ ALL_BUILDING_BLOCKS <- c(
   "Event",
   "Formulation", "ObserverSet", "ExpressionProfile", "Simulation"
 )
+
+#' @title AllBuildingBlocks
+#' @description
+#' Deprecated: Use `ALL_BUILDING_BLOCKS` instead.
+#' Allowed Building Blocks values
+#' @keywords internal
+AllBuildingBlocks <- ALL_BUILDING_BLOCKS
