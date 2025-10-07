@@ -202,7 +202,7 @@ getQualificationCTProfile <- function(qualificationContent) {
 #' Extract the comparison time (CT) mapping from a qualification plan,
 #' returning a data.frame with mapping information for CT analysis.
 #' @param qualificationContent Content of a qualification plan
-#' @return A data.frame with columns 
+#' @return A data.frame with columns
 #' `Project`, `Simulation`, `Output` and relevant CT fields
 #' @keywords internal
 getQualificationCTMapping <- function(qualificationContent) {
