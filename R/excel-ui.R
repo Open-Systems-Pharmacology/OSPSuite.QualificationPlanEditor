@@ -140,11 +140,12 @@ excelUI <- function(fileName = "qualification.xlsx",
     )
   }
   writeDataToSheet(data = observedData, sheetName = "ObsData", excelObject = excelObject)
-  # 3rd column uses a drop down list
+  # Type column uses a drop down list
+  typeColIndex <- which(names(observedData) == "Type")
   openxlsx::dataValidation(
     excelObject,
     sheet = "ObsData",
-    cols = 3,
+    cols = typeColIndex,
     rows = 1 + seq_len(nrow(observedData)),
     type = "list",
     value = "'Lookup'!$L$2:$L$4"
@@ -161,11 +162,12 @@ excelUI <- function(fileName = "qualification.xlsx",
     )
   }
   writeDataToSheet(data = bbData, sheetName = "BB", excelObject = excelObject)
-  # 3rd column uses a drop down list
+  # Parent-Project column uses a drop down list
+  parentProjectColIndex <- which(names(bbData) == "Parent-Project")
   openxlsx::dataValidation(
     excelObject,
     sheet = "BB",
-    cols = 4,
+    cols = parentProjectColIndex,
     rows = 1 + seq_len(nrow(bbData)),
     type = "list",
     value = paste0("'Projects'!$A$2:$A$", 1 + nrow(projectData))
@@ -208,6 +210,7 @@ excelUI <- function(fileName = "qualification.xlsx",
       excelObject = excelObject
     )
     # Color CT Mapping
+    colorColIndex <- which(names(ctMapping) == "Color")
     for (ctIndex in seq_along(ctMapping$Color)) {
       openxlsx::addStyle(
         excelObject,
@@ -217,7 +220,7 @@ excelUI <- function(fileName = "qualification.xlsx",
           fontColour = ctMapping$Color[ctIndex]
         ),
         rows = 1 + ctIndex,
-        cols = 8
+        cols = colorColIndex
       )
     }
 
@@ -226,6 +229,7 @@ excelUI <- function(fileName = "qualification.xlsx",
     writeDataToSheet(data = ddiRatio, sheetName = "DDI_Ratio", excelObject = excelObject)
     # TODO: handle dataValidation
     # Color DDI Ratios
+    groupColorColIndex <- which(names(ddiRatio) == "Group Color")
     for (ddiIndex in seq_along(ddiRatio[["Group Color"]])) {
       openxlsx::addStyle(
         excelObject,
@@ -235,7 +239,7 @@ excelUI <- function(fileName = "qualification.xlsx",
           fontColour = ddiRatio[["Group Color"]][ddiIndex]
         ),
         rows = 1 + ddiIndex,
-        cols = 8
+        cols = groupColorColIndex
       )
     }
 
@@ -300,6 +304,17 @@ excelUI <- function(fileName = "qualification.xlsx",
 #' @import openxlsx
 #' @keywords internal
 writeDataToSheet <- function(data, sheetName, excelObject) {
+  # Input validation
+  if (!is.data.frame(data)) {
+    cli::cli_abort("data must be a data.frame, not {class(data)[1]}")
+  }
+  if (!is.character(sheetName) || length(sheetName) != 1) {
+    cli::cli_abort("sheetName must be a single character string")
+  }
+  if (!openxlsx::sheetExists(excelObject, sheetName)) {
+    cli::cli_abort("Sheet {.val {sheetName}} does not exist in the workbook")
+  }
+  
   openxlsx::writeDataTable(
     excelObject,
     sheet = sheetName,
