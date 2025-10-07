@@ -282,7 +282,7 @@ getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
     if (projectData$ID[projectIndex] %in% qualificationProjects) {
       next
     }
-    for (bbType in AllBuildingBlocks) {
+    for (bbType in ALL_BUILDING_BLOCKS) {
       snapshotBBs <- getBBFromSnapshot(
         projectData$Path[projectIndex],
         bbType = paste0(bbType, "s")

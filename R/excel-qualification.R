@@ -85,7 +85,7 @@ styleQualificationCells <- function(qualificationStyles, columnIndices, sheetNam
   openxlsx::addStyle(
     excelObject,
     sheet = sheetName,
-    style = excelOptions$newProjectStyle,
+    style = EXCEL_OPTIONS$newProjectStyle,
     rows = 1 + which(qualificationStyles %in% "New"),
     cols = columnIndices,
     gridExpand = TRUE
@@ -93,7 +93,7 @@ styleQualificationCells <- function(qualificationStyles, columnIndices, sheetNam
   openxlsx::addStyle(
     excelObject,
     sheet = sheetName,
-    style = excelOptions$deletedProjectStyle,
+    style = EXCEL_OPTIONS$deletedProjectStyle,
     rows = 1 + which(qualificationStyles %in% "Deleted"),
     cols = columnIndices,
     gridExpand = TRUE

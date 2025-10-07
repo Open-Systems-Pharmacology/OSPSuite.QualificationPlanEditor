@@ -8,18 +8,19 @@
 # Use quali data to fill remaining Excel sheets
 
 #' @title excelUI
-#' @param fileName Name of the Excel file to be created
+#' @param fileName Character string. Name of the Excel file to be created.
 #' @param snapshotPaths
-#' List of project snapshots given by their URL or relative path
+#' Named list of project snapshots given by their URL or relative path.
 #' @param observedDataPaths
-#' List of observed data sets (which are not included into the projects)
-#' given by their URL or relative path
+#' Named list of observed data sets (which are not included into the projects)
+#' given by their URL or relative path.
 #' @param excelTemplate
-#' Default excel template (only captions and lookup tables)
+#' Character string. Path to an Excel template file (only captions and lookup tables).
+#' If `NULL`, uses the default template from the package.
 #' @param qualificationPlan
-#' Optional: existing qualification plan.
-#' If `NULL`, at least 1 project must be included into the projects list above
-#' @param toRemove  Optional: projects to remove? Optional: observed data sets to remove?
+#' Character string. Path, URL, or JSON string of an existing qualification plan.
+#' If `NULL`, at least 1 project must be included in the snapshotPaths.
+#' @return Invisibly returns `NULL`. Side effect: creates an Excel file at the specified path.
 #' @import openxlsx
 #' @import jsonlite
 #' @export
@@ -27,8 +28,7 @@ excelUI <- function(fileName = "qualification.xlsx",
                     snapshotPaths,
                     observedDataPaths,
                     excelTemplate = NULL,
-                    qualificationPlan = NULL,
-                    toRemove = NULL) {
+                    qualificationPlan = NULL) {
   ospsuite.utils::validateIsFileExtension(fileName, "xlsx")
   excelTemplate <- excelTemplate %||%
     system.file("Qualification-Template.xlsx", package = "ospsuite.qualificationplaneditor")
@@ -36,9 +36,20 @@ excelUI <- function(fileName = "qualification.xlsx",
   if(!file.exists(excelTemplate)){
     cli::cli_abort("excelTemplate: {.file {excelTemplate}} does not exist")
   }
-  stopifnot(file.exists(excelTemplate))
-  file.copy(from = excelTemplate, to = fileName, overwrite = TRUE)
-  excelObject <- openxlsx::loadWorkbook(fileName)
+  
+  # Copy template to output file
+  fileCopied <- file.copy(from = excelTemplate, to = fileName, overwrite = TRUE)
+  if (!fileCopied) {
+    cli::cli_abort("Failed to copy template {.file {excelTemplate}} to {.file {fileName}}")
+  }
+  
+  # Load workbook with error handling
+  excelObject <- tryCatch(
+    openxlsx::loadWorkbook(fileName),
+    error = function(e) {
+      cli::cli_abort("Cannot load workbook {.file {fileName}}: {e$message}")
+    }
+  )
   use_qualification <- !is.null(qualificationPlan)
 
   # MetaInfo ?
@@ -48,7 +59,12 @@ excelUI <- function(fileName = "qualification.xlsx",
   # Qualification Plan provided
   qualificationProjects <- NULL
   if (use_qualification) {
-    qualificationContent <- jsonlite::fromJSON(qualificationPlan, simplifyVector = FALSE)
+    qualificationContent <- tryCatch(
+      jsonlite::fromJSON(qualificationPlan, simplifyVector = FALSE),
+      error = function(e) {
+        cli::cli_abort("Cannot parse qualification plan: {e$message}")
+      }
+    )
     qualificationProjectData <- getProjectsFromQualification(qualificationContent)
     qualificationObservedData <- getObsDataFromQualification(qualificationContent)
     qualificationBBData <- getBBDataFromQualification(qualificationContent)
@@ -277,9 +293,10 @@ excelUI <- function(fileName = "qualification.xlsx",
 #' @title writeDataToSheet
 #' @description
 #' Write a data.frame to a specific sheet in an Excel file
-#' @param data A data.frame
-#' @param sheetName Name of the sheet to write to
+#' @param data A data.frame to write to the sheet
+#' @param sheetName Character string. Name of the sheet to write to
 #' @param excelObject An openxlsx workbook object
+#' @return Invisibly returns `NULL`. Side effect: mutates the workbook by writing data and freezing the header row.
 #' @import openxlsx
 #' @keywords internal
 writeDataToSheet <- function(data, sheetName, excelObject) {
@@ -287,19 +304,19 @@ writeDataToSheet <- function(data, sheetName, excelObject) {
     excelObject,
     sheet = sheetName,
     x = data,
-    headerStyle = excelOptions$headerStyle,
+    headerStyle = EXCEL_OPTIONS$headerStyle,
     withFilter = TRUE
   )
   openxlsx::freezePane(excelObject, sheet = sheetName, firstRow = TRUE)
   return(invisible())
 }
 
-#' @title excelOptions
+#' @title EXCEL_OPTIONS
 #' @description
 #' List of default Excel options
 #' @import openxlsx
 #' @export
-excelOptions <- list(
+EXCEL_OPTIONS <- list(
   headerStyle = openxlsx::createStyle(
     fgFill = "#ADD8E6",
     textDecoration = "Bold",
@@ -316,11 +333,11 @@ excelOptions <- list(
   )
 )
 
-#' @title AllBuildingBlocks
+#' @title ALL_BUILDING_BLOCKS
 #' @description
 #' Allowed Building Blocks values
 #' @keywords internal
-AllBuildingBlocks <- c(
+ALL_BUILDING_BLOCKS <- c(
   "Individual",
   "Population",
   "Compound",
