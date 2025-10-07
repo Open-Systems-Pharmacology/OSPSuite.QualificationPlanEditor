@@ -24,7 +24,7 @@ remotes::install_github("Open-Systems-Pharmacology/OSPSuite.QualificationPlanEdi
 
 ## Example
 
-Here is a basic example of showing how to convert include an updated project snapshot into your qualification plan:
+Here is a basic example showing how to include an updated project snapshot into your qualification plan:
 
 ``` r
 ## Load the ospsuite.qualificationplaneditor package
