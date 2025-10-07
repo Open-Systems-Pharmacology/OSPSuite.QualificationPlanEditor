@@ -119,7 +119,7 @@ getQualificationStyles <- function(data, commonProjects, qualificationProjects, 
 #' @description
 #' Get a data.frame of qualification plan sections
 #' @param qualificationContent Content of a qualification plan
-#' @return A data.frame with `Section Reference`, `Title`, `Content` and `Parent Section` columns 
+#' @return A data.frame with `Section Reference`, `Title`, `Content` and `Parent Section` columns
 #' @keywords internal
 getQualificationSections <- function(qualificationContent) {
   return(parseSectionsToDataFrame(qualificationContent$Sections))
