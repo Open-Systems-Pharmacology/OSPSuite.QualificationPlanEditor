@@ -133,7 +133,7 @@ getBBFromSnapshot <- function(snapshotPath, bbType = "Simulations") {
       return(snapshot[[bbType]])
     },
     error = function(e) {
-      stop(sprintf("Failed to read snapshot from '%s': %s", snapshotPath, e$message))
+      cli::cli_abort("Failed to read snapshot from {.file {snapshotPath}}: {e$message}")
     }
   )
 }
@@ -185,7 +185,7 @@ getSimulationsOutputsFromProjects <- function(projectData) {
   for (projectIndex in seq_len(nrow(projectData))) {
     snapshotSimulations <- getSimulationsFromSnapshot(projectData$Path[projectIndex])
     
-    if (is.null(snapshotSimulations) || length(snapshotSimulations) == 0) {
+    if (ospsuite.utils::isEmpty(snapshotSimulations)) {
       next
     }
     
@@ -265,7 +265,7 @@ getSimulationsObsDataFromProjects <- function(projectData) {
   for (projectIndex in 1:nrow(projectData)) {
     snapshotSimulations <- getSimulationsFromSnapshot(projectData$Path[projectIndex])
     
-    if (is.null(snapshotSimulations) || length(snapshotSimulations) == 0) {
+    if (ospsuite.utils::isEmpty(snapshotSimulations)) {
       next
     }
     
@@ -373,7 +373,7 @@ getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
       snapshotBBs <- snapshot[[bbKey]]
       
       # Guard against NULL or empty building block lists
-      if (is.null(snapshotBBs) || length(snapshotBBs) == 0) {
+      if (ospsuite.utils::isEmpty(snapshotBBs)) {
         next
       }
       
