@@ -343,7 +343,7 @@ getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
   # Accumulate all rows in a list for efficiency
   allRows <- list()
   
-  for (projectIndex in 1:nrow(projectData)) {
+  for (projectIndex in seq_len(nrow(projectData))) {
     # If qualificationProjects is provided, check if the project is already in it
     if (projectData$ID[projectIndex] %in% qualificationProjects) {
       next
