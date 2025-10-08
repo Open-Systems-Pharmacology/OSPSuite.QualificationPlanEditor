@@ -355,14 +355,9 @@ getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
         jsonlite::fromJSON(projectData$Path[projectIndex], simplifyVector = FALSE)
       },
       error = function(e) {
-        cli::cli_warn("Failed to read snapshot for project {.val {projectData$ID[projectIndex]}} from {.file {projectData$Path[projectIndex]}}: {e$message}")
-        return(NULL)
+        cli::cli_abort("Failed to read snapshot for project {.val {projectData$ID[projectIndex]}} from {.file {projectData$Path[projectIndex]}}: {e$message}")
       }
     )
-    
-    if (is.null(snapshot)) {
-      next
-    }
     
     for (bbType in AllBuildingBlocks) {
       # Get building blocks using pluralized key
