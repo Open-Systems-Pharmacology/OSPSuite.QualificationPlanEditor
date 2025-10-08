@@ -262,7 +262,7 @@ getSimulationsObsDataFromProjects <- function(projectData) {
   # Accumulate all rows in a list for efficiency
   allRows <- list()
   
-  for (projectIndex in 1:nrow(projectData)) {
+  for (projectIndex in seq_len(nrow(projectData))) {
     snapshotSimulations <- getSimulationsFromSnapshot(projectData$Path[projectIndex])
     
     if (ospsuite.utils::isEmpty(snapshotSimulations)) {
