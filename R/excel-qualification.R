@@ -9,7 +9,7 @@
 #' @export
 getProjectsFromQualification <- function(qualificationContent) {
   # Guard for empty/NULL inputs
-  if (is.null(qualificationContent$Projects) || length(qualificationContent$Projects) == 0) {
+  if (ospsuite.utils::isEmpty(qualificationContent$Projects)) {
     return(data.frame(ID = character(), Path = character(), stringsAsFactors = FALSE))
   }
   
@@ -35,7 +35,7 @@ getProjectsFromQualification <- function(qualificationContent) {
 #' @export
 getObsDataFromQualification <- function(qualificationContent) {
   # Guard for empty/NULL inputs
-  if (is.null(qualificationContent$ObservedDataSets) || length(qualificationContent$ObservedDataSets) == 0) {
+  if (ospsuite.utils::isEmpty(qualificationContent$ObservedDataSets)) {
     return(data.frame(ID = character(), Path = character(), Type = character(), stringsAsFactors = FALSE))
   }
   
@@ -62,7 +62,7 @@ getObsDataFromQualification <- function(qualificationContent) {
 #' @export
 getBBDataFromQualification <- function(qualificationContent) {
   # Guard for empty/NULL inputs
-  if (is.null(qualificationContent$Projects) || length(qualificationContent$Projects) == 0) {
+  if (ospsuite.utils::isEmpty(qualificationContent$Projects)) {
     return(data.frame(
       "Project" = character(),
       "BB-Type" = character(),
@@ -76,7 +76,7 @@ getBBDataFromQualification <- function(qualificationContent) {
   bbData <- lapply(
     qualificationContent$Projects,
     function(projectContent) {
-      if (is.null(projectContent$BuildingBlocks)) {
+      if (ospsuite.utils::isEmpty(projectContent$BuildingBlocks)) {
         return(NULL)
       }
       projectBB <- do.call(rbind.data.frame, projectContent$BuildingBlocks)
@@ -95,7 +95,7 @@ getBBDataFromQualification <- function(qualificationContent) {
   bbData <- bbData[!sapply(bbData, is.null)]
   
   # If all projects had NULL BuildingBlocks, return empty data.frame
-  if (length(bbData) == 0) {
+  if (ospsuite.utils::isEmpty(bbData)) {
     return(data.frame(
       "Project" = character(),
       "BB-Type" = character(),
