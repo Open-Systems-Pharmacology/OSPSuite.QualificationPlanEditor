@@ -211,7 +211,7 @@ getSimulationsOutputsFromProjects <- function(projectData) {
     
     # Add non-empty results to allRows
     if (length(simOutputsData) > 0) {
-      allRows <- c(allRows, simOutputsData)
+      allRows[(length(allRows) + seq_along(simOutputsData))] <- simOutputsData
     }
   }
   
