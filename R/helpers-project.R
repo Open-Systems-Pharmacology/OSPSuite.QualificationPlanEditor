@@ -355,10 +355,7 @@ getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
         jsonlite::fromJSON(projectData$Path[projectIndex], simplifyVector = FALSE)
       },
       error = function(e) {
-        warning(sprintf("Failed to read snapshot for project '%s' from '%s': %s",
-                       projectData$ID[projectIndex],
-                       projectData$Path[projectIndex],
-                       e$message))
+        cli::cli_warn("Failed to read snapshot for project {.val {projectData$ID[projectIndex]}} from {.file {projectData$Path[projectIndex]}}: {e$message}")
         return(NULL)
       }
     )
