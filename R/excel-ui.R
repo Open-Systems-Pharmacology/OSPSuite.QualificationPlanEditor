@@ -312,7 +312,7 @@ writeDataToSheet <- function(data, sheetName, excelObject) {
   ospsuite.utils::validateIsOfType(data, "data.frame")
   ospsuite.utils::validateIsCharacter(sheetName)
   ospsuite.utils::validateIsOfLength(sheetName, 1)
-  validateExcelSheet(sheetName, excelObject)
+  ospsuite.utils::validateIsIncluded(sheetName, names(excelObject))
   
   openxlsx::writeDataTable(
     excelObject,
