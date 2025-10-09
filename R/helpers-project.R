@@ -348,7 +348,6 @@ getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
     if (projectData$ID[projectIndex] %in% qualificationProjects) {
       next
     }
-    
     # Parse the snapshot once per project
     snapshot <- tryCatch(
       {
@@ -359,7 +358,7 @@ getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
       }
     )
     
-    for (bbType in AllBuildingBlocks) {
+    for (bbType in ALL_BUILDING_BLOCKS) {
       # Get building blocks using pluralized key
       bbKey <- paste0(bbType, "s")
       snapshotBBs <- snapshot[[bbKey]]
@@ -368,7 +367,6 @@ getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
       if (ospsuite.utils::isEmpty(snapshotBBs)) {
         next
       }
-      
       bbData <- lapply(
         snapshotBBs,
         function(snapshotBB) {
