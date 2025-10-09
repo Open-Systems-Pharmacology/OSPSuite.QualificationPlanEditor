@@ -7,7 +7,7 @@
   [![](https://img.shields.io/github/downloads/Open-Systems-Pharmacology/OSPSuite.QualificationPlanEditor/total?label=%E2%AD%B3%20Downloads%20total)](https://github.com/Open-Systems-Pharmacology/OSPSuite.QualificationPlanEditor/releases)
 
   [![build](https://img.shields.io/github/actions/workflow/status/Open-Systems-Pharmacology/OSPSuite.QualificationPlanEditor/main-workflow.yaml?logo=github&logoColor=white&label=Build)](https://github.com/Open-Systems-Pharmacology/OSPSuite.QualificationPlanEditor/actions/workflows/main-workflow.yaml)
-  [![codecov](https://codecov.io/gh/Open-Systems-Pharmacology/OSPSuite.QualificationPlanEditor/branch/develop/graph/badge.svg)](https://codecov.io/gh/Open-Systems-Pharmacology/OSPSuite.QualificationPlanEditor)
+  [![codecov](https://codecov.io/gh/Open-Systems-Pharmacology/OSPSuite.QualificationPlanEditor/branch/main/graph/badge.svg)](https://codecov.io/gh/Open-Systems-Pharmacology/OSPSuite.QualificationPlanEditor)
   [![Lint Test](https://img.shields.io/github/actions/workflow/status/Open-Systems-Pharmacology/OSPSuite.QualificationPlanEditor/lint.yaml?logo=githubactions&logoColor=white&label=lint)](https://github.com/Open-Systems-Pharmacology/OSPSuite.QualificationPlanEditor/actions/workflows/lint.yaml)
 
 <!-- badges: end -->
