@@ -50,7 +50,7 @@ excelUI <- function(fileName = "qualification.xlsx",
       cli::cli_abort("Cannot load workbook {.file {fileName}}: {e$message}")
     }
   )
-  use_qualification <- !is.null(qualificationPlan)
+  useQualification <- !is.null(qualificationPlan)
 
   # MetaInfo ?
 
@@ -58,7 +58,7 @@ excelUI <- function(fileName = "qualification.xlsx",
   projectData <- getProjectsFromList(snapshotPaths)
   # Qualification Plan provided
   qualificationProjects <- NULL
-  if (use_qualification) {
+  if (useQualification) {
     qualificationContent <- tryCatch(
       jsonlite::fromJSON(qualificationPlan, simplifyVector = FALSE),
       error = function(e) {
@@ -82,10 +82,10 @@ excelUI <- function(fileName = "qualification.xlsx",
   }
 
   writeDataToSheet(data = projectData, sheetName = "Projects", excelObject = excelObject)
-  if (use_qualification) {
+  if (useQualification) {
     styleQualificationCells(
       qualificationStyles = projectStyles,
-      columnIndices = 1:ncol(projectData),
+      columnIndices = seq_len(ncol(projectData)),
       sheetName = "Projects",
       excelObject = excelObject
     )
@@ -94,7 +94,7 @@ excelUI <- function(fileName = "qualification.xlsx",
   # Simulation Ouptuts
   simulationsOutputs <- getSimulationsOutputsFromProjects(projectData)
   writeDataToSheet(data = simulationsOutputs, sheetName = "Simulations_Outputs", excelObject = excelObject)
-  if (use_qualification) {
+  if (useQualification) {
     simulationsOutputStyles <- getQualificationStyles(
       data = simulationsOutputs,
       commonProjects = commonProjects,
@@ -102,7 +102,7 @@ excelUI <- function(fileName = "qualification.xlsx",
     )
     styleQualificationCells(
       qualificationStyles = simulationsOutputStyles,
-      columnIndices = 1:ncol(simulationsOutputs),
+      columnIndices = seq_len(ncol(simulationsOutputs)),
       sheetName = "Simulations_Outputs",
       excelObject = excelObject
     )
@@ -111,7 +111,7 @@ excelUI <- function(fileName = "qualification.xlsx",
   # Simulations ObsData
   simulationsObsData <- getSimulationsObsDataFromProjects(projectData)
   writeDataToSheet(data = simulationsObsData, sheetName = "Simulations_ObsData", excelObject = excelObject)
-  if (use_qualification) {
+  if (useQualification) {
     simulationsObsDataStyles <- getQualificationStyles(
       data = simulationsObsData,
       commonProjects = commonProjects,
@@ -119,7 +119,7 @@ excelUI <- function(fileName = "qualification.xlsx",
     )
     styleQualificationCells(
       qualificationStyles = simulationsObsDataStyles,
-      columnIndices = 1:ncol(simulationsObsData),
+      columnIndices = seq_len(ncol(simulationsObsData)),
       sheetName = "Simulations_ObsData",
       excelObject = excelObject
     )
@@ -128,7 +128,7 @@ excelUI <- function(fileName = "qualification.xlsx",
   # Obs Data
   observedData <- getObsDataFromList(observedDataPaths)
   # Qualification Plan provided
-  if (use_qualification) {
+  if (useQualification) {
     commonObsData <- intersect(observedData$ID, qualificationObservedData$ID)
     # Merge to observed data data
     observedData <- merge.data.frame(observedData, qualificationObservedData, by = c("ID", "Path", "Type"), all = TRUE)
@@ -141,6 +141,7 @@ excelUI <- function(fileName = "qualification.xlsx",
   }
   writeDataToSheet(data = observedData, sheetName = "ObsData", excelObject = excelObject)
   # Type column uses a drop down list
+  ospsuite.utils::validateIsIncluded("Type", names(observedData))
   typeColIndex <- which(names(observedData) == "Type")
   openxlsx::dataValidation(
     excelObject,
@@ -153,7 +154,7 @@ excelUI <- function(fileName = "qualification.xlsx",
 
   # BB
   bbData <- getBBDataFromProjects(projectData, qualificationProjects)
-  if (use_qualification) {
+  if (useQualification) {
     bbData <- merge.data.frame(
       bbData,
       qualificationBBData,
@@ -163,6 +164,7 @@ excelUI <- function(fileName = "qualification.xlsx",
   }
   writeDataToSheet(data = bbData, sheetName = "BB", excelObject = excelObject)
   # Parent-Project column uses a drop down list
+  ospsuite.utils::validateIsIncluded("Parent-Project", names(bbData))
   parentProjectColIndex <- which(names(bbData) == "Parent-Project")
   openxlsx::dataValidation(
     excelObject,
@@ -172,7 +174,7 @@ excelUI <- function(fileName = "qualification.xlsx",
     type = "list",
     value = paste0("'Projects'!$A$2:$A$", 1 + nrow(projectData))
   )
-  if (use_qualification) {
+  if (useQualification) {
     bbDataStyles <- getQualificationStyles(
       data = bbData,
       commonProjects = commonProjects,
@@ -180,14 +182,14 @@ excelUI <- function(fileName = "qualification.xlsx",
     )
     styleQualificationCells(
       qualificationStyles = bbDataStyles,
-      columnIndices = 1:ncol(bbData),
+      columnIndices = seq_len(ncol(bbData)),
       sheetName = "BB",
       excelObject = excelObject
     )
   }
 
   # Following only applies if Qualification Plan is provided
-  if (use_qualification) {
+  if (useQualification) {
     # Sim Param
     # writeDataToSheet(
     #  data = getQualificationSimParam(qualificationContent),
@@ -210,6 +212,7 @@ excelUI <- function(fileName = "qualification.xlsx",
       excelObject = excelObject
     )
     # Color CT Mapping
+    ospsuite.utils::validateIsIncluded("Color", names(ctMapping))
     colorColIndex <- which(names(ctMapping) == "Color")
     for (ctIndex in seq_along(ctMapping$Color)) {
       openxlsx::addStyle(
@@ -229,6 +232,7 @@ excelUI <- function(fileName = "qualification.xlsx",
     writeDataToSheet(data = ddiRatio, sheetName = "DDI_Ratio", excelObject = excelObject)
     # TODO: handle dataValidation
     # Color DDI Ratios
+    ospsuite.utils::validateIsIncluded("Group Color", names(ddiRatio))
     groupColorColIndex <- which(names(ddiRatio) == "Group Color")
     for (ddiIndex in seq_along(ddiRatio[["Group Color"]])) {
       openxlsx::addStyle(
@@ -305,15 +309,10 @@ excelUI <- function(fileName = "qualification.xlsx",
 #' @keywords internal
 writeDataToSheet <- function(data, sheetName, excelObject) {
   # Input validation
-  if (!is.data.frame(data)) {
-    cli::cli_abort("data must be a data.frame, not {class(data)[1]}")
-  }
-  if (!is.character(sheetName) || length(sheetName) != 1) {
-    cli::cli_abort("sheetName must be a single character string")
-  }
-  if (!openxlsx::sheetExists(excelObject, sheetName)) {
-    cli::cli_abort("Sheet {.val {sheetName}} does not exist in the workbook")
-  }
+  ospsuite.utils::validateIsOfType(data, "data.frame")
+  ospsuite.utils::validateIsCharacter(sheetName)
+  ospsuite.utils::validateIsOfLength(sheetName, 1)
+  validateExcelSheet(sheetName, excelObject)
   
   openxlsx::writeDataTable(
     excelObject,
