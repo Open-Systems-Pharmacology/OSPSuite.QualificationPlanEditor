@@ -20,7 +20,7 @@ test_that("getProjectsFromQualification handles NULL Projects", {
   expect_equal(colnames(result), c("Id", "Path"))
 })
 
-test_that("getProjectsFromQualification works with valId Projects", {
+test_that("getProjectsFromQualification works with valid Projects", {
   qualificationContent <- list(
     Projects = list(
       list(Id = "Project1", Path = "path/to/project1.json"),
@@ -58,7 +58,7 @@ test_that("getObsDataFromQualification handles NULL ObservedDataSets", {
   expect_equal(colnames(result), c("Id", "Path", "Type"))
 })
 
-test_that("getObsDataFromQualification works with valId ObservedDataSets", {
+test_that("getObsDataFromQualification works with valid ObservedDataSets", {
   qualificationContent <- list(
     ObservedDataSets = list(
       list(Id = "Obs1", Path = "path/to/obs1.csv", Type = "TimeProfile"),
@@ -129,13 +129,13 @@ test_that("getBBDataFromQualification handles mixed Projects (some with Building
   expect_equal(result$`BB-Name`, "Sim1")
 })
 
-test_that("getBBDataFromQualification works with valId Projects with BuildingBlocks", {
+test_that("getBBDataFromQualification works with valid Projects with BuildingBlocks", {
   qualificationContent <- list(
     Projects = list(
       list(
         Id = "Project1",
         BuildingBlocks = list(
-          list(Type = "IndivIdual", Name = "IndivIdual1", Project = "Parent1")
+          list(Type = "Individual", Name = "Individual1", Project = "Parent1")
         )
       ),
       list(
@@ -152,5 +152,5 @@ test_that("getBBDataFromQualification works with valId Projects with BuildingBlo
   
   expect_equal(nrow(result), 3)
   expect_equal(result$Project, c("Project1", "Project2", "Project2"))
-  expect_equal(result$`BB-Type`, c("IndivIdual", "Simulation", "Compound"))
+  expect_equal(result$`BB-Type`, c("Individual", "Simulation", "Compound"))
 })
