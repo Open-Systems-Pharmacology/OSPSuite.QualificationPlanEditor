@@ -1,23 +1,20 @@
-# qualificationPath <- "C:/Design2Code/Qualification-Tests/qualification_plan.json"
-# qualificationContent <- jsonlite::fromJSON(qualificationPath, simplifyVector = FALSE)
-
 #' @title getProjectsFromQualification
 #' @description
 #' Get a data.frame of project IDs and Paths/URLs
 #' @param qualificationContent Content of a qualification plan
-#' @return data.frame with columns `ID` and `Path`
+#' @return data.frame with columns `Id` and `Path`
 #' @export
 getProjectsFromQualification <- function(qualificationContent) {
   # Guard for empty/NULL inputs
   if (ospsuite.utils::isEmpty(qualificationContent$Projects)) {
-    return(data.frame(ID = character(), Path = character(), stringsAsFactors = FALSE))
+    return(data.frame(Id = character(), Path = character(), stringsAsFactors = FALSE))
   }
-  
+
   projectData <- lapply(
     qualificationContent$Projects,
     function(projectContent) {
       data.frame(
-        ID = projectContent$Id,
+        Id = projectContent$Id,
         Path = projectContent$Path,
         stringsAsFactors = FALSE
       )
@@ -31,19 +28,19 @@ getProjectsFromQualification <- function(qualificationContent) {
 #' @description
 #' Get a data.frame of observed data IDs and Paths/URLs
 #' @param qualificationContent Content of a qualification plan
-#' @return data.frame with columns `ID`, `Path` and `Type`
+#' @return data.frame with columns `Id`, `Path` and `Type`
 #' @export
 getObsDataFromQualification <- function(qualificationContent) {
   # Guard for empty/NULL inputs
   if (ospsuite.utils::isEmpty(qualificationContent$ObservedDataSets)) {
-    return(data.frame(ID = character(), Path = character(), Type = character(), stringsAsFactors = FALSE))
+    return(data.frame(Id = character(), Path = character(), Type = character(), stringsAsFactors = FALSE))
   }
-  
+
   obsData <- lapply(
     qualificationContent$ObservedDataSets,
     function(obsDataContent) {
       data.frame(
-        ID = obsDataContent$Id,
+        Id = obsDataContent$Id,
         Path = obsDataContent$Path,
         Type = obsDataContent$Type %||% "TimeProfile",
         stringsAsFactors = FALSE
@@ -72,7 +69,7 @@ getBBDataFromQualification <- function(qualificationContent) {
       stringsAsFactors = FALSE
     ))
   }
-  
+
   bbData <- lapply(
     qualificationContent$Projects,
     function(projectContent) {
@@ -90,10 +87,10 @@ getBBDataFromQualification <- function(qualificationContent) {
       )
     }
   )
-  
+
   # Filter out NULL values before rbind
   bbData <- bbData[!sapply(bbData, is.null)]
-  
+
   # If all projects had NULL BuildingBlocks, return empty data.frame
   if (ospsuite.utils::isEmpty(bbData)) {
     return(data.frame(
@@ -105,7 +102,7 @@ getBBDataFromQualification <- function(qualificationContent) {
       stringsAsFactors = FALSE
     ))
   }
-  
+
   bbData <- do.call(rbind, bbData)
   return(bbData)
 }
@@ -201,6 +198,7 @@ parseSectionsToDataFrame <- function(sectionsIn, sectionsOut = data.frame(), par
 #' @return data.frame with columns `ID` and `Path`
 #' @keywords internal
 getQualificationSimParam <- function(qualificationContent) {
+  # TODO
   # data.frame(
   #  Project	Parent Project	Parent Simulation	Path	TargetSimulation
   #
@@ -405,6 +403,33 @@ formatAxesSettings <- function(axesSettings) {
     Y_Dimension = yAxesSettings$Dimension,
     Y_GridLines = yAxesSettings$GridLines,
     Y_Scaling = yAxesSettings$Scaling
+  )
+  return(axesSettingsData)
+}
+
+#' @title formatGlobalAxesSettings
+#' @description
+#' Format axes settings for use in qualification plans or reports.
+#' @param axesSettings Content of a qualification plan
+#' @param plotName Name of plot for which axes settings are defined
+#' @return A data.frame with axes setting information
+#' @keywords internal
+formatGlobalAxesSettings <- function(axesSettings, plotName) {
+  if (is.null(axesSettings)) {
+    return(data.frame(
+      Plot = plotName,
+      Type = c("X", "Y"),
+      Dimension = NA,
+      Unit = NA,
+      GridLines = NA,
+      Scaling = NA
+    ))
+  }
+  axesSettingsData <- dplyr::bind_rows(lapply(axesSettings, as.data.frame))
+  axesSettingsData <- dplyr::mutate(
+    .data = axesSettingsData,
+    Plot = plotName,
+    .before = dplyr::everything()
   )
   return(axesSettingsData)
 }

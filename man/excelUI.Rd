@@ -9,24 +9,25 @@ excelUI(
   snapshotPaths,
   observedDataPaths,
   excelTemplate = NULL,
-  qualificationPlan = NULL,
-  toRemove = NULL
+  qualificationPlan = NULL
 )
 }
 \arguments{
-\item{fileName}{Name of the Excel file to be created}
+\item{fileName}{Character string. Name of the Excel file to be created.}
 
-\item{snapshotPaths}{List of project snapshots given by their URL or relative path}
+\item{snapshotPaths}{Named list of project snapshots given by their URL or relative path.}
 
-\item{observedDataPaths}{List of observed data sets (which are not included into the projects)
-given by their URL or relative path}
+\item{observedDataPaths}{Named list of observed data sets (which are not included into the projects)
+given by their URL or relative path.}
 
-\item{excelTemplate}{Default excel template (only captions and lookup tables)}
+\item{excelTemplate}{Character string. Path to an Excel template file (only captions and lookup tables).
+If `NULL`, uses the default template from the package.}
 
-\item{qualificationPlan}{Optional: existing qualification plan.
-If `NULL`, at least 1 project must be included into the projects list above}
-
-\item{toRemove}{Optional: projects to remove? Optional: observed data sets to remove?}
+\item{qualificationPlan}{Character string. Path, URL, or JSON string of an existing qualification plan.
+If `NULL`, at least 1 project must be included in the snapshotPaths.}
+}
+\value{
+Invisibly returns `NULL`. Side effect: creates an Excel file at the specified path.
 }
 \description{
 excelUI

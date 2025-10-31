@@ -10,7 +10,7 @@ getObsDataFromQualification(qualificationContent)
 \item{qualificationContent}{Content of a qualification plan}
 }
 \value{
-data.frame with columns `ID`, `Path` and `Type`
+data.frame with columns `Id`, `Path` and `Type`
 }
 \description{
 Get a data.frame of observed data IDs and Paths/URLs

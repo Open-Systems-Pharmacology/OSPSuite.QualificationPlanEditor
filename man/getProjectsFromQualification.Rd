@@ -10,7 +10,7 @@ getProjectsFromQualification(qualificationContent)
 \item{qualificationContent}{Content of a qualification plan}
 }
 \value{
-data.frame with columns `ID` and `Path`
+data.frame with columns `Id` and `Path`
 }
 \description{
 Get a data.frame of project IDs and Paths/URLs

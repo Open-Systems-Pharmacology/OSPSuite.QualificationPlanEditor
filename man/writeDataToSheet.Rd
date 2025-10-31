@@ -7,11 +7,14 @@
 writeDataToSheet(data, sheetName, excelObject)
 }
 \arguments{
-\item{data}{A data.frame}
+\item{data}{A data.frame to write to the sheet}
 
-\item{sheetName}{Name of the sheet to write to}
+\item{sheetName}{Character string. Name of the sheet to write to}
 
 \item{excelObject}{An openxlsx workbook object}
+}
+\value{
+Invisibly returns `NULL`. Side effect: mutates the workbook by writing data and freezing the header row.
 }
 \description{
 Write a data.frame to a specific sheet in an Excel file
