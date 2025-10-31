@@ -61,17 +61,21 @@
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>A data.frame</p></dd>
+<dd><p>A data.frame to write to the sheet</p></dd>
 
 
 <dt id="arg-sheetname">sheetName<a class="anchor" aria-label="anchor" href="#arg-sheetname"></a></dt>
-<dd><p>Name of the sheet to write to</p></dd>
+<dd><p>Character string. Name of the sheet to write to</p></dd>
 
 
 <dt id="arg-excelobject">excelObject<a class="anchor" aria-label="anchor" href="#arg-excelobject"></a></dt>
 <dd><p>An openxlsx workbook object</p></dd>
 
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>Invisibly returns `NULL`. Side effect: mutates the workbook by writing data and freezing the header row.</p>
+    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

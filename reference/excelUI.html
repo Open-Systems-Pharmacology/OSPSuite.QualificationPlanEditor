@@ -58,8 +58,7 @@
 <span>  <span class="va">snapshotPaths</span>,</span>
 <span>  <span class="va">observedDataPaths</span>,</span>
 <span>  excelTemplate <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  qualificationPlan <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  toRemove <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  qualificationPlan <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -68,31 +67,32 @@
 
 
 <dl><dt id="arg-filename">fileName<a class="anchor" aria-label="anchor" href="#arg-filename"></a></dt>
-<dd><p>Name of the Excel file to be created</p></dd>
+<dd><p>Character string. Name of the Excel file to be created.</p></dd>
 
 
 <dt id="arg-snapshotpaths">snapshotPaths<a class="anchor" aria-label="anchor" href="#arg-snapshotpaths"></a></dt>
-<dd><p>List of project snapshots given by their URL or relative path</p></dd>
+<dd><p>Named list of project snapshots given by their URL or relative path.</p></dd>
 
 
 <dt id="arg-observeddatapaths">observedDataPaths<a class="anchor" aria-label="anchor" href="#arg-observeddatapaths"></a></dt>
-<dd><p>List of observed data sets (which are not included into the projects)
-given by their URL or relative path</p></dd>
+<dd><p>Named list of observed data sets (which are not included into the projects)
+given by their URL or relative path.</p></dd>
 
 
 <dt id="arg-exceltemplate">excelTemplate<a class="anchor" aria-label="anchor" href="#arg-exceltemplate"></a></dt>
-<dd><p>Default excel template (only captions and lookup tables)</p></dd>
+<dd><p>Character string. Path to an Excel template file (only captions and lookup tables).
+If `NULL`, uses the default template from the package.</p></dd>
 
 
 <dt id="arg-qualificationplan">qualificationPlan<a class="anchor" aria-label="anchor" href="#arg-qualificationplan"></a></dt>
-<dd><p>Optional: existing qualification plan.
-If `NULL`, at least 1 project must be included into the projects list above</p></dd>
-
-
-<dt id="arg-toremove">toRemove<a class="anchor" aria-label="anchor" href="#arg-toremove"></a></dt>
-<dd><p>Optional: projects to remove? Optional: observed data sets to remove?</p></dd>
+<dd><p>Character string. Path, URL, or JSON string of an existing qualification plan.
+If `NULL`, at least 1 project must be included in the snapshotPaths.</p></dd>
 
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>Invisibly returns `NULL`. Side effect: creates an Excel file at the specified path.</p>
+    </div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
