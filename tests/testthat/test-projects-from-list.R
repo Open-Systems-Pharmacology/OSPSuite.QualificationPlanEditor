@@ -6,7 +6,7 @@ test_that("getProjectsFromList creates a data.frame with appropriate values", {
   expect_equal(
     getProjectsFromList(snapshotPaths),
     data.frame(
-      ID = c("A", "B"),
+      Id = c("A", "B"),
       Path = c("path/to/A.json", "path/to/B.json"),
       row.names = NULL
     )
@@ -14,12 +14,12 @@ test_that("getProjectsFromList creates a data.frame with appropriate values", {
 })
 
 
-test_that("getProjectsFromList can parse IDs from paths", {
+test_that("getProjectsFromList can parse Ids from paths", {
   snapshotPaths <- c("path/to/A.json", "path/to/B.json")
   expect_equal(
     getProjectsFromList(snapshotPaths),
     data.frame(
-      ID = c("A", "B"),
+      Id = c("A", "B"),
       Path = c("path/to/A.json", "path/to/B.json"),
       row.names = NULL
     )
@@ -28,7 +28,7 @@ test_that("getProjectsFromList can parse IDs from paths", {
   expect_equal(
     getProjectsFromList(snapshotPaths),
     data.frame(
-      ID = c("A", "B"),
+      Id = c("A", "B"),
       Path = c("path/to/A-Model.json", "path/to/B.json"),
       row.names = NULL
     )

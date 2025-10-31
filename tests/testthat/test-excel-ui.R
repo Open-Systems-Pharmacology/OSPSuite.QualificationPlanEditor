@@ -17,7 +17,7 @@ test_that("excelUI stops if fileName is not Excel", {
       snapshotPaths = snapshotPaths, 
       observedDataPaths = observedDataPaths
     ),
-    "(Provided file has extension)*(txt)*(while)*(xlsx)*(was expected instead)"
+    "(ProvIded file has extension)*(txt)*(while)*(xlsx)*(was expected instead)"
   )
 })
 
@@ -29,7 +29,7 @@ test_that("excelUI stops if template does not exist or is not not Excel", {
       observedDataPaths = observedDataPaths,
       excelTemplate = "template.txt"
     ),
-    "(Provided file has extension)*(txt)*(while)*(xlsx)*(was expected instead)"
+    "(ProvIded file has extension)*(txt)*(while)*(xlsx)*(was expected instead)"
   )
   expect_error(
     excelUI(
