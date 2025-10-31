@@ -9,10 +9,10 @@ getBBDataFromProjects(projectData, qualificationProjects = NULL)
 \arguments{
 \item{projectData}{A data.frame of project snapshots}
 
-\item{qualificationProjects}{Optional: a data.frame of building blocks from a qualification plan}
+\item{qualificationProjects}{Optional: a character vector of project IDs from a qualification plan}
 }
 \value{
-A data.frame with columns `Project`, `Simulation` and `Output`
+A data.frame with columns `Project`, `BB-Type`, `BB-Name`, `Parent-Project`
 }
 \description{
 Get a data.frame of projects, type, name and parent project

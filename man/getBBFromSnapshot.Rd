@@ -7,14 +7,14 @@
 getBBFromSnapshot(snapshotPath, bbType = "Simulations")
 }
 \arguments{
-\item{snapshotPath}{A path to a project snapshot (JSON file)}
+\item{snapshotPath}{A path/URL to a project snapshot (JSON file)}
 
 \item{bbType}{A building block type (e.g. `"Simulations"`, `"Individuals"`)}
 }
 \value{
-A list of simulations information
+A list of building block information
 }
 \description{
-Get a list of simulations from a project snapshot
+Get a list of building blocks from a project snapshot
 }
 \keyword{internal}

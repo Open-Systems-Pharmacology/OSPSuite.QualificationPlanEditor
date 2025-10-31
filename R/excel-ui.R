@@ -1,12 +1,3 @@
-# TODO:
-# If a qualification plan is input
-# Use getProjectsFromQualification to update current project list from snapshot IDs
-# -> All data in the union default style
-# -> Data from snapshots not in Union = Removed -> Red color
-# -> Data from quali not in Union = New -> Green color ?
-#   -> Data includes, projects, observed data sets, simulations, simulation outputs, simulation observed data
-# Use quali data to fill remaining Excel sheets
-
 #' @title excelUI
 #' @param fileName Character string. Name of the Excel file to be created.
 #' @param snapshotPaths
@@ -29,6 +20,7 @@ excelUI <- function(fileName = "qualification.xlsx",
                     observedDataPaths,
                     excelTemplate = NULL,
                     qualificationPlan = NULL) {
+  cli::cli_h1("Exporting to Excel UI")
   ospsuite.utils::validateIsFileExtension(fileName, "xlsx")
   excelTemplate <- excelTemplate %||%
     system.file("Qualification-Template.xlsx", package = "ospsuite.qualificationplaneditor")
@@ -38,6 +30,7 @@ excelUI <- function(fileName = "qualification.xlsx",
   }
   
   # Copy template to output file
+  cli::cli_progress_step("Copying Excel Template to {.file {fileName}}")
   fileCopied <- file.copy(from = excelTemplate, to = fileName, overwrite = TRUE)
   if (!fileCopied) {
     cli::cli_abort("Failed to copy template {.file {excelTemplate}} to {.file {fileName}}")
@@ -50,11 +43,20 @@ excelUI <- function(fileName = "qualification.xlsx",
       cli::cli_abort("Cannot load workbook {.file {fileName}}: {e$message}")
     }
   )
+  cli::cli_progress_step("Checking for Qualification Plan")
   useQualification <- !is.null(qualificationPlan)
-
+  cli::cli_alert_info(
+    ifelse(
+      useQualification,
+      "Qualification Plan: {.file {qualificationPlan}}",
+      "{.strong No} Qualification Plan input"
+    )
+  )
+  
   # MetaInfo ?
 
   # Projects
+  cli::cli_progress_step("Exporting {.field Projects} Data")
   projectData <- getProjectsFromList(snapshotPaths)
   # Qualification Plan provided
   qualificationProjects <- NULL
@@ -68,16 +70,16 @@ excelUI <- function(fileName = "qualification.xlsx",
     qualificationProjectData <- getProjectsFromQualification(qualificationContent)
     qualificationObservedData <- getObsDataFromQualification(qualificationContent)
     qualificationBBData <- getBBDataFromQualification(qualificationContent)
-
-    qualificationProjects <- qualificationProjectData$ID
-    commonProjects <- intersect(projectData$ID, qualificationProjects)
+    
+    qualificationProjects <- qualificationProjectData$Id
+    commonProjects <- intersect(projectData$Id, qualificationProjects)
     # Merge to project data
-    projectData <- merge.data.frame(projectData, qualificationProjectData, by = c("ID", "Path"), all = TRUE)
+    projectData <- merge.data.frame(projectData, qualificationProjectData, by = c("Id", "Path"), all = TRUE)
     projectStyles <- getQualificationStyles(
       data = projectData,
       commonProjects = commonProjects,
       qualificationProjects = qualificationProjects,
-      projectVariable = "ID"
+      projectVariable = "Id"
     )
   }
 
@@ -90,8 +92,9 @@ excelUI <- function(fileName = "qualification.xlsx",
       excelObject = excelObject
     )
   }
-
+  
   # Simulation Ouptuts
+  cli::cli_progress_step("Exporting {.field Simulation Outputs} Data")
   simulationsOutputs <- getSimulationsOutputsFromProjects(projectData)
   writeDataToSheet(data = simulationsOutputs, sheetName = "Simulations_Outputs", excelObject = excelObject)
   if (useQualification) {
@@ -109,6 +112,7 @@ excelUI <- function(fileName = "qualification.xlsx",
   }
 
   # Simulations ObsData
+  cli::cli_progress_step("Exporting {.field Simulation Observed Data}")
   simulationsObsData <- getSimulationsObsDataFromProjects(projectData)
   writeDataToSheet(data = simulationsObsData, sheetName = "Simulations_ObsData", excelObject = excelObject)
   if (useQualification) {
@@ -126,17 +130,18 @@ excelUI <- function(fileName = "qualification.xlsx",
   }
 
   # Obs Data
+  cli::cli_progress_step("Exporting {.field Observed Data}")
   observedData <- getObsDataFromList(observedDataPaths)
   # Qualification Plan provided
   if (useQualification) {
-    commonObsData <- intersect(observedData$ID, qualificationObservedData$ID)
+    commonObsData <- intersect(observedData$Id, qualificationObservedData$Id)
     # Merge to observed data data
-    observedData <- merge.data.frame(observedData, qualificationObservedData, by = c("ID", "Path", "Type"), all = TRUE)
+    observedData <- merge.data.frame(observedData, qualificationObservedData, by = c("Id", "Path", "Type"), all = TRUE)
     obsDataStyles <- getQualificationStyles(
       data = observedData,
       commonProjects = commonObsData,
-      qualificationProjects = qualificationObservedData$ID,
-      projectVariable = "ID"
+      qualificationProjects = qualificationObservedData$Id,
+      projectVariable = "Id"
     )
   }
   writeDataToSheet(data = observedData, sheetName = "ObsData", excelObject = excelObject)
@@ -153,6 +158,7 @@ excelUI <- function(fileName = "qualification.xlsx",
   )
 
   # BB
+  cli::cli_progress_step("Exporting {.field Buidling Block} Data")
   bbData <- getBBDataFromProjects(projectData, qualificationProjects)
   if (useQualification) {
     bbData <- merge.data.frame(
@@ -197,6 +203,7 @@ excelUI <- function(fileName = "qualification.xlsx",
     #  excelObject = excelObject
     # )
 
+    cli::cli_progress_step("Exporting {.field Comparison Time Profile} Plot Settings")
     # Comparison Time (CT) Profile
     writeDataToSheet(
       data = getQualificationCTProfile(qualificationContent),
@@ -228,6 +235,7 @@ excelUI <- function(fileName = "qualification.xlsx",
     }
 
     # DDI Ratio
+    cli::cli_progress_step("Exporting {.field DDI Ratio} Plot Settings")
     ddiRatio <- getQualificationDDIRatio(qualificationContent)
     writeDataToSheet(data = ddiRatio, sheetName = "DDI_Ratio", excelObject = excelObject)
     # TODO: handle dataValidation
@@ -275,6 +283,7 @@ excelUI <- function(fileName = "qualification.xlsx",
     )
 
     # Global Plot Settings
+    cli::cli_progress_step("Exporting {.field Global Plot Settings}")
     globalPlotSettings <- formatPlotSettings(qualificationContent$Plots$PlotSettings)
     writeDataToSheet(
       data = globalPlotSettings,
@@ -283,18 +292,26 @@ excelUI <- function(fileName = "qualification.xlsx",
     )
 
     # GlobalAxes DDI PreVsObs
-    # TODO: check if this is required for all AxesSettings
-    ddiAxesSettings <- lapply(qualificationContent$Plots$AxesSettings$DDIRatioPlotsPredictedVsObserved, as.data.frame)
+    cli::cli_progress_step("Exporting {.field Global Axes Settings}")
+    ddiAxesSettings <- lapply(
+      ALL_EXCEL_AXES,
+      function(plotName){
+        formatGlobalAxesSettings(
+          axesSettings = qualificationContent$Plots$AxesSettings[[plotName]],
+          plotName = plotName
+          )
+      })
     ddiAxesSettings <- do.call("rbind", ddiAxesSettings)
     writeDataToSheet(
       data = ddiAxesSettings,
-      sheetName = "GlobalAxes_DDI_PredVsObs",
+      sheetName = "GlobalAxesSettings",
       excelObject = excelObject
     )
   }
   # Save the final workbook
+  cli::cli_progress_step("Saving extracted data into {.file {fileName}}")
   openxlsx::saveWorkbook(excelObject, file = fileName, overwrite = TRUE)
-  return(invisible())
+  return(invisible(TRUE))
 }
 
 
@@ -325,52 +342,3 @@ writeDataToSheet <- function(data, sheetName, excelObject) {
   return(invisible())
 }
 
-#' @title EXCEL_OPTIONS
-#' @description
-#' List of default Excel options
-#' @import openxlsx
-#' @export
-EXCEL_OPTIONS <- list(
-  headerStyle = openxlsx::createStyle(
-    fgFill = "#ADD8E6",
-    textDecoration = "Bold",
-    border = "Bottom",
-    fontColour = "black"
-  ),
-  newProjectStyle = openxlsx::createStyle(
-    fgFill = "#A3FFA3",
-    fontColour = "black"
-  ),
-  deletedProjectStyle = openxlsx::createStyle(
-    fgFill = "#FF8884",
-    fontColour = "black"
-  )
-)
-
-#' @title excelOptions
-#' @description
-#' Deprecated: Use `EXCEL_OPTIONS` instead.
-#' List of default Excel options
-#' @import openxlsx
-#' @export
-excelOptions <- EXCEL_OPTIONS
-
-#' @title ALL_BUILDING_BLOCKS
-#' @description
-#' Allowed Building Blocks values
-#' @keywords internal
-ALL_BUILDING_BLOCKS <- c(
-  "Individual",
-  "Population",
-  "Compound",
-  "Protocol",
-  "Event",
-  "Formulation", "ObserverSet", "ExpressionProfile", "Simulation"
-)
-
-#' @title AllBuildingBlocks
-#' @description
-#' Deprecated: Use `ALL_BUILDING_BLOCKS` instead.
-#' Allowed Building Blocks values
-#' @keywords internal
-AllBuildingBlocks <- ALL_BUILDING_BLOCKS

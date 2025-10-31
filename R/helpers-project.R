@@ -45,7 +45,7 @@ getProjectsFromList <- function(snapshotPaths) {
     )
   }
   projectData <- data.frame(
-    ID = snapshotIDs,
+    Id = snapshotIDs,
     Path = unlist(snapshotPaths),
     row.names = NULL,
     stringsAsFactors = FALSE
@@ -111,7 +111,7 @@ getObsDataFromList <- function(observedDataPaths) {
   )
   observedDataTypes <- do.call(rbind, observedDataTypes)
   projectData <- data.frame(
-    ID = observedDataIDs,
+    Id = observedDataIDs,
     observedDataTypes,
     row.names = NULL,
     stringsAsFactors = FALSE
@@ -197,7 +197,7 @@ getSimulationsOutputsFromProjects <- function(projectData) {
           return(NULL)
         }
         data.frame(
-          Project = projectData$ID[projectIndex],
+          Project = projectData$Id[projectIndex],
           Simulation = snapshotSimulation$Name,
           Output = outputSelections,
           row.names = NULL,
@@ -277,7 +277,7 @@ getSimulationsObsDataFromProjects <- function(projectData) {
           return(NULL)
         }
         data.frame(
-          Project = projectData$ID[projectIndex],
+          Project = projectData$Id[projectIndex],
           Simulation = snapshotSimulation$Name,
           ObservedData = observedData,
           row.names = NULL,
@@ -345,7 +345,7 @@ getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
   
   for (projectIndex in seq_len(nrow(projectData))) {
     # If qualificationProjects is provided, check if the project is already in it
-    if (projectData$ID[projectIndex] %in% qualificationProjects) {
+    if (projectData$Id[projectIndex] %in% qualificationProjects) {
       next
     }
     # Parse the snapshot once per project
@@ -354,7 +354,7 @@ getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
         jsonlite::fromJSON(projectData$Path[projectIndex], simplifyVector = FALSE)
       },
       error = function(e) {
-        cli::cli_abort("Failed to read snapshot for project {.val {projectData$ID[projectIndex]}} from {.file {projectData$Path[projectIndex]}}: {e$message}")
+        cli::cli_abort("Failed to read snapshot for project {.val {projectData$Id[projectIndex]}} from {.file {projectData$Path[projectIndex]}}: {e$message}")
       }
     )
     
@@ -371,7 +371,7 @@ getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
         snapshotBBs,
         function(snapshotBB) {
           data.frame(
-            Project = projectData$ID[projectIndex],
+            Project = projectData$Id[projectIndex],
             "BB-Type" = bbType,
             "BB-Name" = snapshotBB$Name,
             "Parent-Project" = "",

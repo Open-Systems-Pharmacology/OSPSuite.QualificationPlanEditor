@@ -10,7 +10,7 @@ getQualificationCTMapping(qualificationContent)
 \item{qualificationContent}{Content of a qualification plan}
 }
 \value{
-A data.frame with columns 
+A data.frame with columns
 `Project`, `Simulation`, `Output` and relevant CT fields
 }
 \description{

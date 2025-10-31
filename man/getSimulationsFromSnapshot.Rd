@@ -7,7 +7,7 @@
 getSimulationsFromSnapshot(snapshotPath)
 }
 \arguments{
-\item{snapshotPath}{A data.frame of project snapshots}
+\item{snapshotPath}{A path/URL to a project snapshot (JSON file)}
 }
 \value{
 A list of simulations information
