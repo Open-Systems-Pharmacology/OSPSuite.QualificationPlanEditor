@@ -1,0 +1,398 @@
+---
+title: "Excel File Structure and Workflow"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Excel File Structure and Workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ospsuite.qualificationplaneditor)
+```
+
+## Overview
+
+The `{ospsuite.qualificationplaneditor}` package provides a bidirectional workflow for working with qualification plans through an Excel interface. This vignette explains how to use and update the Excel file structure.
+
+## Workflow Summary
+
+The typical workflow consists of three main steps:
+
+1. **Export to Excel**: Convert a qualification plan (JSON) to an Excel workbook
+2. **Edit Excel**: Modify the Excel file using Excel, LibreOffice, or similar tools
+3. **Import from Excel**: Convert the updated Excel file back to a qualification plan (JSON)
+
+```{r, eval=FALSE}
+# Step 1: Export qualification plan to Excel
+excelUI(
+  fileName = "qualification.xlsx",
+  snapshotPaths = snapshotPaths,
+  observedDataPaths = observedDataPaths,
+  qualificationPlan = "qualification_plan.json"
+)
+
+# Step 2: Edit the Excel file (done manually)
+
+# Step 3: Convert Excel back to qualification plan
+excelToQualificationPlan(
+  excelFile = "qualification.xlsx",
+  qualificationPlan = "updated_qualification_plan.json"
+)
+```
+
+## Excel File Structure
+
+The Excel workbook created by `excelUI()` contains multiple sheets, each representing different aspects of the qualification plan. The sheets are organized as follows:
+
+### Core Data Sheets
+
+#### 1. **MetaInfo**
+Contains metadata about the qualification plan such as title, version, and description.
+
+#### 2. **Projects**
+Lists all project snapshots included in the qualification plan.
+
+- **Id**: Unique identifier for the project
+- **Path**: File path or URL to the project snapshot JSON file
+
+**Example:**
+| Id | Path |
+|---------|------|
+| Raltegravir | https://raw.githubusercontent.com/.../Raltegravir-Model.json |
+| Atazanavir | https://raw.githubusercontent.com/.../Atazanavir-Model.json |
+
+#### 3. **Simulations_Outputs**
+Defines which simulation outputs should be included in plots and comparisons.
+
+- **Project**: Reference to a project ID
+- **Simulation**: Name of the simulation within the project
+- **Output**: Specific output variable to track
+
+#### 4. **Simulations_ObsData**
+Links simulations to observed data sets for comparison.
+
+- **Project**: Reference to a project ID
+- **Simulation**: Name of the simulation
+- **ObsData**: Reference to an observed data set ID
+
+#### 5. **ObsData**
+Lists all observed data sets that are not included in the projects.
+
+- **Id**: Unique identifier for the observed data set
+- **Path**: File path or URL to the observed data CSV file
+- **Type**: Type of observed data (e.g., "TimeProfile" or "DDIRatio")
+
+**Note:** The Type column uses a dropdown list with predefined values for consistency.
+
+#### 6. **BB** (Building Blocks)
+Defines building blocks shared between projects or imported from other projects.
+
+- **Project**: The project that will use the building block
+- **BB-Type**: Type of building block (Individual, Population, Compound, Protocol, Event, Formulation, ObserverSet, ExpressionProfile, Simulation)
+- **BB-Name**: Name of the building block
+- **Parent-Project**: Project from which to import the building block (can be empty for new building blocks)
+
+**Note:** The Parent-Project column uses a dropdown list populated from the Projects sheet.
+
+### Plot Configuration Sheets
+
+#### 7. **CT_Profile** (Comparison Time Profile)
+Configures time profile comparison plots.
+
+Contains settings for individual comparison time profile plots such as plot name, title, and which simulations/outputs to include.
+
+#### 8. **CT_Mapping**
+Maps specific simulation outputs to plots defined in CT_Profile.
+
+- **Profile**: Reference to a plot in CT_Profile
+- **Project**: Project ID
+- **Simulation**: Simulation name
+- **Output**: Output variable
+- **ObsData**: Associated observed data (optional)
+- **Color**: Line/marker color (displayed as colored cell)
+
+#### 9. **DDI_Ratio** (Drug-Drug Interaction Ratios)
+Configures DDI ratio plots.
+
+Contains settings for DDI ratio plots including grouping and styling.
+
+- **Group**: Name of the DDI group
+- **Group Color**: Color for the group (displayed as colored cell)
+
+#### 10. **DDI_Ratio_Mapping**
+Maps observed data to DDI ratio plots.
+
+Links DDI ratio data sets to the groups defined in DDI_Ratio sheet.
+
+### Report Structure Sheets
+
+#### 11. **Sections**
+Defines the structure and content of the qualification report.
+
+Organizes the report into hierarchical sections and subsections, specifying which plots and tables to include in each section.
+
+#### 12. **Inputs**
+Defines input tables that document building blocks used in simulations.
+
+- **Project**: Project ID
+- **BB-Type**: Type of building block to document
+- **BB-Name**: Specific building block name
+- **Section Reference**: Reference to a section where the input table should appear
+
+### Global Settings Sheets
+
+#### 13. **GlobalPlotSettings**
+Defines global plot appearance settings that apply to all plots.
+
+- **ChartWidth**: Width of charts in pixels
+- **ChartHeight**: Height of charts in pixels  
+- **AxisSize**: Font size for axis labels
+- **LegendSize**: Font size for legend text
+- **OriginSize**: Font size for origin labels
+- **FontFamilyName**: Font family for all text
+- **WatermarkSize**: Font size for watermark text
+
+#### 14. **GlobalAxesSettings**
+Configures axes properties for different plot types.
+
+- **Plot**: Type of plot (e.g., "ComparisonTimeProfile", "DDIRatioPlotsPredictedVsObserved")
+- **Type**: Axis type (X, Y, or Y2)
+- **Dimension**: Physical dimension (Time, Concentration, Age, etc.)
+- **Unit**: Unit of measurement (optional for dimensionless)
+- **GridLines**: Whether to show grid lines (TRUE/FALSE)
+- **Scaling**: Scale type (Linear or Log)
+
+#### 15. **Lookup**
+Contains lookup tables for dropdown lists used in other sheets.
+
+This sheet provides reference values for:
+- Observed data types (TimeProfile, DDIRatio)
+- Building block types
+- Other enumerated values
+
+**Note:** This sheet is typically hidden and should not be modified unless you need to change the available options.
+
+## How to Update the Excel File
+
+### Step 1: Generate the Excel File
+
+Start by generating an Excel file from an existing qualification plan or from project snapshots:
+
+```{r, eval=FALSE}
+library(ospsuite.qualificationplaneditor)
+
+# Define your snapshot paths
+snapshotPaths <- list(
+  "Compound A" = "path/to/compound-a.json",
+  "Compound B" = "path/to/compound-b.json"
+)
+
+# Define observed data paths
+observedDataPaths <- list(
+  "Clinical Data Set 1" = list(
+    Path = "path/to/clinical-data-1.csv",
+    Type = "TimeProfile"
+  ),
+  "DDI Study Data" = list(
+    Path = "path/to/ddi-data.csv",
+    Type = "DDIRatio"
+  )
+)
+
+# Generate Excel file
+excelUI(
+  fileName = "my_qualification.xlsx",
+  snapshotPaths = snapshotPaths,
+  observedDataPaths = observedDataPaths,
+  qualificationPlan = "original_qualification_plan.json"  # Optional
+)
+```
+
+### Step 2: Open and Edit the Excel File
+
+Open the generated Excel file in Excel, LibreOffice Calc, or another spreadsheet application.
+
+#### Adding New Projects
+
+1. Go to the **Projects** sheet
+2. Add a new row with a unique **Id** and the **Path** to the project snapshot
+3. Save the file
+
+#### Modifying Observed Data
+
+1. Go to the **ObsData** sheet
+2. Add, remove, or modify rows as needed
+3. For the **Type** column, use the dropdown to select "TimeProfile" or "DDIRatio"
+4. Save the file
+
+#### Configuring Plot Mappings
+
+1. Go to **CT_Mapping** or **DDI_Ratio_Mapping** sheets
+2. Add or modify mappings between simulations and observed data
+3. For **CT_Mapping**, you can specify colors by entering hex color codes (e.g., #FF0000 for red)
+4. Save the file
+
+#### Adjusting Global Settings
+
+1. Go to **GlobalPlotSettings** or **GlobalAxesSettings** sheets
+2. Modify values as needed (e.g., chart dimensions, fonts, axis properties)
+3. Save the file
+
+#### Working with Building Blocks
+
+1. Go to the **BB** sheet
+2. Add rows to import building blocks from other projects
+3. Use the **Parent-Project** dropdown to select the source project
+4. Specify the **BB-Type** and **BB-Name**
+5. The building block will be imported into the **Project** specified in that row
+6. Save the file
+
+### Step 3: Convert Excel Back to Qualification Plan
+
+After editing the Excel file, convert it back to a qualification plan JSON file:
+
+```{r, eval=FALSE}
+excelToQualificationPlan(
+  excelFile = "my_qualification.xlsx",
+  qualificationPlan = "updated_qualification_plan.json"
+)
+```
+
+The function will validate the Excel file structure and create a new qualification plan JSON file that can be used with the OSP Suite qualification framework.
+
+## Understanding Color Coding
+
+When you provide an existing qualification plan to `excelUI()`, the resulting Excel file uses color coding to highlight changes:
+
+- **Green cells**: New data added that wasn't in the original qualification plan
+- **Red cells**: Data from the original qualification plan that's missing from the new snapshots
+- **White cells**: Data that matches between the original plan and new snapshots
+
+This color coding helps you quickly identify what has changed between versions and make informed decisions about updates.
+
+## Tips and Best Practices
+
+### Validation and Dropdown Lists
+
+Several columns use data validation with dropdown lists to ensure consistency:
+
+- **ObsData.Type**: Select from predefined types (TimeProfile, DDIRatio)
+- **BB.Parent-Project**: Select from available projects
+- **GlobalAxesSettings.Plot**: Select from available plot types
+- **GlobalAxesSettings.Dimension**: Select from available dimensions
+- **GlobalAxesSettings.Scaling**: Select Linear or Log
+
+Always use these dropdowns when available to avoid validation errors.
+
+### Excel Formulas
+
+Avoid using Excel formulas in data cells. The import process reads cell values, not formulas, so formula results will be imported as static values.
+
+### Sheet Names
+
+Do not rename the sheets. The `excelToQualificationPlan()` function expects specific sheet names and will fail if they are missing or renamed.
+
+### Empty Rows
+
+Remove any empty rows from data tables. Empty rows can cause parsing errors during import.
+
+### File Format
+
+Always save the file in Excel format (.xlsx). Other formats like .xls or .csv are not supported.
+
+### Backup Your Work
+
+Before making extensive changes, save a backup copy of your Excel file. This allows you to revert changes if needed.
+
+## Common Use Cases
+
+### Use Case 1: Updating Project Versions
+
+When a new version of a project snapshot is released:
+
+1. Open the Excel file
+2. Go to the **Projects** sheet
+3. Update the **Path** column to point to the new version
+4. Save and convert back to JSON
+
+### Use Case 2: Adding New Observed Data
+
+To add new clinical data to your qualification:
+
+1. Open the Excel file
+2. Go to the **ObsData** sheet
+3. Add a new row with a unique **Id**, the data **Path**, and appropriate **Type**
+4. Go to **Simulations_ObsData** or **CT_Mapping** to link the data to simulations
+5. Save and convert back to JSON
+
+### Use Case 3: Reusing Building Blocks Across Projects
+
+To import a building block from one project into another:
+
+1. Open the Excel file
+2. Go to the **BB** sheet
+3. Add a row specifying:
+   - **Project**: The destination project
+   - **BB-Type**: Type of building block (e.g., "Compound")
+   - **BB-Name**: Name of the building block
+   - **Parent-Project**: The source project (use the dropdown)
+4. Save and convert back to JSON
+
+### Use Case 4: Customizing Plot Appearance
+
+To change global plot settings:
+
+1. Open the Excel file
+2. Go to **GlobalPlotSettings**
+3. Modify values like **ChartWidth**, **ChartHeight**, or **FontFamilyName**
+4. Go to **GlobalAxesSettings** to adjust axis properties (scaling, units, dimensions)
+5. Save and convert back to JSON
+
+## Troubleshooting
+
+### Error: "Sheet not found"
+
+Ensure all required sheets are present in the Excel file. Do not delete or rename sheets.
+
+### Error: "Invalid column value"
+
+Check that dropdown-based columns use valid values from the dropdown lists. Manually typed values may not match the expected format.
+
+### Error: "Cannot parse qualification plan"
+
+The generated JSON file might be malformed. Common causes:
+- Empty rows in data tables
+- Special characters in text fields
+- Missing required columns
+
+### Colors Not Displaying in Excel
+
+Some versions of Excel or LibreOffice may not display cell background colors correctly. This doesn't affect functionality - the data is still valid.
+
+## Further Resources
+
+- Package documentation: `help(package = "ospsuite.qualificationplaneditor")`
+- Function help: `?excelUI`, `?excelToQualificationPlan`
+- OSP Suite documentation: [Open Systems Pharmacology Documentation](https://docs.open-systems-pharmacology.org/)
+- Example qualification plans: [OSP Suite Examples](https://github.com/Open-Systems-Pharmacology)
+
+## Summary
+
+The Excel interface provides a user-friendly way to edit and maintain qualification plans without directly editing JSON files. Key points to remember:
+
+1. Use `excelUI()` to export qualification plans to Excel
+2. Edit the Excel file using standard spreadsheet tools
+3. Use `excelToQualificationPlan()` to convert back to JSON
+4. Follow the sheet structure and use dropdown lists where provided
+5. Pay attention to color coding when working with existing qualification plans
+6. Test your changes by running the qualification workflow with the updated JSON file
+
+By following this workflow, you can efficiently manage complex qualification plans while minimizing the risk of JSON syntax errors and maintaining data consistency across your qualification projects.
