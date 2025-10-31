@@ -31,6 +31,20 @@ The typical workflow consists of three main steps:
 3. **Import from Excel**: Convert the updated Excel file back to a qualification plan (JSON)
 
 ```{r, eval=FALSE}
+# Define your snapshot paths
+snapshotPaths <- list(
+  "Compound A" = "https://raw.githubusercontent.com/.../compound-a.json",
+  "Compound B" = "https://raw.githubusercontent.com/.../compound-b.json"
+)
+
+# Define observed data paths
+observedDataPaths <- list(
+  "Clinical Data" = list(
+    Path = "https://raw.githubusercontent.com/.../clinical-data.csv",
+    Type = "TimeProfile"
+  )
+)
+
 # Step 1: Export qualification plan to Excel
 excelUI(
   fileName = "qualification.xlsx",
@@ -191,18 +205,18 @@ library(ospsuite.qualificationplaneditor)
 
 # Define your snapshot paths
 snapshotPaths <- list(
-  "Compound A" = "path/to/compound-a.json",
-  "Compound B" = "path/to/compound-b.json"
+  "Compound A" = "https://raw.githubusercontent.com/example/models/main/compound-a.json",
+  "Compound B" = "https://raw.githubusercontent.com/example/models/main/compound-b.json"
 )
 
 # Define observed data paths
 observedDataPaths <- list(
   "Clinical Data Set 1" = list(
-    Path = "path/to/clinical-data-1.csv",
+    Path = "https://raw.githubusercontent.com/example/data/main/clinical-data-1.csv",
     Type = "TimeProfile"
   ),
   "DDI Study Data" = list(
-    Path = "path/to/ddi-data.csv",
+    Path = "https://raw.githubusercontent.com/example/data/main/ddi-data.csv",
     Type = "DDIRatio"
   )
 )
