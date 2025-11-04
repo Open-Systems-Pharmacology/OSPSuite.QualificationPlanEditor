@@ -53,8 +53,6 @@ excelUI <- function(fileName = "qualification.xlsx",
     )
   )
   
-  # MetaInfo ?
-
   # Projects
   cli::cli_progress_step("Exporting {.field Projects} Data")
   projectData <- getProjectsFromList(snapshotPaths)
@@ -281,7 +279,20 @@ excelUI <- function(fileName = "qualification.xlsx",
       sheetName = "Inputs",
       excelObject = excelObject
     )
-
+    
+    # MetaInfo
+    cli::cli_progress_step("Exporting {.field Schema} Data")
+    # Parse version from schema
+    qualificationSchema <- unlist(strsplit(qualificationContent[["$schema"]], "/"))
+    schemaVersion <- grep("^v\\d+\\.\\d+", qualificationSchema, value = TRUE)
+    schemaVersion <- gsub(pattern = "v", replacement = "", schemaVersion)
+    schemaData <- data.frame("Qualification plan schema version" = schemaVersion, check.names = FALSE)
+    writeDataToSheet(
+      data = schemaData,
+      sheetName = "MetaInfo",
+      excelObject = excelObject
+    )
+    
     # Global Plot Settings
     cli::cli_progress_step("Exporting {.field Global Plot Settings}")
     globalPlotSettings <- formatPlotSettings(qualificationContent$Plots$PlotSettings)

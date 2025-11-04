@@ -13,6 +13,15 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   }
   sheetNames <- readxl::excel_sheets(excelFile)
   ospsuite.utils::validateIsIncluded(ALL_EXCEL_SHEETS, sheetNames)
+  
+  # Schema
+  cli::cli_progress_step("Exporting {.field Schema} Data")
+  qualificationSchema <- readxl::read_excel(excelFile, sheet = "MetaInfo")
+  qualificationSchema <- paste0(
+    "https://raw.githubusercontent.com/Open-Systems-Pharmacology/QualificationPlan/v",
+    utils::head(qualificationSchema[[1]], 1),
+    "/schemas/OSP_Qualification_Plan_Schema.json"
+  )
 
   # Projects
   # TODO: add Building Blocks but need to understand how to include them first
@@ -133,7 +142,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   # qualificationIntro <- readxl::read_excel(excelFile, sheet = "Inputs")
 
   qualificationContent <- list(
-    "$schema" = NA,
+    "$schema" = qualificationSchema,
     "Projects" = qualificationProjects,
     "ObservedDataSets" = qualificationObsDataSets,
     "Plots" = qualificationPlots,
