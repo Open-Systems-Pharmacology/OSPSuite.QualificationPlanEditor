@@ -35,7 +35,6 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
       "Parent-Project" = list(type = "character", allowedValues = qualificationProjects$Id, naAllowed = TRUE, nullAllowed = TRUE)
     )
   )
-  qualificationBB <- readxl::read_excel(excelFile, sheet = "BB")
   exportedQualificationProjects <- getProjectsFromExcel(qualificationProjects, qualificationBB)
   
   
