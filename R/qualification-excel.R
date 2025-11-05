@@ -29,7 +29,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   ospsuite.utils::validateColumns(
     qualificationBB,
     columnSpecs = list(
-      "Project"	= list(type = "character", allowedValues = qualificationProjects$Id, naAllowed = FALSE, nullAllowed = TRUE),
+      "Project" = list(type = "character", allowedValues = qualificationProjects$Id, naAllowed = FALSE, nullAllowed = TRUE),
       "BB-Type" = list(type = "character", naAllowed = FALSE, nullAllowed = TRUE),
       "BB-Name" = list(type = "character", naAllowed = FALSE, nullAllowed = TRUE),
       "Parent-Project" = list(type = "character", allowedValues = qualificationProjects$Id, naAllowed = TRUE, nullAllowed = TRUE)
