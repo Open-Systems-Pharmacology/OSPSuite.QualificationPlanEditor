@@ -258,7 +258,7 @@ getProjectsFromExcel <- function(projectData, bbData) {
         .data = bbData, 
         .data[["Project"]] %in% projectData$Id[rowIndex]
         )
-      if(nrow(selectedBBData)==0){
+      if (nrow(selectedBBData) == 0) {
         updatedProject <- list(
           Id = projectData$Id[rowIndex], 
           Path = projectData$Path[rowIndex]
