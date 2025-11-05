@@ -247,7 +247,7 @@ groupAxesSettings <- function(qualificationAxesSettings) {
 #' @keywords internal
 getProjectsFromExcel <- function(projectData, bbData) {
   noBB <- is.na(bbData[["Parent-Project"]])
-  if(all(noBB)){
+  if (all(noBB)) {
     return(projectData)
   }
   bbData <- dplyr::filter(.data = bbData, !noBB)
