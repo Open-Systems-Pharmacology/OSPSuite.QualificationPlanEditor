@@ -15,7 +15,6 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   ospsuite.utils::validateIsIncluded(ALL_EXCEL_SHEETS, sheetNames)
 
   # Projects
-  # TODO: add Building Blocks but need to understand how to include them first
   cli::cli_progress_step("Exporting {.field Projects} Data")
   qualificationProjects <- readxl::read_excel(excelFile, sheet = "Projects")
   ospsuite.utils::validateColumns(
@@ -25,6 +24,20 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
       Path = list(type = "character", naAllowed = FALSE)
     )
   )
+  # Building Blocks
+  qualificationBB <- readxl::read_excel(excelFile, sheet = "BB")
+  ospsuite.utils::validateColumns(
+    qualificationBB,
+    columnSpecs = list(
+      "Project" = list(type = "character", allowedValues = qualificationProjects$Id, naAllowed = FALSE, nullAllowed = TRUE),
+      "BB-Type" = list(type = "character", naAllowed = FALSE, nullAllowed = TRUE),
+      "BB-Name" = list(type = "character", naAllowed = FALSE, nullAllowed = TRUE),
+      "Parent-Project" = list(type = "character", allowedValues = qualificationProjects$Id, naAllowed = TRUE, nullAllowed = TRUE)
+    )
+  )
+  exportedQualificationProjects <- getProjectsFromExcel(qualificationProjects, qualificationBB)
+  
+  
   # ObservedDataSets
   cli::cli_progress_step("Exporting {.field Observed Data}")
   qualificationObsDataSets <- readxl::read_excel(excelFile, sheet = "ObsData")
@@ -134,7 +147,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
 
   qualificationContent <- list(
     "$schema" = NA,
-    "Projects" = qualificationProjects,
+    "Projects" = exportedQualificationProjects,
     "ObservedDataSets" = qualificationObsDataSets,
     "Plots" = qualificationPlots,
     "Inputs" = qualificationInputs,
@@ -223,6 +236,50 @@ groupAxesSettings <- function(qualificationAxesSettings) {
     exportedSettings[[plotName]] <- axesSetting
   }
   return(exportedSettings)
+}
+
+#' @title getProjectsFromExcel
+#' @description
+#' Get qualification project if building blocks
+#' @param projectData A data.frame of project Id and Path
+#' @param bbData A data.frame mapping Building Block to parent project
+#' @return A list of Project with their building blocks
+#' @keywords internal
+getProjectsFromExcel <- function(projectData, bbData) {
+  noBB <- is.na(bbData[["Parent-Project"]])
+  if (all(noBB)) {
+    return(projectData)
+  }
+  bbData <- dplyr::filter(.data = bbData, !noBB)
+  updatedProjects <- lapply(
+    seq_len(nrow(projectData)),
+    function(rowIndex){
+      selectedBBData <- dplyr::filter(
+        .data = bbData, 
+        .data[["Project"]] %in% projectData$Id[rowIndex]
+        )
+      if (nrow(selectedBBData) == 0) {
+        updatedProject <- list(
+          Id = projectData$Id[rowIndex], 
+          Path = projectData$Path[rowIndex]
+          )
+        return(updatedProject)
+        }
+      selectedBBData <- dplyr::select(
+        .data = selectedBBData, 
+        dplyr::matches(c("BB-Type", "BB-Name", "Parent-Project"))
+        )
+      names(selectedBBData) <- c("Type", "Name", "Project")
+      
+      updatedProject <- list(
+        Id = projectData$Id[rowIndex], 
+        Path = projectData$Path[rowIndex],
+        BuildingBlocks = selectedBBData
+        )
+      return(updatedProject)
+    }
+  )
+  return(updatedProjects)
 }
 
 #' @title getCTPlotsFromExcel
