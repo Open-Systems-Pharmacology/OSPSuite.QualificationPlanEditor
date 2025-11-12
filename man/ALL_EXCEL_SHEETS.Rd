@@ -5,7 +5,7 @@
 \alias{ALL_EXCEL_SHEETS}
 \title{ALL_EXCEL_SHEETS}
 \format{
-An object of class \code{character} of length 15.
+An object of class \code{character} of length 20.
 }
 \usage{
 ALL_EXCEL_SHEETS

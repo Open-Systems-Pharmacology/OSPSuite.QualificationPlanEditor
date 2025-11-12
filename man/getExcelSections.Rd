@@ -2,19 +2,15 @@
 % Please edit documentation in R/qualification-excel.R
 \name{getExcelSections}
 \alias{getExcelSections}
-\title{parseSectionsToNestedList}
+\title{getExcelSections}
 \usage{
 getExcelSections(sectionData)
 }
 \arguments{
-\item{sectionsIn}{A Section list including Reference, Title, Content and Sections fields}
-
-\item{sectionsOut}{A data.frame to accumulate the parsed sections}
-
-\item{parentSection}{A string representing the parent section reference}
+\item{sectionData}{A data.frame}
 }
 \value{
-A data.frame
+A nexted list of sections
 }
 \description{
 Parse qualification plan sections

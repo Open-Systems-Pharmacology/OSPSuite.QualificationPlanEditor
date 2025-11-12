@@ -10,9 +10,6 @@ parseSectionsToNestedList(sectionsIn, sectionData)
 \item{sectionsIn}{A data.frame row including Reference, Title, Content and Parent Section fields}
 
 \item{sectionData}{A data.frame of all section information}
-
-\item{sectionsOut}{A Section list including Reference, Title, Content and Sections fields
-data.frame to accumulate the parsed sections}
 }
 \value{
 A nested list
