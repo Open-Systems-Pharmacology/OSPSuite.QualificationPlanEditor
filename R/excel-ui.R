@@ -25,24 +25,25 @@ excelUI <- function(fileName = "qualification.xlsx",
   excelTemplate <- excelTemplate %||%
     system.file("Qualification-Template.xlsx", package = "ospsuite.qualificationplaneditor")
   ospsuite.utils::validateIsFileExtension(excelTemplate, "xlsx")
-  if(!file.exists(excelTemplate)){
+  if (!file.exists(excelTemplate)) {
     cli::cli_abort("excelTemplate: {.file {excelTemplate}} does not exist")
   }
-  
-  # Copy template to output file
+
+  #---- Copy template to output file ----
   cli::cli_progress_step("Copying Excel Template to {.file {fileName}}")
   fileCopied <- file.copy(from = excelTemplate, to = fileName, overwrite = TRUE)
   if (!fileCopied) {
     cli::cli_abort("Failed to copy template {.file {excelTemplate}} to {.file {fileName}}")
   }
-  
-  # Load workbook with error handling
+
+  #---- Load workbook with error handling ----
   excelObject <- tryCatch(
     openxlsx::loadWorkbook(fileName),
     error = function(e) {
       cli::cli_abort("Cannot load workbook {.file {fileName}}: {e$message}")
     }
   )
+  #---- Check for Qualification Plan ----
   cli::cli_progress_step("Checking for Qualification Plan")
   useQualification <- !is.null(qualificationPlan)
   cli::cli_alert_info(
@@ -53,7 +54,7 @@ excelUI <- function(fileName = "qualification.xlsx",
     )
   )
   
-  # Projects
+  #---- Projects ----
   cli::cli_progress_step("Exporting {.field Projects} Data")
   projectData <- getProjectsFromList(snapshotPaths)
   # Qualification Plan provided
@@ -68,7 +69,7 @@ excelUI <- function(fileName = "qualification.xlsx",
     qualificationProjectData <- getProjectsFromQualification(qualificationContent)
     qualificationObservedData <- getObsDataFromQualification(qualificationContent)
     qualificationBBData <- getBBDataFromQualification(qualificationContent)
-    
+
     qualificationProjects <- qualificationProjectData$Id
     commonProjects <- intersect(projectData$Id, qualificationProjects)
     # Merge to project data
@@ -90,8 +91,8 @@ excelUI <- function(fileName = "qualification.xlsx",
       excelObject = excelObject
     )
   }
-  
-  # Simulation Ouptuts
+
+  #---- Simulation Ouptuts ----
   cli::cli_progress_step("Exporting {.field Simulation Outputs} Data")
   simulationsOutputs <- getSimulationsOutputsFromProjects(projectData)
   writeDataToSheet(data = simulationsOutputs, sheetName = "Simulations_Outputs", excelObject = excelObject)
@@ -109,7 +110,7 @@ excelUI <- function(fileName = "qualification.xlsx",
     )
   }
 
-  # Simulations ObsData
+  #---- Simulations ObsData ----
   cli::cli_progress_step("Exporting {.field Simulation Observed Data}")
   simulationsObsData <- getSimulationsObsDataFromProjects(projectData)
   writeDataToSheet(data = simulationsObsData, sheetName = "Simulations_ObsData", excelObject = excelObject)
@@ -127,7 +128,7 @@ excelUI <- function(fileName = "qualification.xlsx",
     )
   }
 
-  # Obs Data
+  #---- Obs Data ----
   cli::cli_progress_step("Exporting {.field Observed Data}")
   observedData <- getObsDataFromList(observedDataPaths)
   # Qualification Plan provided
@@ -155,7 +156,7 @@ excelUI <- function(fileName = "qualification.xlsx",
     value = "'Lookup'!$L$2:$L$4"
   )
 
-  # BB
+  #---- Building Blocks ----
   cli::cli_progress_step("Exporting {.field Buidling Block} Data")
   bbData <- getBBDataFromProjects(projectData, qualificationProjects)
   if (useQualification) {
@@ -192,94 +193,9 @@ excelUI <- function(fileName = "qualification.xlsx",
     )
   }
 
-  # Following only applies if Qualification Plan is provided
+  #---- Qualification Plan provided ----
   if (useQualification) {
-    # Sim Param
-    # writeDataToSheet(
-    #  data = getQualificationSimParam(qualificationContent),
-    #  sheetName = "SimParam",
-    #  excelObject = excelObject
-    # )
-
-    cli::cli_progress_step("Exporting {.field Comparison Time Profile} Plot Settings")
-    # Comparison Time (CT) Profile
-    writeDataToSheet(
-      data = getQualificationCTProfile(qualificationContent),
-      sheetName = "CT_Profile",
-      excelObject = excelObject
-    )
-
-    # CT Mapping
-    ctMapping <- getQualificationCTMapping(qualificationContent)
-    writeDataToSheet(
-      data = ctMapping,
-      sheetName = "CT_Mapping",
-      excelObject = excelObject
-    )
-    # Color CT Mapping
-    ospsuite.utils::validateIsIncluded("Color", names(ctMapping))
-    colorColIndex <- which(names(ctMapping) == "Color")
-    for (ctIndex in seq_along(ctMapping$Color)) {
-      openxlsx::addStyle(
-        excelObject,
-        sheet = "CT_Mapping",
-        style = openxlsx::createStyle(
-          fgFill = ctMapping$Color[ctIndex],
-          fontColour = ctMapping$Color[ctIndex]
-        ),
-        rows = 1 + ctIndex,
-        cols = colorColIndex
-      )
-    }
-
-    # DDI Ratio
-    cli::cli_progress_step("Exporting {.field DDI Ratio} Plot Settings")
-    ddiRatio <- getQualificationDDIRatio(qualificationContent)
-    writeDataToSheet(data = ddiRatio, sheetName = "DDI_Ratio", excelObject = excelObject)
-    # TODO: handle dataValidation
-    # Color DDI Ratios
-    ospsuite.utils::validateIsIncluded("Group Color", names(ddiRatio))
-    groupColorColIndex <- which(names(ddiRatio) == "Group Color")
-    for (ddiIndex in seq_along(ddiRatio[["Group Color"]])) {
-      openxlsx::addStyle(
-        excelObject,
-        sheet = "DDI_Ratio",
-        style = openxlsx::createStyle(
-          fgFill = ddiRatio[["Group Color"]][ddiIndex],
-          fontColour = ddiRatio[["Group Color"]][ddiIndex]
-        ),
-        rows = 1 + ddiIndex,
-        cols = groupColorColIndex
-      )
-    }
-
-    # DDI Ratio Mapping
-    writeDataToSheet(
-      data = getQualificationDDIRatioMapping(qualificationContent),
-      sheetName = "DDI_Ratio_Mapping",
-      excelObject = excelObject
-    )
-
-    # Sections
-    writeDataToSheet(
-      data = getQualificationSections(qualificationContent),
-      sheetName = "Sections",
-      excelObject = excelObject
-    )
-
-    # Inputs
-    writeDataToSheet(
-      data = data.frame(
-        Project = NA,
-        "BB-Type" = NA,
-        "BB-Name" = NA,
-        "Section Reference" = NA,
-        check.names = FALSE
-      ),
-      sheetName = "Inputs",
-      excelObject = excelObject
-    )
-    
+    cli::cli_h2("Qualification {.field Plots}")
     # MetaInfo
     cli::cli_progress_step("Exporting {.field Schema} Data")
     # Parse version from schema
@@ -292,7 +208,89 @@ excelUI <- function(fileName = "qualification.xlsx",
       sheetName = "MetaInfo",
       excelObject = excelObject
     )
-    
+    cli::cli_progress_step("Exporting {.field Sections}")
+    # Sections
+    writeDataToSheet(
+      data = getQualificationSections(qualificationContent),
+      sheetName = "Sections",
+      excelObject = excelObject
+    )
+    # cli::cli_progress_step("Exporting {.field Inputs}")
+    # Inputs
+    # TODO: extract and export input information
+    # cli::cli_progress_step("Exporting {.field Simulated Parameters}")
+    # Sim Param
+    # TODO: extract and export Sim Param information
+
+    # cli::cli_progress_step("Exporting {.field All Plots} Settings")
+    # AllPlots
+    # TODO: extract and export AllPlot information (issue #25)
+
+    cli::cli_progress_step("Exporting {.field Comparison Time Profile} Plot Settings")
+    # Comparison Time (CT) Profile
+    writeDataToSheet(
+      data = getQualificationCTPlots(qualificationContent),
+      sheetName = "CT_Plots",
+      excelObject = excelObject
+    )
+    # CT Mapping
+    ctMapping <- getQualificationCTMapping(qualificationContent)
+    writeDataToSheet(
+      data = ctMapping,
+      sheetName = "CT_Mapping",
+      excelObject = excelObject
+    )
+    # Color CT Mapping
+    styleColorMapping(
+      mapping = ctMapping,
+      sheetName = "CT_Mapping",
+      excelObject = excelObject
+    )
+    cli::cli_progress_step("Exporting {.field GOF Merged} Plot Settings")
+    # Goodness of fit (GOF) Plots
+    writeDataToSheet(
+      data = getQualificationGOFPlots(qualificationContent),
+      sheetName = "GOF_Plots",
+      excelObject = excelObject
+    )
+    # GOF Mapping
+    gofMapping <- getQualificationGOFMapping(qualificationContent)
+    writeDataToSheet(
+      data = gofMapping,
+      sheetName = "GOF_Mapping",
+      excelObject = excelObject
+    )
+    # Color GOF Mapping
+    styleColorMapping(
+      mapping = gofMapping,
+      sheetName = "GOF_Mapping",
+      excelObject = excelObject
+    )
+    cli::cli_progress_step("Exporting {.field DDI Ratio} Plot Settings")
+    # DDI Ratio
+    ddiRatio <- getQualificationDDIRatio(qualificationContent)
+    writeDataToSheet(
+      data = ddiRatio,
+      sheetName = "DDIRatio_Plots",
+      excelObject = excelObject
+    )
+    # Color DDI Ratios
+    styleColorMapping(
+      mapping = ddiRatio,
+      sheetName = "DDIRatio_Plots",
+      excelObject = excelObject,
+      columnName = "Group Color"
+    )
+    # DDI Ratio Mapping
+    writeDataToSheet(
+      data = getQualificationDDIRatioMapping(qualificationContent),
+      sheetName = "DDIRatio_Mapping",
+      excelObject = excelObject
+    )
+    # cli::cli_progress_step("Exporting {.field PK Ratio} Plot Settings")
+    # PK Ratio
+    # TODO: same workflow as DDI Ratio (issue #26)
+
     # Global Plot Settings
     cli::cli_progress_step("Exporting {.field Global Plot Settings}")
     globalPlotSettings <- formatPlotSettings(qualificationContent$Plots$PlotSettings)
@@ -306,12 +304,13 @@ excelUI <- function(fileName = "qualification.xlsx",
     cli::cli_progress_step("Exporting {.field Global Axes Settings}")
     ddiAxesSettings <- lapply(
       ALL_EXCEL_AXES,
-      function(plotName){
+      function(plotName) {
         formatGlobalAxesSettings(
           axesSettings = qualificationContent$Plots$AxesSettings[[plotName]],
           plotName = plotName
-          )
-      })
+        )
+      }
+    )
     ddiAxesSettings <- do.call("rbind", ddiAxesSettings)
     writeDataToSheet(
       data = ddiAxesSettings,
@@ -324,7 +323,6 @@ excelUI <- function(fileName = "qualification.xlsx",
   openxlsx::saveWorkbook(excelObject, file = fileName, overwrite = TRUE)
   return(invisible(TRUE))
 }
-
 
 #' @title writeDataToSheet
 #' @description
@@ -341,7 +339,9 @@ writeDataToSheet <- function(data, sheetName, excelObject) {
   ospsuite.utils::validateIsCharacter(sheetName)
   ospsuite.utils::validateIsOfLength(sheetName, 1)
   ospsuite.utils::validateIsIncluded(sheetName, names(excelObject))
-  
+  if(nrow(data) == 0){
+    return(invisible())
+  }
   openxlsx::writeDataTable(
     excelObject,
     sheet = sheetName,
@@ -353,3 +353,34 @@ writeDataToSheet <- function(data, sheetName, excelObject) {
   return(invisible())
 }
 
+#' @title styleColorMapping
+#' @description
+#' Apply background color to mapping data.frame in excel object
+#' @param mapping A data.frame
+#' @param sheetName Character string. Name of the sheet to write to
+#' @param excelObject An openxlsx workbook object
+#' @param columnName Character string. Name of the column where colors are defined
+#' @return Invisibly returns `NULL`. Side effect: mutates the workbook by writing data and freezing the header row.
+#' @import openxlsx
+#' @keywords internal
+styleColorMapping <- function(mapping, sheetName, excelObject, columnName = "Color") {
+  if(nrow(mapping) == 0){
+    return(invisible())
+  }
+  ospsuite.utils::validateIsIncluded(columnName, names(mapping))
+  colorColIndex <- which(names(mapping) == columnName)
+  for (rowIndex in seq_along(mapping[[columnName]])) {
+    colorValue <- mapping[rowIndex, columnName]
+    if(is.na(colorValue)){
+      next
+    }
+    openxlsx::addStyle(
+      excelObject,
+      sheet = sheetName,
+      style = openxlsx::createStyle(fgFill = colorValue, fontColour = colorValue),
+      rows = 1 + rowIndex,
+      cols = colorColIndex
+    )
+  }
+  return(invisible())
+}

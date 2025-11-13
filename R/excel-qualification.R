@@ -190,7 +190,6 @@ parseSectionsToDataFrame <- function(sectionsIn, sectionsOut = data.frame(), par
   return(sectionsOut)
 }
 
-
 #' @title getQualificationSimParam
 #' @description
 #' Get a data.frame of project IDs and Paths/URLs
@@ -206,7 +205,7 @@ getQualificationSimParam <- function(qualificationContent) {
   return(data.frame())
 }
 
-#' @title getQualificationCTProfile
+#' @title getQualificationCTPlots
 #' @description
 #' Extract a data.frame containing comparison time (CT) profile information
 #' from the qualification plan content
@@ -214,7 +213,7 @@ getQualificationSimParam <- function(qualificationContent) {
 #' @return data.frame with columns
 #' `Title`, `Section Reference`, `Simulation Duration`, `TimeUnit` and plot settings
 #' @keywords internal
-getQualificationCTProfile <- function(qualificationContent) {
+getQualificationCTPlots <- function(qualificationContent) {
   ctProfiles <- data.frame()
   for (ctPlot in qualificationContent$Plots$ComparisonTimeProfilePlots) {
     ctProfile <- cbind(
@@ -262,6 +261,76 @@ getQualificationCTMapping <- function(qualificationContent) {
     }
   }
   return(ctMappings)
+}
+
+#' @title getQualificationGOFPlots
+#' @description
+#' Extract a data.frame containing goodness of fit (GOF) plot information
+#' from the qualification plan content
+#' @param qualificationContent Content of a qualification plan
+#' @return data.frame with columns
+#' `Title`, `Section Reference`, `Artifacts`, `PlotTypes`, `Groups` and plot settings
+#' @keywords internal
+getQualificationGOFPlots <- function(qualificationContent) {
+  gofPlots <- data.frame()
+  for (gofPlot in qualificationContent$Plots$GOFMergedPlots) {
+    gofPlotSettings <- list(
+      Title = gofPlot$Title,
+      "Section Reference" = gofPlot$SectionReference,
+      Artifacts = unlist(gofPlot$Artifacts),
+      "Plot Type" = unlist(gofPlot$PlotTypes),
+      "Group Caption" = sapply(gofPlot$Groups, function(group) group$Caption),
+      "Group Symbol" = sapply(gofPlot$Groups, function(group) group$Symbol)
+    )
+    # translating list whose fields may have different lengths into a data.frame
+    maxRows <- max(sapply(gofPlotSettings, length))
+    gofPlotSettings <- sapply(
+      gofPlotSettings,
+      function(gofField) {
+        gofField <- c(gofField, rep(NA, maxRows - length(gofField)))
+        return(gofField)
+      },
+      simplify = FALSE,
+      USE.NAMES = TRUE
+    )
+    gofPlotSettings <- cbind(
+      data.frame(gofPlotSettings, check.names = FALSE),
+      formatPlotSettings(gofPlot$PlotSettings),
+      formatAxesSettings(gofPlot$AxesSettings)
+    )
+    gofPlots <- rbind(gofPlots, gofPlotSettings)
+  }
+  return(gofPlots)
+}
+
+#' @title getQualificationGOFMapping
+#' @description
+#' Extract the goodness of fit (GOF) mapping from a qualification plan,
+#' returning a data.frame with mapping information for GOF analysis.
+#' @param qualificationContent Content of a qualification plan
+#' @return A data.frame with columns
+#' `Project`, `Simulation`, `Output` and relevant GOF fields
+#' @keywords internal
+getQualificationGOFMapping <- function(qualificationContent) {
+  gofMappings <- data.frame()
+  for (gofPlot in qualificationContent$Plots$GOFMergedPlots) {
+    for (gofGroup in gofPlot$Groups) {
+      for (outputMapping in gofGroup$OutputMappings) {
+        gofMapping <- data.frame(
+          Project = outputMapping$Project,
+          Simulation = outputMapping$Simulation,
+          Output = outputMapping$Output,
+          "Observed data" = unlist(outputMapping$ObservedData) %||% NA,
+          "Plot Title" = gofPlot$Title,
+          "Group Title" = gofGroup$Caption,
+          Color = outputMapping$Color,
+          check.names = FALSE
+        )
+        gofMappings <- rbind(gofMappings, gofMapping)
+      }
+    }
+  }
+  return(gofMappings)
 }
 
 #' @title getQualificationDDIRatio

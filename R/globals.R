@@ -30,9 +30,9 @@ ALL_BUILDING_BLOCKS <- c(
   "Compound",
   "Protocol",
   "Event",
-  "Formulation", 
-  "ObserverSet", 
-  "ExpressionProfile", 
+  "Formulation",
+  "ObserverSet",
+  "ExpressionProfile",
   "Simulation"
 )
 
@@ -70,6 +70,7 @@ ALL_EXCEL_DIMENSIONS <- c(
 #' @keywords internal
 ALL_EXCEL_SHEETS <- c(
   "MetaInfo", "Projects", "Simulations_Outputs", "Simulations_ObsData", "ObsData", "BB", "SimParam",
-  "CT_Profile", "CT_Mapping", "DDI_Ratio", "DDI_Ratio_Mapping", "Sections", "Inputs", 
-  "GlobalPlotSettings", "GlobalAxesSettings"
+  paste0(c("All", "CT", "GOF", "DDIRatio", "PKRatio"), "_Plots"),
+  paste0(c("CT", "GOF", "DDIRatio", "PKRatio"), "_Mapping"),
+  "Sections", "Inputs", "GlobalPlotSettings", "GlobalAxesSettings"
 )
