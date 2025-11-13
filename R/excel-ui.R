@@ -53,9 +53,7 @@ excelUI <- function(fileName = "qualification.xlsx",
       "{.strong No} Qualification Plan input"
     )
   )
-
-  # MetaInfo ?
-
+  
   #---- Projects ----
   cli::cli_progress_step("Exporting {.field Projects} Data")
   projectData <- getProjectsFromList(snapshotPaths)
@@ -198,6 +196,18 @@ excelUI <- function(fileName = "qualification.xlsx",
   #---- Qualification Plan provided ----
   if (useQualification) {
     cli::cli_h2("Qualification {.field Plots}")
+    # MetaInfo
+    cli::cli_progress_step("Exporting {.field Schema} Data")
+    # Parse version from schema
+    qualificationSchema <- unlist(strsplit(qualificationContent[["$schema"]], "/"))
+    schemaVersion <- grep("^v\\d+\\.\\d+", qualificationSchema, value = TRUE)
+    schemaVersion <- gsub(pattern = "v", replacement = "", schemaVersion)
+    schemaData <- data.frame("Qualification plan schema version" = schemaVersion, check.names = FALSE)
+    writeDataToSheet(
+      data = schemaData,
+      sheetName = "MetaInfo",
+      excelObject = excelObject
+    )
     cli::cli_progress_step("Exporting {.field Sections}")
     # Sections
     writeDataToSheet(
