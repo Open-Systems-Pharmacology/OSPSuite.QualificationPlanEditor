@@ -16,7 +16,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
 
   # Projects
   cli::cli_progress_step("Exporting {.field Projects} Data")
-  qualificationProjects <- readxl::read_excel(excelFile, sheet = "Projects")
+  qualificationProjects <- readxl::read_excel(excelFile, sheet = "Projects", col_types  = "text")
   ospsuite.utils::validateColumns(
     qualificationProjects,
     columnSpecs = list(
@@ -25,7 +25,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
     )
   )
   # Building Blocks
-  qualificationBB <- readxl::read_excel(excelFile, sheet = "BB")
+  qualificationBB <- readxl::read_excel(excelFile, sheet = "BB", col_types  = "text")
   ospsuite.utils::validateColumns(
     qualificationBB,
     columnSpecs = list(
@@ -36,11 +36,10 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
     )
   )
   exportedQualificationProjects <- getProjectsFromExcel(qualificationProjects, qualificationBB)
-  
-  
+
   # ObservedDataSets
   cli::cli_progress_step("Exporting {.field Observed Data}")
-  qualificationObsDataSets <- readxl::read_excel(excelFile, sheet = "ObsData")
+  qualificationObsDataSets <- readxl::read_excel(excelFile, sheet = "ObsData", col_types  = "text")
   ospsuite.utils::validateColumns(
     qualificationObsDataSets,
     columnSpecs = list(
@@ -59,11 +58,11 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
       Plot = list(type = "character", allowedValues = ALL_EXCEL_AXES, naAllowed = FALSE, nullAllowed = TRUE),
       Type = list(type = "character", allowedValues = c("X", "Y", "Y2"), naAllowed = FALSE, nullAllowed = TRUE),
       # TODO: use a comprehensive list of dimensions and units (from ospsuite package ?)
-      Dimension = list(type = "character", allowedValues = ALL_EXCEL_DIMENSIONS, naAllowed = FALSE, nullAllowed = TRUE),
+      Dimension = list(type = "character", allowedValues = ALL_EXCEL_DIMENSIONS, naAllowed = TRUE, nullAllowed = TRUE),
       # Need to allow na to include unitless axes
       Unit = list(type = "character", naAllowed = TRUE, nullAllowed = TRUE),
-      GridLines = list(type = "logical", naAllowed = FALSE, nullAllowed = TRUE),
-      Scaling = list(type = "character", allowedValues = c("Linear", "Log"), naAllowed = FALSE, nullAllowed = TRUE)
+      GridLines = list(type = "logical", naAllowed = TRUE, nullAllowed = TRUE),
+      Scaling = list(type = "character", allowedValues = c("Linear", "Log"), naAllowed = TRUE, nullAllowed = TRUE)
     )
   )
   qualificationAxesSettings <- groupAxesSettings(qualificationAxesSettings)
@@ -82,29 +81,38 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
       WatermarkSize = list(type = "numeric", naAllowed = FALSE, nullAllowed = TRUE)
     )
   )
-  # - AllPlots
-  # TODO: find examples with All Plots defined in both qualification and Excel
-  # - GOFMergedPlots
-  # TODO: find examples with GOFMergedPlots defined in both qualification and Excel
-  # - ComparisonTimeProfilePlots
+  # AllPlots
+  # cli::cli_progress_step("Exporting {.field All Plots} Settings")
+
+  # ComparisonTimeProfile Plots
   cli::cli_progress_step("Exporting {.field Comparison Time Profile} Plot Settings")
-  ctData <- readxl::read_excel(excelFile, sheet = "CT_Profile")
+  ctData <- readxl::read_excel(excelFile, sheet = "CT_Plots")
   ctMapping <- readxl::read_excel(excelFile, sheet = "CT_Mapping")
   ctPlots <- getCTPlotsFromExcel(ctData, ctMapping)
 
-  # - DDIRatioPlots
+  # GOFMerged Plots
+  cli::cli_progress_step("Exporting {.field GOF} Plot Settings")
+  gofData <- readxl::read_excel(excelFile, sheet = "GOF_Plots")
+  gofMapping <- readxl::read_excel(excelFile, sheet = "GOF_Mapping")
+  gofPlots <- getGOFPlotsFromExcel(gofData, gofMapping)
+
+  # DDIRatio Plots
   cli::cli_progress_step("Exporting {.field DDI Ratio} Plot Settings")
-  ddiData <- readxl::read_excel(excelFile, sheet = "DDI_Ratio")
-  ddiMapping <- readxl::read_excel(excelFile, sheet = "DDI_Ratio_Mapping")
+  ddiData <- readxl::read_excel(excelFile, sheet = "DDIRatio_Plots")
+  ddiMapping <- readxl::read_excel(excelFile, sheet = "DDIRatio_Mapping")
   ddiPlots <- getDDIPlotsFromExcel(ddiData, ddiMapping)
+
+  # PKRatioPlots
+  # cli::cli_progress_step("Exporting {.field PK Ratio} Plot Settings")
 
   qualificationPlots <- list(
     AxesSettings = qualificationAxesSettings,
     PlotSettings = qualificationPlotSettings,
     AllPlots = NA,
-    GOFMergedPlots = NA,
+    GOFMergedPlots = gofPlots,
     ComparisonTimeProfilePlots = ctPlots,
-    DDIRatioPlots = ddiPlots
+    DDIRatioPlots = ddiPlots,
+    PKRatioPlots = NA
   )
 
   # Sections
@@ -165,13 +173,11 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   return(invisible(TRUE))
 }
 
-#' @title parseSectionsToNestedList
+#' @title getExcelSections
 #' @description
 #' Parse qualification plan sections
-#' @param sectionsIn A Section list including Reference, Title, Content and Sections fields
-#' @param sectionsOut A data.frame to accumulate the parsed sections
-#' @param parentSection A string representing the parent section reference
-#' @return A data.frame
+#' @param sectionData A data.frame
+#' @return A nexted list of sections
 #' @keywords internal
 getExcelSections <- function(sectionData) {
   excelSections <- lapply(
@@ -191,14 +197,12 @@ getExcelSections <- function(sectionData) {
 #' @description
 #' Parse qualification plan sections
 #' @param sectionsIn A data.frame row including Reference, Title, Content and Parent Section fields
-#' @param sectionsOut A Section list including Reference, Title, Content and Sections fields
-#' data.frame to accumulate the parsed sections
 #' @param sectionData A data.frame of all section information
 #' @return A nested list
 #' @keywords internal
 parseSectionsToNestedList <- function(sectionsIn, sectionData) {
   names(sectionsIn) <- c("Reference", "Title", "Content", "Parent")
-  sectionsOut <- as.list(sectionsIn |> dplyr::select(-matches("Parent")))
+  sectionsOut <- as.list(sectionsIn |> dplyr::select(-dplyr::matches("Parent")))
   childSections <- sectionData[["Parent Section"]] %in% sectionsIn$Reference
   if (!any(childSections)) {
     sectionsOut$Sections <- NA
@@ -253,29 +257,29 @@ getProjectsFromExcel <- function(projectData, bbData) {
   bbData <- dplyr::filter(.data = bbData, !noBB)
   updatedProjects <- lapply(
     seq_len(nrow(projectData)),
-    function(rowIndex){
+    function(rowIndex) {
       selectedBBData <- dplyr::filter(
-        .data = bbData, 
+        .data = bbData,
         .data[["Project"]] %in% projectData$Id[rowIndex]
-        )
+      )
       if (nrow(selectedBBData) == 0) {
         updatedProject <- list(
-          Id = projectData$Id[rowIndex], 
+          Id = projectData$Id[rowIndex],
           Path = projectData$Path[rowIndex]
-          )
-        return(updatedProject)
-        }
-      selectedBBData <- dplyr::select(
-        .data = selectedBBData, 
-        dplyr::matches(c("BB-Type", "BB-Name", "Parent-Project"))
         )
+        return(updatedProject)
+      }
+      selectedBBData <- dplyr::select(
+        .data = selectedBBData,
+        dplyr::matches(c("BB-Type", "BB-Name", "Parent-Project"))
+      )
       names(selectedBBData) <- c("Type", "Name", "Project")
-      
+
       updatedProject <- list(
-        Id = projectData$Id[rowIndex], 
+        Id = projectData$Id[rowIndex],
         Path = projectData$Path[rowIndex],
         BuildingBlocks = selectedBBData
-        )
+      )
       return(updatedProject)
     }
   )
@@ -294,16 +298,16 @@ getCTPlotsFromExcel <- function(data, mapping) {
   ctDictionary <- data.frame(
     Excel = c("Project", "Simulation", "Output", "Observed data", "StartTime", "TimeUnit", "Color", "Caption", "Symbol"),
     Qualification = c("Project", "Simulation", "Output", "ObservedData", "StartTime", "TimeUnit", "Color", "Caption", "Symbol")
-    )
-  
+  )
+
   for (plotIndex in seq_len(nrow(data))) {
     plotData <- dplyr::filter(
-      .data = mapping, 
+      .data = mapping,
       .data[["Plot Title"]] %in% data[plotIndex, "Title"]
-      )
+    )
     plotData <- dplyr::select(.data = plotData, dplyr::matches(ctDictionary$Excel))
     names(plotData) <- ctDictionary$Qualification
-    
+
     ctPlots[[plotIndex]] <- list(
       Title = data$Title[plotIndex],
       SectionReference = data$`Section Reference`[plotIndex],
@@ -316,6 +320,56 @@ getCTPlotsFromExcel <- function(data, mapping) {
     )
   }
   return(ctPlots)
+}
+
+#' @title getGOFPlotsFromExcel
+#' @description
+#' Get qualification settings for GOFMerged plots
+#' @param data A data.frame of plot settings
+#' @param mapping A data.frame mapping plot information to projects
+#' @return A list of GOFMerged plots
+#' @keywords internal
+#' @importFrom stats na.exclude
+getGOFPlotsFromExcel <- function(data, mapping) {
+  plotRows <- cummax(seq_along(data$Title) * !is.na(data$Title))
+  gofPlotInfo <- split(data, plotRows)
+  gofPlots <- vector(mode = "list", length = dplyr::n_distinct(plotRows))
+  gofDictionary <- data.frame(
+    Excel = c("Project", "Simulation", "Output", "Observed data", "Color"),
+    Qualification = c("Project", "Simulation", "Output", "ObservedData", "Color")
+  )
+
+  for (plotIndex in seq_along(gofPlots)) {
+    # Regular Fields
+    plotTitle <- stats::na.exclude(gofPlotInfo[[plotIndex]]$Title)
+    gofPlots[[plotIndex]]$Title <- plotTitle
+    gofPlots[[plotIndex]]$SectionReference <- stats::na.exclude(gofPlotInfo[[plotIndex]]$`Section Reference`)
+    gofPlots[[plotIndex]]$PlotTypes <- stats::na.exclude(gofPlotInfo[[plotIndex]]$`Plot Type`)
+    gofPlots[[plotIndex]]$Artifacts <- stats::na.exclude(gofPlotInfo[[plotIndex]]$`Artifacts`)
+    # TODO: handle plot and axes settings if defined
+    gofPlots[[plotIndex]]$PlotSettings <- NA
+    gofPlots[[plotIndex]]$AxesSettings <- NA
+
+    # Groups
+    # TODO: handle if an NA is within these 2 columns
+    groupInfo <- stats::na.exclude(gofPlotInfo[[plotIndex]][, c("Group Caption", "Group Symbol")])
+    gofPlots[[plotIndex]]$Groups <- vector(mode = "list", length = nrow(groupInfo))
+    for (groupIndex in seq_len(nrow(groupInfo))) {
+      groupTitle <- groupInfo$`Group Caption`[groupIndex]
+      gofPlots[[plotIndex]]$Groups[[groupIndex]]$Caption <- groupTitle
+      gofPlots[[plotIndex]]$Groups[[groupIndex]]$Symbol <- groupInfo$`Group Symbol`[groupIndex]
+      # Get all relevant GOF mapping
+      outputMappings <- dplyr::filter(
+        .data = mapping,
+        .data[["Plot Title"]] %in% plotTitle,
+        .data[["Group Title"]] %in% groupTitle
+      )
+      outputMappings <- dplyr::select(.data = outputMappings, dplyr::matches(gofDictionary$Excel))
+      names(outputMappings) <- gofDictionary$Qualification
+      gofPlots[[plotIndex]]$Groups[[groupIndex]]$OutputMappings <- outputMappings
+    }
+  }
+  return(gofPlots)
 }
 
 #' @title getDDIPlotsFromExcel
@@ -332,20 +386,20 @@ getDDIPlotsFromExcel <- function(data, mapping) {
 
   for (plotIndex in seq_along(ddiPlots)) {
     # Regular Fields
-    plotTitle <- na.exclude(ddiPlotInfo[[plotIndex]]$Title)
+    plotTitle <- stats::na.exclude(ddiPlotInfo[[plotIndex]]$Title)
     ddiPlots[[plotIndex]]$Title <- plotTitle
-    ddiPlots[[plotIndex]]$SectionReference <- na.exclude(ddiPlotInfo[[plotIndex]]$`Section Ref`)
-    ddiPlots[[plotIndex]]$PKParameters <- na.exclude(ddiPlotInfo[[plotIndex]]$`PK-Parameter`)
-    ddiPlots[[plotIndex]]$PlotTypes <- na.exclude(ddiPlotInfo[[plotIndex]]$`Plot Type`)
-    ddiPlots[[plotIndex]]$Artifacts <- na.exclude(ddiPlotInfo[[plotIndex]]$`Artifacts`)
-    ddiPlots[[plotIndex]]$Subunits <- na.exclude(ddiPlotInfo[[plotIndex]]$`Subunits`)
+    ddiPlots[[plotIndex]]$SectionReference <- stats::na.exclude(ddiPlotInfo[[plotIndex]]$`Section Ref`)
+    ddiPlots[[plotIndex]]$PKParameters <- stats::na.exclude(ddiPlotInfo[[plotIndex]]$`PK-Parameter`)
+    ddiPlots[[plotIndex]]$PlotTypes <- stats::na.exclude(ddiPlotInfo[[plotIndex]]$`Plot Type`)
+    ddiPlots[[plotIndex]]$Artifacts <- stats::na.exclude(ddiPlotInfo[[plotIndex]]$`Artifacts`)
+    ddiPlots[[plotIndex]]$Subunits <- stats::na.exclude(ddiPlotInfo[[plotIndex]]$`Subunits`)
     # TODO: handle plot and axes settings if defined
     ddiPlots[[plotIndex]]$PlotSettings <- NA
     ddiPlots[[plotIndex]]$AxesSettings <- NA
 
     # Groups
     # TODO: handle if an NA is within these 3 columns
-    groupInfo <- na.exclude(ddiPlotInfo[[plotIndex]][, c("Group Caption", "Group Color", "Group Symbol")])
+    groupInfo <- stats::na.exclude(ddiPlotInfo[[plotIndex]][, c("Group Caption", "Group Color", "Group Symbol")])
     ddiPlots[[plotIndex]]$Groups <- vector(mode = "list", length = nrow(groupInfo))
     for (groupIndex in seq_len(nrow(groupInfo))) {
       groupTitle <- groupInfo$`Group Caption`[groupIndex]
