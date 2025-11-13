@@ -282,12 +282,13 @@ getQualificationGOFPlots <- function(qualificationContent) {
       "Group Caption" = sapply(gofPlot$Groups, function(group) group$Caption),
       "Group Symbol" = sapply(gofPlot$Groups, function(group) group$Symbol)
     )
+    # translating list whose fields may have different lengths into a data.frame
     maxRows <- max(sapply(gofPlotSettings, length))
     gofPlotSettings <- sapply(
       gofPlotSettings,
-      function(ddiField) {
-        ddiField <- c(ddiField, rep(NA, maxRows - length(ddiField)))
-        return(ddiField)
+      function(gofField) {
+        gofField <- c(gofField, rep(NA, maxRows - length(gofField)))
+        return(gofField)
       },
       simplify = FALSE,
       USE.NAMES = TRUE
