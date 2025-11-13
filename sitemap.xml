@@ -21,15 +21,18 @@
 <url><loc>/reference/getCTPlotsFromExcel.html</loc></url>
 <url><loc>/reference/getDDIPlotsFromExcel.html</loc></url>
 <url><loc>/reference/getExcelSections.html</loc></url>
+<url><loc>/reference/getGOFPlotsFromExcel.html</loc></url>
 <url><loc>/reference/getObsDataFromList.html</loc></url>
 <url><loc>/reference/getObsDataFromQualification.html</loc></url>
 <url><loc>/reference/getProjectsFromExcel.html</loc></url>
 <url><loc>/reference/getProjectsFromList.html</loc></url>
 <url><loc>/reference/getProjectsFromQualification.html</loc></url>
 <url><loc>/reference/getQualificationCTMapping.html</loc></url>
-<url><loc>/reference/getQualificationCTProfile.html</loc></url>
+<url><loc>/reference/getQualificationCTPlots.html</loc></url>
 <url><loc>/reference/getQualificationDDIRatio.html</loc></url>
 <url><loc>/reference/getQualificationDDIRatioMapping.html</loc></url>
+<url><loc>/reference/getQualificationGOFMapping.html</loc></url>
+<url><loc>/reference/getQualificationGOFPlots.html</loc></url>
 <url><loc>/reference/getQualificationSections.html</loc></url>
 <url><loc>/reference/getQualificationSimParam.html</loc></url>
 <url><loc>/reference/getQualificationStyles.html</loc></url>
@@ -40,6 +43,7 @@
 <url><loc>/reference/index.html</loc></url>
 <url><loc>/reference/parseSectionsToDataFrame.html</loc></url>
 <url><loc>/reference/parseSectionsToNestedList.html</loc></url>
+<url><loc>/reference/styleColorMapping.html</loc></url>
 <url><loc>/reference/styleQualificationCells.html</loc></url>
 <url><loc>/reference/writeDataToSheet.html</loc></url>
 </urlset>
