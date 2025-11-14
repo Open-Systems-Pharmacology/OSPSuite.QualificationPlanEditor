@@ -136,12 +136,6 @@ excelUI <- function(fileName = "qualification.xlsx",
     commonObsData <- intersect(observedData$Id, qualificationObservedData$Id)
     # Merge to observed data data
     observedData <- merge.data.frame(observedData, qualificationObservedData, by = c("Id", "Path", "Type"), all = TRUE)
-    obsDataStyles <- getQualificationStyles(
-      data = observedData,
-      commonProjects = commonObsData,
-      qualificationProjects = qualificationObservedData$Id,
-      projectVariable = "Id"
-    )
   }
   writeDataToSheet(data = observedData, sheetName = "ObsData", excelObject = excelObject)
   # Type column uses a drop down list

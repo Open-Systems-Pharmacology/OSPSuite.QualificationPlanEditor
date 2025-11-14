@@ -74,3 +74,5 @@ ALL_EXCEL_SHEETS <- c(
   paste0(c("CT", "GOF", "DDIRatio", "PKRatio"), "_Mapping"),
   "Sections", "Inputs", "GlobalPlotSettings", "GlobalAxesSettings"
 )
+
+utils::globalVariables(c(".data"))
