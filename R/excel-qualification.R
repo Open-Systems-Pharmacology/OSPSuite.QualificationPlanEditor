@@ -205,6 +205,38 @@ getQualificationSimParam <- function(qualificationContent) {
   return(data.frame())
 }
 
+#' @title getQualificationAllPlots
+#' @description
+#' Extract a data.frame containing All Plots information
+#' from the qualification plan content
+#' @param qualificationContent Content of a qualification plan
+#' @param simulationsOutputs A data.frame of Project, Simulation and Output
+#' @return data.frame with columns
+#' `Project`, `Simulation` and `Section Reference`
+#' @keywords internal
+getQualificationAllPlots <- function(qualificationContent, simulationsOutputs) {
+  allPlotsData <- data.frame()
+  for (allPlot in qualificationContent$Plots$AllPlots) {
+    allPlotsData <- rbind(
+      allPlotsData,
+      data.frame(
+        Project = allPlot$Project,
+        Simulation = allPlot$Simulation,
+        "Section Reference" = allPlot$SectionReference,
+        check.names = FALSE
+        )
+    )
+  }
+  # Add Project and Simulation that are not already defined
+  newPlotData <- dplyr::filter(
+    .data = simulationsOutputs,
+    !(paste(.data[["Project"]], .data[["Simulation"]]) %in% paste(allPlotsData$Project, allPlotsData$Simulation))
+    )
+  newPlotData <- dplyr::mutate(.data = newPlotData, `Section Reference` = NA)
+  newPlotData <- dplyr::select(.data = newPlotData, -dplyr::matches("Output"))
+  return(rbind(allPlotsData, newPlotData))
+}
+
 #' @title getQualificationCTPlots
 #' @description
 #' Extract a data.frame containing comparison time (CT) profile information
