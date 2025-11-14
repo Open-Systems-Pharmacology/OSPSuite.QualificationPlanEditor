@@ -91,7 +91,11 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
     )
   )
   # AllPlots
-  # cli::cli_progress_step("Exporting {.field All Plots} Settings")
+  cli::cli_progress_step("Exporting {.field All Plots} Settings")
+  allPlotsData <- readxl::read_excel(excelFile, sheet = "All_Plots")
+  if(nrow(allPlotsData) == 0){
+    allPlotsData <- NA
+  }
 
   # ComparisonTimeProfile Plots
   cli::cli_progress_step("Exporting {.field Comparison Time Profile} Plot Settings")
@@ -117,7 +121,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   qualificationPlots <- list(
     AxesSettings = qualificationAxesSettings,
     PlotSettings = qualificationPlotSettings,
-    AllPlots = NA,
+    AllPlots = allPlotsData,
     GOFMergedPlots = gofPlots,
     ComparisonTimeProfilePlots = ctPlots,
     DDIRatioPlots = ddiPlots,
@@ -416,7 +420,11 @@ getDDIPlotsFromExcel <- function(data, mapping) {
       ddiPlots[[plotIndex]]$Groups[[groupIndex]]$Color <- groupInfo$`Group Color`[groupIndex]
       ddiPlots[[plotIndex]]$Groups[[groupIndex]]$Symbol <- groupInfo$`Group Symbol`[groupIndex]
       # Get all relevant DDI Ratios from mapping
-      ddiRatios <- dplyr::filter(.data = mapping, `Plot Title` %in% plotTitle, `Group Title` %in% groupTitle)
+      ddiRatios <- dplyr::filter(
+        .data = mapping, 
+        .data[["Plot Title"]] %in% plotTitle, 
+        .data[["Group Title"]] %in% groupTitle
+        )
       ddiPlots[[plotIndex]]$Groups[[groupIndex]]$DDIRatios <- lapply(
         seq_len(nrow(ddiRatios)),
         function(ddiRatioIndex) {
