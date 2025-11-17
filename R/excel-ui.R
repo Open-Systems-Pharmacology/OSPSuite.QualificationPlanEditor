@@ -133,7 +133,6 @@ excelUI <- function(fileName = "qualification.xlsx",
   observedData <- getObsDataFromList(observedDataPaths)
   # Qualification Plan provided
   if (useQualification) {
-    commonObsData <- intersect(observedData$Id, qualificationObservedData$Id)
     # Merge to observed data data
     observedData <- merge.data.frame(observedData, qualificationObservedData, by = c("Id", "Path", "Type"), all = TRUE)
   }
@@ -206,11 +205,7 @@ excelUI <- function(fileName = "qualification.xlsx",
     # Sections
     sectionData <- getQualificationSections(qualificationContent)
     writeDataToSheet(data = sectionData, sheetName = "Sections", excelObject = excelObject)
-    # cli::cli_progress_step("Exporting {.field Inputs}")
-    # Inputs
-    # TODO: extract and export input information
-    # cli::cli_progress_step("Exporting {.field Simulated Parameters}")
-    # Sim Param
+    # TODO: extract and export Input information
     # TODO: extract and export Sim Param information
     
     cli::cli_progress_step("Exporting {.field All Plots} Settings")
@@ -301,9 +296,8 @@ excelUI <- function(fileName = "qualification.xlsx",
       sheetName = "DDIRatio_Mapping",
       excelObject = excelObject
     )
-    # cli::cli_progress_step("Exporting {.field PK Ratio} Plot Settings")
     # PK Ratio
-    # TODO: same workflow as DDI Ratio (issue #26)
+    # TODO: same workflow as PK Ratio (issue #26)
 
     # Global Plot Settings
     cli::cli_progress_step("Exporting {.field Global Plot Settings}")

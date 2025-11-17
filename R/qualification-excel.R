@@ -115,8 +115,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   ddiMapping <- readxl::read_excel(excelFile, sheet = "DDIRatio_Mapping")
   ddiPlots <- getDDIPlotsFromExcel(ddiData, ddiMapping)
 
-  # PKRatioPlots
-  # cli::cli_progress_step("Exporting {.field PK Ratio} Plot Settings")
+  # TODO: PKRatioPlots
 
   qualificationPlots <- list(
     AxesSettings = qualificationAxesSettings,
