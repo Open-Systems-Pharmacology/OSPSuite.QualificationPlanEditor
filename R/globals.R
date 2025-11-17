@@ -3,7 +3,7 @@
 #' List of default Excel options
 #' @import openxlsx
 #' @export
-EXCEL_OPTIONS <- list(
+EXCEL_OPTIONS <- list( # nolint
   headerStyle = openxlsx::createStyle(
     fgFill = "#ADD8E6",
     textDecoration = "Bold",
@@ -18,13 +18,13 @@ EXCEL_OPTIONS <- list(
     fgFill = "#FF8884",
     fontColour = "black"
   )
-) # nolint
+)
 
 #' @title ALL_BUILDING_BLOCKS
 #' @description
 #' Allowed Building Blocks values
 #' @keywords internal
-ALL_BUILDING_BLOCKS <- c(
+ALL_BUILDING_BLOCKS <- c( # nolint
   "Individual",
   "Population",
   "Compound",
@@ -34,26 +34,26 @@ ALL_BUILDING_BLOCKS <- c(
   "ObserverSet",
   "ExpressionProfile",
   "Simulation"
-) # nolint
+)
 
 #' @title ALL_EXCEL_AXES
 #' @description
 #' Allowed Excel Axes
 #' @keywords internal
-ALL_EXCEL_AXES <- c(
+ALL_EXCEL_AXES <- c( # nolint
   "GOFMergedPlotsPredictedVsObserved",
   "GOFMergedPlotsResidualsOverTime",
   "DDIRatioPlotsPredictedVsObserved",
   "DDIRatioPlotsResidualsVsObserved",
   "ComparisonTimeProfile",
   "PKRatioPlots"
-) # nolint
+)
 
 #' @title ALL_EXCEL_DIMENSIONS
 #' @description
 #' Allowed Excel Dimensions Blocks values
 #' @keywords internal
-ALL_EXCEL_DIMENSIONS <- c(
+ALL_EXCEL_DIMENSIONS <- c( # nolint
   "Age",
   "Amount",
   "Concentration (mass)",
@@ -62,17 +62,17 @@ ALL_EXCEL_DIMENSIONS <- c(
   "Mass",
   "Time",
   "Dimensionless"
-) # nolint
+)
 
 #' @title ALL_EXCEL_SHEETS
 #' @description
 #' Required Excel sheets to be read by UI
 #' @keywords internal
-ALL_EXCEL_SHEETS <- c(
+ALL_EXCEL_SHEETS <- c( # nolint
   "MetaInfo", "Projects", "Simulations_Outputs", "Simulations_ObsData", "ObsData", "BB", "SimParam",
   paste0(c("All", "CT", "GOF", "DDIRatio", "PKRatio"), "_Plots"),
   paste0(c("CT", "GOF", "DDIRatio", "PKRatio"), "_Mapping"),
   "Sections", "Inputs", "GlobalPlotSettings", "GlobalAxesSettings"
-) # nolint
+)
 
 utils::globalVariables(c(".data"))
