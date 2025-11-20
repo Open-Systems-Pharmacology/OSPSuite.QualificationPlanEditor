@@ -190,19 +190,52 @@ parseSectionsToDataFrame <- function(sectionsIn, sectionsOut = data.frame(), par
   return(sectionsOut)
 }
 
-#' @title getQualificationSimParam
+#' @title getQualificationIntro
+#' @description
+#' Get a data.frame of project Path
+#' @param qualificationContent Content of a qualification plan
+#' @return data.frame with `Path` column
+#' @keywords internal
+getQualificationIntro <- function(qualificationContent) {
+  qualificationIntro <- qualificationContent$Intro
+  if (is.null(qualificationIntro)) {
+    return(data.frame())
+  }
+  return(data.frame(Path = unlist(qualificationIntro)))
+}
+
+#' @title getQualificationInputs
 #' @description
 #' Get a data.frame of project IDs and Paths/URLs
 #' @param qualificationContent Content of a qualification plan
 #' @return data.frame with columns `ID` and `Path`
 #' @keywords internal
-getQualificationSimParam <- function(qualificationContent) {
-  # TODO
-  # data.frame(
-  #  Project	Parent Project	Parent Simulation	Path	TargetSimulation
-  #
-  # )
-  return(data.frame())
+getQualificationInputs <- function(qualificationContent) {
+  qualificationInputs <- qualificationContent$Inputs
+  if (is.null(qualificationInputs)) {
+    inputsData <- data.frame(
+      "Project" = NULL,
+      "BB-Type" = NULL,
+      "BB-Name" = NULL,
+      "Section Reference" = NULL,
+      check.names = FALSE
+    )
+    return(inputsData)
+  }
+  inputsData <- lapply(
+    qualificationInputs,
+    function(qualificationInput) {
+      inputData <- data.frame(
+        "Project" = qualificationInput$Project,
+        "BB-Type" = qualificationInput$Type,
+        "BB-Name" = qualificationInput$Name,
+        "Section Reference" = qualificationInput$SectionReference,
+        check.names = FALSE
+      )
+    }
+  )
+  inputsData <- do.call("rbind", inputsData)
+  return(inputsData)
 }
 
 #' @title getQualificationAllPlots

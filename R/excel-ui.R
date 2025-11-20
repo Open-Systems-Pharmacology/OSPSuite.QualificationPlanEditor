@@ -53,7 +53,7 @@ excelUI <- function(fileName = "qualification.xlsx",
       "{.strong No} Qualification Plan input"
     )
   )
-  
+
   #---- Projects ----
   cli::cli_progress_step("Exporting {.field Projects} Data")
   projectData <- getProjectsFromList(snapshotPaths)
@@ -203,11 +203,34 @@ excelUI <- function(fileName = "qualification.xlsx",
     )
     cli::cli_progress_step("Exporting {.field Sections}")
     # Sections
-    sectionData <- getQualificationSections(qualificationContent)
-    writeDataToSheet(data = sectionData, sheetName = "Sections", excelObject = excelObject)
-    # TODO: extract and export Input information
+    sectionsData <- getQualificationSections(qualificationContent)
+    writeDataToSheet(data = sectionsData, sheetName = "Sections", excelObject = excelObject)
+    cli::cli_progress_step("Exporting {.field Intro and Inputs}")
+    # Inputs
+    writeDataToSheet(
+      data = getQualificationIntro(qualificationContent),
+      sheetName = "Intro",
+      excelObject = excelObject
+    )
+    inputsData <- getQualificationInputs(qualificationContent)
+    writeDataToSheet(
+      data = inputsData,
+      sheetName = "Inputs",
+      excelObject = excelObject
+    )
+    if (nrow(inputsData) > 0) {
+      sectionColIndex <- which(names(inputsData) %in% "Section Reference")
+      openxlsx::dataValidation(
+        excelObject,
+        sheet = "Inputs",
+        cols = sectionColIndex,
+        rows = 1 + seq_len(nrow(inputsData)),
+        type = "list",
+        value = paste0("'Sections'!$A$2:$A$", 1 + nrow(sectionsData))
+      )
+    }
     # TODO: extract and export Sim Param information
-    
+
     cli::cli_progress_step("Exporting {.field All Plots} Settings")
     # AllPlots
     allPlotsData <- getQualificationAllPlots(qualificationContent, simulationsOutputs)
@@ -224,14 +247,14 @@ excelUI <- function(fileName = "qualification.xlsx",
       excelObject = excelObject
     )
     # TODO when fixing issue #32: wrap dataValidation to prevent run when empty data
-    if(nrow(allPlotsData) > 0){
+    if (nrow(allPlotsData) > 0) {
       openxlsx::dataValidation(
         excelObject,
         sheet = "All_Plots",
         cols = which(names(allPlotsData) %in% "Section Reference"),
         rows = 1 + seq_len(nrow(allPlotsData)),
         type = "list",
-        value = paste0("'Sections'!$A$2:$A$", nrow(sectionData)+1)
+        value = paste0("'Sections'!$A$2:$A$", nrow(sectionsData) + 1)
       )
     }
 
@@ -347,7 +370,7 @@ writeDataToSheet <- function(data, sheetName, excelObject) {
   ospsuite.utils::validateIsCharacter(sheetName)
   ospsuite.utils::validateIsOfLength(sheetName, 1)
   ospsuite.utils::validateIsIncluded(sheetName, names(excelObject))
-  if(nrow(data) == 0){
+  if (nrow(data) == 0) {
     return(invisible())
   }
   openxlsx::writeDataTable(
@@ -372,14 +395,14 @@ writeDataToSheet <- function(data, sheetName, excelObject) {
 #' @import openxlsx
 #' @keywords internal
 styleColorMapping <- function(mapping, sheetName, excelObject, columnName = "Color") {
-  if(nrow(mapping) == 0){
+  if (nrow(mapping) == 0) {
     return(invisible())
   }
   ospsuite.utils::validateIsIncluded(columnName, names(mapping))
   colorColIndex <- which(names(mapping) == columnName)
   for (rowIndex in seq_along(mapping[[columnName]])) {
     colorValue <- mapping[rowIndex, columnName]
-    if(is.na(colorValue)){
+    if (is.na(colorValue)) {
       next
     }
     openxlsx::addStyle(

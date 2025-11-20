@@ -13,7 +13,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   }
   sheetNames <- readxl::excel_sheets(excelFile)
   ospsuite.utils::validateIsIncluded(ALL_EXCEL_SHEETS, sheetNames)
-  
+
   # Schema
   cli::cli_progress_step("Exporting {.field Schema} Data")
   qualificationSchema <- readxl::read_excel(excelFile, sheet = "MetaInfo")
@@ -25,7 +25,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
 
   # Projects
   cli::cli_progress_step("Exporting {.field Projects} Data")
-  qualificationProjects <- readxl::read_excel(excelFile, sheet = "Projects", col_types  = "text")
+  qualificationProjects <- readxl::read_excel(excelFile, sheet = "Projects", col_types = "text")
   ospsuite.utils::validateColumns(
     qualificationProjects,
     columnSpecs = list(
@@ -34,7 +34,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
     )
   )
   # Building Blocks
-  qualificationBB <- readxl::read_excel(excelFile, sheet = "BB", col_types  = "text")
+  qualificationBB <- readxl::read_excel(excelFile, sheet = "BB", col_types = "text")
   ospsuite.utils::validateColumns(
     qualificationBB,
     columnSpecs = list(
@@ -48,7 +48,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
 
   # ObservedDataSets
   cli::cli_progress_step("Exporting {.field Observed Data}")
-  qualificationObsDataSets <- readxl::read_excel(excelFile, sheet = "ObsData", col_types  = "text")
+  qualificationObsDataSets <- readxl::read_excel(excelFile, sheet = "ObsData", col_types = "text")
   ospsuite.utils::validateColumns(
     qualificationObsDataSets,
     columnSpecs = list(
@@ -93,7 +93,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   # AllPlots
   cli::cli_progress_step("Exporting {.field All Plots} Settings")
   allPlotsData <- readxl::read_excel(excelFile, sheet = "All_Plots")
-  if(nrow(allPlotsData) == 0){
+  if (nrow(allPlotsData) == 0) {
     allPlotsData <- NA
   }
 
@@ -160,10 +160,15 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
       )
     )
   )
+  qualificationInputs <- getInputsFromExcel(qualificationInputs)
+
   # Format section as a nested list
   qualificationSections <- getExcelSections(qualificationSections)
-  # Intro ?
-  # qualificationIntro <- readxl::read_excel(excelFile, sheet = "Inputs")
+  # Intro
+  qualificationIntro <- readxl::read_excel(excelFile, sheet = "Intro")
+  if (nrow(qualificationIntro) == 0) {
+    qualificationIntro <- NULL
+  }
 
   qualificationContent <- list(
     "$schema" = qualificationSchema,
@@ -172,7 +177,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
     "Plots" = qualificationPlots,
     "Inputs" = qualificationInputs,
     "Sections" = qualificationSections,
-    "Intro" = NA
+    "Intro" = qualificationIntro
   )
 
   cli::cli_progress_step("Saving extracted data into {.file {qualificationPlan}}")
@@ -420,10 +425,10 @@ getDDIPlotsFromExcel <- function(data, mapping) {
       ddiPlots[[plotIndex]]$Groups[[groupIndex]]$Symbol <- groupInfo$`Group Symbol`[groupIndex]
       # Get all relevant DDI Ratios from mapping
       ddiRatios <- dplyr::filter(
-        .data = mapping, 
-        .data[["Plot Title"]] %in% plotTitle, 
+        .data = mapping,
+        .data[["Plot Title"]] %in% plotTitle,
         .data[["Group Title"]] %in% groupTitle
-        )
+      )
       ddiPlots[[plotIndex]]$Groups[[groupIndex]]$DDIRatios <- lapply(
         seq_len(nrow(ddiRatios)),
         function(ddiRatioIndex) {
@@ -451,4 +456,23 @@ getDDIPlotsFromExcel <- function(data, mapping) {
     }
   }
   return(ddiPlots)
+}
+
+#' @title getInputsFromExcel
+#' @description
+#' Get qualification Inputs
+#' @param data A data.frame of Inputs settings
+#' @return A list of Inputs
+#' @keywords internal
+getInputsFromExcel <- function(data) {
+  if (nrow(data) == 0) {
+    return()
+  }
+  inputDictionary <- data.frame(
+    Excel = c("Project", "BB-Type", "BB-Name", "Section Reference"),
+    Qualification = c("Project", "Type", "Name", "SectionReference")
+  )
+  data <- dplyr::select(.data = data, dplyr::matches(inputDictionary$Excel))
+  names(data) <- inputDictionary$Qualification
+  return(data)
 }
