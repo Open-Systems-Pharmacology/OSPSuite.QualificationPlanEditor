@@ -133,15 +133,8 @@ excelUI <- function(fileName = "qualification.xlsx",
   observedData <- getObsDataFromList(observedDataPaths)
   # Qualification Plan provided
   if (useQualification) {
-    commonObsData <- intersect(observedData$Id, qualificationObservedData$Id)
     # Merge to observed data data
     observedData <- merge.data.frame(observedData, qualificationObservedData, by = c("Id", "Path", "Type"), all = TRUE)
-    obsDataStyles <- getQualificationStyles(
-      data = observedData,
-      commonProjects = commonObsData,
-      qualificationProjects = qualificationObservedData$Id,
-      projectVariable = "Id"
-    )
   }
   writeDataToSheet(data = observedData, sheetName = "ObsData", excelObject = excelObject)
   # Type column uses a drop down list
@@ -210,21 +203,37 @@ excelUI <- function(fileName = "qualification.xlsx",
     )
     cli::cli_progress_step("Exporting {.field Sections}")
     # Sections
-    writeDataToSheet(
-      data = getQualificationSections(qualificationContent),
-      sheetName = "Sections",
+    sectionData <- getQualificationSections(qualificationContent)
+    writeDataToSheet(data = sectionData, sheetName = "Sections", excelObject = excelObject)
+    # TODO: extract and export Input information
+    # TODO: extract and export Sim Param information
+    
+    cli::cli_progress_step("Exporting {.field All Plots} Settings")
+    # AllPlots
+    allPlotsData <- getQualificationAllPlots(qualificationContent, simulationsOutputs)
+    writeDataToSheet(data = allPlotsData, sheetName = "All_Plots", excelObject = excelObject)
+    allPlotStyles <- getQualificationStyles(
+      data = allPlotsData,
+      commonProjects = commonProjects,
+      qualificationProjects = qualificationProjects
+    )
+    styleQualificationCells(
+      qualificationStyles = allPlotStyles,
+      columnIndices = seq_len(ncol(allPlotsData)),
+      sheetName = "All_Plots",
       excelObject = excelObject
     )
-    # cli::cli_progress_step("Exporting {.field Inputs}")
-    # Inputs
-    # TODO: extract and export input information
-    # cli::cli_progress_step("Exporting {.field Simulated Parameters}")
-    # Sim Param
-    # TODO: extract and export Sim Param information
-
-    # cli::cli_progress_step("Exporting {.field All Plots} Settings")
-    # AllPlots
-    # TODO: extract and export AllPlot information (issue #25)
+    # TODO when fixing issue #32: wrap dataValidation to prevent run when empty data
+    if(nrow(allPlotsData) > 0){
+      openxlsx::dataValidation(
+        excelObject,
+        sheet = "All_Plots",
+        cols = which(names(allPlotsData) %in% "Section Reference"),
+        rows = 1 + seq_len(nrow(allPlotsData)),
+        type = "list",
+        value = paste0("'Sections'!$A$2:$A$", nrow(sectionData)+1)
+      )
+    }
 
     cli::cli_progress_step("Exporting {.field Comparison Time Profile} Plot Settings")
     # Comparison Time (CT) Profile
@@ -287,9 +296,8 @@ excelUI <- function(fileName = "qualification.xlsx",
       sheetName = "DDIRatio_Mapping",
       excelObject = excelObject
     )
-    # cli::cli_progress_step("Exporting {.field PK Ratio} Plot Settings")
     # PK Ratio
-    # TODO: same workflow as DDI Ratio (issue #26)
+    # TODO: same workflow as PK Ratio (issue #26)
 
     # Global Plot Settings
     cli::cli_progress_step("Exporting {.field Global Plot Settings}")
