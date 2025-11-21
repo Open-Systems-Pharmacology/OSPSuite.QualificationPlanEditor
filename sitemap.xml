@@ -22,6 +22,7 @@
 <url><loc>/reference/getDDIPlotsFromExcel.html</loc></url>
 <url><loc>/reference/getExcelSections.html</loc></url>
 <url><loc>/reference/getGOFPlotsFromExcel.html</loc></url>
+<url><loc>/reference/getInputsFromExcel.html</loc></url>
 <url><loc>/reference/getObsDataFromList.html</loc></url>
 <url><loc>/reference/getObsDataFromQualification.html</loc></url>
 <url><loc>/reference/getProjectsFromExcel.html</loc></url>
@@ -34,8 +35,9 @@
 <url><loc>/reference/getQualificationDDIRatioMapping.html</loc></url>
 <url><loc>/reference/getQualificationGOFMapping.html</loc></url>
 <url><loc>/reference/getQualificationGOFPlots.html</loc></url>
+<url><loc>/reference/getQualificationInputs.html</loc></url>
+<url><loc>/reference/getQualificationIntro.html</loc></url>
 <url><loc>/reference/getQualificationSections.html</loc></url>
-<url><loc>/reference/getQualificationSimParam.html</loc></url>
 <url><loc>/reference/getQualificationStyles.html</loc></url>
 <url><loc>/reference/getSimulationsFromSnapshot.html</loc></url>
 <url><loc>/reference/getSimulationsObsDataFromProjects.html</loc></url>
