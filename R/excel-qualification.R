@@ -232,6 +232,7 @@ getQualificationInputs <- function(qualificationContent) {
         "Section Reference" = qualificationInput$SectionReference,
         check.names = FALSE
       )
+      return(inputData)
     }
   )
   inputsData <- do.call("rbind", inputsData)
