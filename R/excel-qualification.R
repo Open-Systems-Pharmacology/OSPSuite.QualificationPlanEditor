@@ -192,7 +192,7 @@ parseSectionsToDataFrame <- function(sectionsIn, sectionsOut = data.frame(), par
 
 #' @title getQualificationIntro
 #' @description
-#' Get a data.frame of project Path
+#' Extract intro paths from qualification content as a data.frame
 #' @param qualificationContent Content of a qualification plan
 #' @return data.frame with `Path` column
 #' @keywords internal
