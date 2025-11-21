@@ -206,9 +206,9 @@ getQualificationIntro <- function(qualificationContent) {
 
 #' @title getQualificationInputs
 #' @description
-#' Get a data.frame of project IDs and Paths/URLs
+#' Get a data.frame of qualification inputs with columns 'Project', 'BB-Type', 'BB-Name', and 'Section Reference'
 #' @param qualificationContent Content of a qualification plan
-#' @return data.frame with columns `ID` and `Path`
+#' @return data.frame with columns 'Project', 'BB-Type', 'BB-Name', and 'Section Reference'
 #' @keywords internal
 getQualificationInputs <- function(qualificationContent) {
   qualificationInputs <- qualificationContent$Inputs
