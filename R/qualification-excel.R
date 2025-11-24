@@ -90,6 +90,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
       WatermarkSize = list(type = "numeric", naAllowed = FALSE, nullAllowed = TRUE)
     )
   )
+  qualificationPlotSettings <- getPlotSettingsFromExcel(qualificationPlotSettings)
   # AllPlots
   cli::cli_progress_step("Exporting {.field All Plots} Settings")
   allPlotsData <- readxl::read_excel(excelFile, sheet = "All_Plots")
@@ -246,13 +247,16 @@ groupAxesSettings <- function(qualificationAxesSettings) {
       .data[["Plot"]] %in% plotName
     )
     if (nrow(axesSetting) == 0) {
-      exportedSettings[[plotName]] <- NA
       next
     }
     if (nrow(axesSetting) < 2) {
       cli::cli_abort("GlobalAxes sheet: {.strong {plotName}} plot only has {.val 1} axis defined")
     }
-    exportedSettings[[plotName]] <- axesSetting
+    exportedSettings[[plotName]] <- dplyr::select(.data = axesSetting, -dplyr::matches("Plot")) 
+    exportedSettings[[plotName]] <- dplyr::mutate(
+      .data = exportedSettings[[plotName]],
+      Unit = ifelse(is.na(.data[["Unit"]]), "", .data[["Unit"]])
+    )
   }
   return(exportedSettings)
 }
@@ -347,10 +351,8 @@ getCTPlotsFromExcel <- function(data, mapping) {
       SectionReference = data$`Section Reference`[plotIndex],
       SimulationDuration = data$`Simulation Duration`[plotIndex],
       TimeUnit = data$TimeUnit[plotIndex],
-      OutputMappings = plotData,
+      OutputMappings = plotData
       # TODO: handle plot and axes settings if defined
-      PlotSettings = NA,
-      AxesSettings = NA
     )
   }
   return(ctPlots)
@@ -381,8 +383,6 @@ getGOFPlotsFromExcel <- function(data, mapping) {
     gofPlots[[plotIndex]]$PlotTypes <- stats::na.exclude(gofPlotInfo[[plotIndex]]$`Plot Type`)
     gofPlots[[plotIndex]]$Artifacts <- stats::na.exclude(gofPlotInfo[[plotIndex]]$`Artifacts`)
     # TODO: handle plot and axes settings if defined
-    gofPlots[[plotIndex]]$PlotSettings <- NA
-    gofPlots[[plotIndex]]$AxesSettings <- NA
 
     # Groups
     # TODO: handle if an NA is within these 2 columns
@@ -428,8 +428,6 @@ getDDIPlotsFromExcel <- function(data, mapping) {
     ddiPlots[[plotIndex]]$Artifacts <- stats::na.exclude(ddiPlotInfo[[plotIndex]]$`Artifacts`)
     ddiPlots[[plotIndex]]$Subunits <- stats::na.exclude(ddiPlotInfo[[plotIndex]]$`Subunits`)
     # TODO: handle plot and axes settings if defined
-    ddiPlots[[plotIndex]]$PlotSettings <- NA
-    ddiPlots[[plotIndex]]$AxesSettings <- NA
 
     # Groups
     # TODO: handle if an NA is within these 3 columns
@@ -492,4 +490,30 @@ getInputsFromExcel <- function(data) {
   data <- dplyr::select(.data = data, dplyr::matches(inputDictionary$Excel))
   names(data) <- inputDictionary$Qualification
   return(data)
+}
+
+#' @title getPlotSettingsFromExcel
+#' @description
+#' Get qualification plot settings
+#' @param data A data.frame of plot settings
+#' @return A list of plot settings
+#' @keywords internal
+getPlotSettingsFromExcel <- function(data){
+  if(nrow(data) == 0) {
+    return(NA)
+  }
+  # Keep only first row
+  data <- dplyr::filter(.data = data, dplyr::row_number() == 1)
+  plotSettings <- list(
+    ChartWidth = data$ChartWidth,
+    ChartHeight = data$ChartHeight,
+    Fonts = list(
+      AxisSize = data$AxisSize,
+      LegendSize = data$LegendSize,
+      OriginSize = data$OriginSize,
+      FontFamilyName = data$FontFamilyName,
+      WatermarkSize = data$WatermarkSize
+    )
+  )
+  return(plotSettings)
 }
