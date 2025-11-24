@@ -477,7 +477,7 @@ getInputsFromExcel <- function(data) {
 
 #' @title getPlotSettingsFromExcel
 #' @description
-#' Get qualification plot setting
+#' Get qualification plot settings
 #' @param data A data.frame of plot settings
 #' @return A list of plot settings
 #' @keywords internal
