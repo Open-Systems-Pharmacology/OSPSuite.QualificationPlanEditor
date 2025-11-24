@@ -482,6 +482,11 @@ getInputsFromExcel <- function(data) {
 #' @return A list of plot settings
 #' @keywords internal
 getPlotSettingsFromExcel <- function(data){
+  if(nrow(data) == 0) {
+    return(NA)
+  }
+  # Keep only first row
+  data <- dplyr::filter(.data = data, dplyr::row_number() == 1)
   plotSettings <- list(
     ChartWidth = data$ChartWidth,
     ChartHeight = data$ChartHeight,
