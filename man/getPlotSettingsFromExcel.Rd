@@ -13,6 +13,6 @@ getPlotSettingsFromExcel(data)
 A list of plot settings
 }
 \description{
-Get qualification plot setting
+Get qualification plot settings
 }
 \keyword{internal}
