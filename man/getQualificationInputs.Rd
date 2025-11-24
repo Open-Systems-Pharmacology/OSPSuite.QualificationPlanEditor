@@ -10,9 +10,9 @@ getQualificationInputs(qualificationContent)
 \item{qualificationContent}{Content of a qualification plan}
 }
 \value{
-data.frame with columns `ID` and `Path`
+data.frame with columns 'Project', 'BB-Type', 'BB-Name', and 'Section Reference'
 }
 \description{
-Get a data.frame of project IDs and Paths/URLs
+Get a data.frame of qualification inputs with columns 'Project', 'BB-Type', 'BB-Name', and 'Section Reference'
 }
 \keyword{internal}

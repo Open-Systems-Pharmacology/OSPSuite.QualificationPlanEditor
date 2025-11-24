@@ -93,10 +93,8 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   # AllPlots
   cli::cli_progress_step("Exporting {.field All Plots} Settings")
   allPlotsData <- readxl::read_excel(excelFile, sheet = "All_Plots")
-  if (nrow(allPlotsData) == 0) {
-    allPlotsData <- NA
-  }
-
+  allPlotsData <- getAllPlotsFromExcel(allPlotsData)
+  
   # ComparisonTimeProfile Plots
   cli::cli_progress_step("Exporting {.field Comparison Time Profile} Plot Settings")
   ctData <- readxl::read_excel(excelFile, sheet = "CT_Plots")
@@ -301,6 +299,25 @@ getProjectsFromExcel <- function(projectData, bbData) {
     }
   )
   return(updatedProjects)
+}
+
+#' @title getAllPlotsFromExcel
+#' @description
+#' Get qualification settings for AllPlots field
+#' @param data A data.frame of plot settings
+#' @return A data.frame with columns 'Project', 'Simulation', and 'Section Reference', or NA if no data
+#' @keywords internal
+getAllPlotsFromExcel <- function(data) {
+  if (nrow(data) == 0) {
+    return(NA)
+  }
+  allPlotsDictionary <- data.frame(
+    Excel = c("Project", "Simulation", "Section Reference"),
+    Qualification = c("Project", "Simulation", "SectionReference")
+  )
+  allPlotsData <- dplyr::select(.data = data, dplyr::matches(allPlotsDictionary$Excel))
+  names(allPlotsData) <- allPlotsDictionary$Qualification
+  return(allPlotsData)
 }
 
 #' @title getCTPlotsFromExcel
