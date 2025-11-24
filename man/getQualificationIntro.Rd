@@ -13,6 +13,6 @@ getQualificationIntro(qualificationContent)
 data.frame with `Path` column
 }
 \description{
-Get a data.frame of project Path
+Extract intro paths from qualification content as a data.frame
 }
 \keyword{internal}
