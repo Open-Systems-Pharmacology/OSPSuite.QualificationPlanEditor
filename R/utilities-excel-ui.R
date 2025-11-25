@@ -27,6 +27,9 @@
 #' getProjectsFromList(snapshotPaths)
 #'
 getProjectsFromList <- function(snapshotPaths) {
+  if (ospsuite.utils::isEmpty(snapshotPaths)) {
+    return(data.frame(Id = character(), Path = character(), stringsAsFactors = FALSE))
+  }
   # If named list, use the names to get IDs
   snapshotIDs <- names(snapshotPaths)
   # If not, IDs = basename of the path
@@ -72,7 +75,7 @@ getProjectsFromList <- function(snapshotPaths) {
 #'
 getObsDataFromList <- function(observedDataPaths) {
   if (ospsuite.utils::isEmpty(observedDataPaths)) {
-    return(NULL)
+    return(data.frame(Id = character(), Path = character(), Type = character(), stringsAsFactors = FALSE))
   }
   # If named list, use the names to get IDs
   observedDataIDs <- names(observedDataPaths)
@@ -181,14 +184,14 @@ getSimulationsFromSnapshot <- function(snapshotPath) {
 getSimulationsOutputsFromProjects <- function(projectData) {
   # Accumulate all rows in a list for efficiency
   allRows <- list()
-  
+
   for (projectIndex in seq_len(nrow(projectData))) {
     snapshotSimulations <- getSimulationsFromSnapshot(projectData$Path[projectIndex])
-    
+
     if (ospsuite.utils::isEmpty(snapshotSimulations)) {
       next
     }
-    
+
     simOutputsData <- lapply(
       snapshotSimulations,
       function(snapshotSimulation) {
@@ -205,16 +208,16 @@ getSimulationsOutputsFromProjects <- function(projectData) {
         )
       }
     )
-    
+
     # Filter out NULL entries
     simOutputsData <- Filter(Negate(is.null), simOutputsData)
-    
+
     # Add non-empty results to allRows
     if (length(simOutputsData) > 0) {
       allRows[(length(allRows) + seq_along(simOutputsData))] <- simOutputsData
     }
   }
-  
+
   # Bind all rows at once
   if (length(allRows) == 0) {
     return(data.frame(
@@ -224,7 +227,7 @@ getSimulationsOutputsFromProjects <- function(projectData) {
       stringsAsFactors = FALSE
     ))
   }
-  
+
   return(do.call(rbind, allRows))
 }
 
@@ -261,14 +264,14 @@ getSimulationsOutputsFromProjects <- function(projectData) {
 getSimulationsObsDataFromProjects <- function(projectData) {
   # Accumulate all rows in a list for efficiency
   allRows <- list()
-  
+
   for (projectIndex in seq_len(nrow(projectData))) {
     snapshotSimulations <- getSimulationsFromSnapshot(projectData$Path[projectIndex])
-    
+
     if (ospsuite.utils::isEmpty(snapshotSimulations)) {
       next
     }
-    
+
     simObsData <- lapply(
       snapshotSimulations,
       function(snapshotSimulation) {
@@ -285,16 +288,16 @@ getSimulationsObsDataFromProjects <- function(projectData) {
         )
       }
     )
-    
+
     # Filter out NULL entries
     simObsData <- Filter(Negate(is.null), simObsData)
-    
+
     # Add non-empty results to allRows
     if (length(simObsData) > 0) {
       allRows <- c(allRows, simObsData)
     }
   }
-  
+
   # Bind all rows at once
   if (length(allRows) == 0) {
     return(data.frame(
@@ -304,7 +307,7 @@ getSimulationsObsDataFromProjects <- function(projectData) {
       stringsAsFactors = FALSE
     ))
   }
-  
+
   return(do.call(rbind, allRows))
 }
 
@@ -342,7 +345,7 @@ getSimulationsObsDataFromProjects <- function(projectData) {
 getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
   # Accumulate all rows in a list for efficiency
   allRows <- list()
-  
+
   for (projectIndex in seq_len(nrow(projectData))) {
     # If qualificationProjects is provided, check if the project is already in it
     if (projectData$Id[projectIndex] %in% qualificationProjects) {
@@ -357,12 +360,12 @@ getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
         cli::cli_abort("Failed to read snapshot for project {.val {projectData$Id[projectIndex]}} from {.file {projectData$Path[projectIndex]}}: {e$message}")
       }
     )
-    
+
     for (bbType in ALL_BUILDING_BLOCKS) {
       # Get building blocks using pluralized key
       bbKey <- paste0(bbType, "s")
       snapshotBBs <- snapshot[[bbKey]]
-      
+
       # Guard against NULL or empty building block lists
       if (ospsuite.utils::isEmpty(snapshotBBs)) {
         next
@@ -381,17 +384,17 @@ getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
           )
         }
       )
-      
+
       # Filter out NULL entries
       bbData <- Filter(Negate(is.null), bbData)
-      
+
       # Add non-empty results to allRows
       if (length(bbData) > 0) {
         allRows <- c(allRows, bbData)
       }
     }
   }
-  
+
   # Bind all rows at once
   if (length(allRows) == 0) {
     return(data.frame(
@@ -403,6 +406,6 @@ getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
       stringsAsFactors = FALSE
     ))
   }
-  
+
   return(do.call(rbind, allRows))
 }
