@@ -95,7 +95,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   cli::cli_progress_step("Exporting {.field All Plots} Settings")
   allPlotsData <- readxl::read_excel(excelFile, sheet = "All_Plots")
   allPlotsData <- getAllPlotsFromExcel(allPlotsData)
-  
+
   # ComparisonTimeProfile Plots
   cli::cli_progress_step("Exporting {.field Comparison Time Profile} Plot Settings")
   ctData <- readxl::read_excel(excelFile, sheet = "CT_Plots")
@@ -252,7 +252,7 @@ groupAxesSettings <- function(qualificationAxesSettings) {
     if (nrow(axesSetting) < 2) {
       cli::cli_abort("GlobalAxes sheet: {.strong {plotName}} plot only has {.val 1} axis defined")
     }
-    exportedSettings[[plotName]] <- dplyr::select(.data = axesSetting, -dplyr::matches("Plot")) 
+    exportedSettings[[plotName]] <- dplyr::select(.data = axesSetting, -dplyr::matches("Plot"))
     exportedSettings[[plotName]] <- dplyr::mutate(
       .data = exportedSettings[[plotName]],
       Unit = ifelse(is.na(.data[["Unit"]]), "", .data[["Unit"]])
@@ -498,8 +498,8 @@ getInputsFromExcel <- function(data) {
 #' @param data A data.frame of plot settings
 #' @return A list of plot settings
 #' @keywords internal
-getPlotSettingsFromExcel <- function(data){
-  if(nrow(data) == 0) {
+getPlotSettingsFromExcel <- function(data) {
+  if (nrow(data) == 0) {
     return(NA)
   }
   # Keep only first row
