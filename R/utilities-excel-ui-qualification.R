@@ -248,6 +248,7 @@ getQualificationInputs <- function(qualificationContent) {
 #' @return data.frame with columns
 #' `Project`, `Simulation` and `Section Reference`
 #' @keywords internal
+#' @import dplyr
 getQualificationAllPlots <- function(qualificationContent, simulationsOutputs) {
   allPlotsData <- data.frame()
   for (allPlot in qualificationContent$Plots$AllPlots) {
