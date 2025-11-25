@@ -179,7 +179,7 @@ parseSectionsToDataFrame <- function(sectionsIn, sectionsOut = data.frame(), par
     )
     sectionsOut <- rbind.data.frame(sectionsOut, sectionOut, stringsAsFactors = FALSE)
     # If subsections are included and not empty, update sectionsOut data.frame
-    if (!is.null(section$Sections)) {
+    if (!ospsuite.utils::isEmpty(section$Sections)) {
       sectionsOut <- parseSectionsToDataFrame(
         sectionsIn = section$Sections,
         sectionsOut = sectionsOut,
@@ -198,7 +198,7 @@ parseSectionsToDataFrame <- function(sectionsIn, sectionsOut = data.frame(), par
 #' @keywords internal
 getQualificationIntro <- function(qualificationContent) {
   qualificationIntro <- qualificationContent$Intro
-  if (is.null(qualificationIntro)) {
+  if (ospsuite.utils::isEmpty(qualificationIntro)) {
     return(data.frame())
   }
   return(data.frame(Path = unlist(qualificationIntro)))
@@ -212,7 +212,7 @@ getQualificationIntro <- function(qualificationContent) {
 #' @keywords internal
 getQualificationInputs <- function(qualificationContent) {
   qualificationInputs <- qualificationContent$Inputs
-  if (is.null(qualificationInputs)) {
+  if (ospsuite.utils::isEmpty(qualificationInputs)) {
     inputsData <- data.frame(
       "Project" = NULL,
       "BB-Type" = NULL,
@@ -248,6 +248,7 @@ getQualificationInputs <- function(qualificationContent) {
 #' @return data.frame with columns
 #' `Project`, `Simulation` and `Section Reference`
 #' @keywords internal
+#' @import dplyr
 getQualificationAllPlots <- function(qualificationContent, simulationsOutputs) {
   allPlotsData <- data.frame()
   for (allPlot in qualificationContent$Plots$AllPlots) {
@@ -258,14 +259,14 @@ getQualificationAllPlots <- function(qualificationContent, simulationsOutputs) {
         Simulation = allPlot$Simulation,
         "Section Reference" = allPlot$SectionReference,
         check.names = FALSE
-        )
+      )
     )
   }
   # Add Project and Simulation that are not already defined
   newPlotData <- dplyr::filter(
     .data = simulationsOutputs,
     !(paste(.data[["Project"]], .data[["Simulation"]]) %in% paste(allPlotsData$Project, allPlotsData$Simulation))
-    )
+  )
   newPlotData <- dplyr::mutate(.data = newPlotData, `Section Reference` = NA)
   newPlotData <- dplyr::select(.data = newPlotData, -dplyr::matches("Output"))
   return(rbind(allPlotsData, newPlotData))
@@ -484,7 +485,7 @@ getQualificationDDIRatioMapping <- function(qualificationContent) {
 #' @return A data.frame with plot settings information
 #' @keywords internal
 formatPlotSettings <- function(plotSettings) {
-  if (is.null(plotSettings)) {
+  if (ospsuite.utils::isEmpty(plotSettings)) {
     return(data.frame(
       ChartWidth = NA,
       ChartHeight = NA,
@@ -513,7 +514,7 @@ formatPlotSettings <- function(plotSettings) {
 #' @return A data.frame with axes setting information
 #' @keywords internal
 formatAxesSettings <- function(axesSettings) {
-  if (is.null(axesSettings)) {
+  if (ospsuite.utils::isEmpty(axesSettings)) {
     return(data.frame(
       X_Dimension = NA,
       X_GridLines = NA,
@@ -550,7 +551,7 @@ formatAxesSettings <- function(axesSettings) {
 #' @return A data.frame with axes setting information
 #' @keywords internal
 formatGlobalAxesSettings <- function(axesSettings, plotName) {
-  if (is.null(axesSettings)) {
+  if (ospsuite.utils::isEmpty(axesSettings)) {
     return(data.frame(
       Plot = plotName,
       Type = c("X", "Y"),

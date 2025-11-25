@@ -73,7 +73,13 @@ excelUI <- function(fileName = "qualification.xlsx",
     qualificationProjects <- qualificationProjectData$Id
     commonProjects <- intersect(projectData$Id, qualificationProjects)
     # Merge to project data
-    projectData <- merge.data.frame(projectData, qualificationProjectData, by = c("Id", "Path"), all = TRUE)
+    projectData <- merge.data.frame(
+      projectData,
+      qualificationProjectData,
+      by = c("Id", "Path"),
+      all = TRUE,
+      sort = FALSE
+    )
     projectStyles <- getQualificationStyles(
       data = projectData,
       commonProjects = commonProjects,
@@ -91,7 +97,6 @@ excelUI <- function(fileName = "qualification.xlsx",
       excelObject = excelObject
     )
   }
-
   #---- Simulation Ouptuts ----
   cli::cli_progress_step("Exporting {.field Simulation Outputs} Data")
   simulationsOutputs <- getSimulationsOutputsFromProjects(projectData)
@@ -134,7 +139,13 @@ excelUI <- function(fileName = "qualification.xlsx",
   # Qualification Plan provided
   if (useQualification) {
     # Merge to observed data data
-    observedData <- merge.data.frame(observedData, qualificationObservedData, by = c("Id", "Path", "Type"), all = TRUE)
+    observedData <- merge.data.frame(
+      observedData,
+      qualificationObservedData,
+      by = c("Id", "Path", "Type"),
+      all = TRUE,
+      sort = FALSE
+    )
   }
   writeDataToSheet(data = observedData, sheetName = "ObsData", excelObject = excelObject)
   # Type column uses a drop down list
@@ -157,7 +168,8 @@ excelUI <- function(fileName = "qualification.xlsx",
       bbData,
       qualificationBBData,
       by = c("Project", "BB-Type", "BB-Name", "Parent-Project"),
-      all = TRUE
+      all = TRUE,
+      sort = FALSE
     )
   }
   writeDataToSheet(data = bbData, sheetName = "BB", excelObject = excelObject)

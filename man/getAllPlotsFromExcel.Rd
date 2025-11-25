@@ -10,7 +10,7 @@ getAllPlotsFromExcel(data)
 \item{data}{A data.frame of plot settings}
 }
 \value{
-A list of AllPlots settings
+A data.frame with columns 'Project', 'Simulation', and 'Section Reference', or NA if no data
 }
 \description{
 Get qualification settings for AllPlots field
