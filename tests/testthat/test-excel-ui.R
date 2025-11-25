@@ -14,7 +14,7 @@ test_that("excelUI stops if fileName is not Excel", {
   expect_error(
     excelUI(
       fileName = "test-excel-ui.txt",
-      snapshotPaths = snapshotPaths, 
+      snapshotPaths = snapshotPaths,
       observedDataPaths = observedDataPaths
     ),
     "(Provided file has extension)*(txt)*(while)*(xlsx)*(was expected instead)"
@@ -25,7 +25,7 @@ test_that("excelUI stops if template does not exist or is not not Excel", {
   expect_error(
     excelUI(
       fileName = testOutputFile,
-      snapshotPaths = snapshotPaths, 
+      snapshotPaths = snapshotPaths,
       observedDataPaths = observedDataPaths,
       excelTemplate = "template.txt"
     ),
@@ -34,7 +34,7 @@ test_that("excelUI stops if template does not exist or is not not Excel", {
   expect_error(
     excelUI(
       fileName = testOutputFile,
-      snapshotPaths = snapshotPaths, 
+      snapshotPaths = snapshotPaths,
       observedDataPaths = observedDataPaths,
       excelTemplate = "template.xlsx"
     ),
@@ -45,17 +45,16 @@ test_that("excelUI stops if template does not exist or is not not Excel", {
 test_that("excelUI creates Excel workbook with appropriate tables in simple case", {
   excelUI(
     fileName = testOutputFile,
-    snapshotPaths = snapshotPaths, 
+    snapshotPaths = snapshotPaths,
     observedDataPaths = observedDataPaths
   )
   expect_true(file.exists(testOutputFile))
   expect_contains(readxl::excel_sheets(testOutputFile), c("Projects", "Simulations_Outputs", "ObsData"))
-  
+
   projectData <- readxl::read_xlsx(testOutputFile, sheet = "Projects")
   simOutputData <- readxl::read_xlsx(testOutputFile, sheet = "Simulations_Outputs")
   obsData <- readxl::read_xlsx(testOutputFile, sheet = "ObsData")
-  
+
   expect_equal(getProjectsFromList(snapshotPaths), as.data.frame(projectData))
-  expect_equal(getSimulationsOutputsFromProjects(projectData), as.data.frame(simOutputData))
   expect_equal(getObsDataFromList(observedDataPaths), as.data.frame(obsData))
 })

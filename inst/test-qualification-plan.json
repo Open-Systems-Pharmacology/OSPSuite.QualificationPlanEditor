@@ -1,0 +1,2130 @@
+{
+    "$schema": "https://raw.githubusercontent.com/Open-Systems-Pharmacology/QualificationPlan/v3.1/schemas/OSP_Qualification_Plan_Schema.json",
+    "Projects": [
+        {
+            "Id": "Digoxin",
+            "Path": "https://raw.githubusercontent.com/Open-Systems-Pharmacology/Digoxin-Model/v2.0/Digoxin-Model.json"
+        },
+        {
+            "Id": "Clarithromycin",
+            "Path": "https://raw.githubusercontent.com/Open-Systems-Pharmacology/Clarithromycin-Model/v1.2/Clarithromycin-Model.json"
+        },
+        {
+            "Id": "Clarithromycin-Digoxin-DDI",
+            "Path": "https://raw.githubusercontent.com/Open-Systems-Pharmacology/Clarithromycin-Digoxin-DDI/v1.0/Clarithromycin-Digoxin-DDI.json",
+            "BuildingBlocks": [
+                {
+                    "Type": "Compound",
+                    "Name": "Digoxin",
+                    "Project": "Digoxin"
+                },
+                {
+                    "Type": "Formulation",
+                    "Name": "Solution",
+                    "Project": "Digoxin"
+                },
+                {
+                    "Type": "Formulation",
+                    "Name": "Tablet Clarithromycin",
+                    "Project": "Clarithromycin"
+                },
+                {
+                    "Type": "Compound",
+                    "Name": "Clarithromycin",
+                    "Project": "Clarithromycin"
+                }
+
+            ]
+        }
+    ],
+    "ObservedDataSets": [
+        {
+            "Id": "DDI Ratios",
+            "Path": "https://raw.githubusercontent.com/Open-Systems-Pharmacology/Database-for-observed-data/v1.6/DDI.csv",
+            "Type": "DDIRatio"
+        }
+    ],
+    "Plots": {
+        "AxesSettings": {
+            "GOFMergedPlotsPredictedVsObserved": [
+                {
+                    "Type": "X",
+                    "Dimension": "Concentration (mass)",
+                    "Unit": "ng/ml",
+                    "GridLines": false,
+                    "Scaling": "Log"
+                },
+                {
+                    "Type": "Y",
+                    "Dimension": "Concentration (mass)",
+                    "Unit": "ng/ml",
+                    "GridLines": false,
+                    "Scaling": "Log"
+                }
+            ],
+            "GOFMergedPlotsResidualsOverTime": [
+                {
+                    "Type": "X",
+                    "Dimension": "Time",
+                    "Unit": "h",
+                    "GridLines": false,
+                    "Scaling": "Linear"
+                },
+                {
+                    "Type": "Y",
+                    "Dimension": "Dimensionless",
+                    "Unit": "",
+                    "GridLines": false,
+                    "Scaling": "Linear"
+                }
+            ],
+            "ComparisonTimeProfile": [
+                {
+                    "Type": "X",
+                    "Dimension": "Time",
+                    "Unit": "h",
+                    "GridLines": false,
+                    "Scaling": "Linear"
+                },
+                {
+                    "Type": "Y",
+                    "Dimension": "Concentration (mass)",
+                    "Unit": "ng/ml",
+                    "GridLines": false,
+                    "Scaling": "Log"
+                }
+            ],
+            "DDIRatioPlotsPredictedVsObserved": [
+                {
+                    "Type": "X",
+                    "Dimension": "Dimensionless",
+                    "Unit": "",
+                    "GridLines": false,
+                    "Scaling": "Log"
+                },
+                {
+                    "Type": "Y",
+                    "Dimension": "Dimensionless",
+                    "Unit": "",
+                    "GridLines": false,
+                    "Scaling": "Log"
+                }
+            ],
+            "DDIRatioPlotsResidualsVsObserved": [
+                {
+                    "Type": "X",
+                    "Dimension": "Dimensionless",
+                    "Unit": "",
+                    "GridLines": false,
+                    "Scaling": "Log"
+                },
+                {
+                    "Type": "Y",
+                    "Dimension": "Dimensionless",
+                    "Unit": "",
+                    "GridLines": false,
+                    "Scaling": "Log"
+                }
+            ],
+            "PKRatioPlots": [
+                {
+                    "Type": "X",
+                    "Dimension": "Age",
+                    "Unit": "year(s)",
+                    "GridLines": false,
+                    "Scaling": "Linear"
+                },
+                {
+                    "Type": "Y",
+                    "Dimension": "Dimensionless",
+                    "Unit": "",
+                    "GridLines": false,
+                    "Scaling": "Log"
+                }
+            ]
+        },
+        "PlotSettings": {
+            "ChartWidth": 500,
+            "ChartHeight": 400,
+            "Fonts": {
+                "AxisSize": 11,
+                "LegendSize": 9,
+                "OriginSize": 9,
+                "FontFamilyName": "Arial",
+                "WatermarkSize": 40
+            }
+        },
+        "AllPlots": [],
+        "GOFMergedPlots": [],
+        "ComparisonTimeProfilePlots": [
+            {
+                "SectionReference": "clarithromycin-digoxin-ddi-timeprofile",
+                "Title": "Rengelshausen 2003 (0.01 mg/kg IV) - Plasma",
+                "SimulationDuration": 10,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Rengelshausen2003_Control_IV",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Rengelshausen 2003 - 0.01mg/kg iv with placebo - Digoxin - IV - 0.01 mg/kg - Plasma - agg. (n=3)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Control (without Clarithromycin)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Rengelshausen2003_Treatment_IV",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Rengelshausen 2003 - 0.01mg/kg iv with clarithromycin - Digoxin - IV - 0.01 mg/kg - Plasma - agg. (n=3)",
+                        "StartTime": 26,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Treatment (with Clarithromycin)",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "clarithromycin-digoxin-ddi-timeprofile",
+                "Title": "Rengelshausen 2003 (0.75 mg PO) - Plasma",
+                "SimulationDuration": 12,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Rengelshausen2003_Control_PO",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Rengelshausen 2003 - 0.75mg po with placebo - Digoxin - PO - 0.75 mg - Plasma - agg. (n=12)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Control (without Clarithromycin)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Rengelshausen2003_Treatment_PO",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Rengelshausen 2003 - 0.75mg po with clarithromycin - Digoxin - PO - 0.75 mg - Plasma - agg. (n=12)",
+                        "StartTime": 24.5,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Treatment (with Clarithromycin)",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "clarithromycin-digoxin-ddi-timeprofile",
+                "Title": "Tsutsumi 2002 (0.5mg IV) - Plasma",
+                "SimulationDuration": 96,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Tsutsumi2002_Control",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Tsutsumi 2002 - 0.5mg iv - Digoxin - IV - 0.5 mg - Plasma - agg. (n=9)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Control (without Clarithromycin)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Tsutsumi2002_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Tsutsumi 2002 - 0.5mg iv with clarithromycin - Digoxin - IV - 0.5 mg - Plasma - agg. (n=9)",
+                        "StartTime": 24,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Treatment (with Clarithromycin)",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "clarithromycin-digoxin-ddi-timeprofile",
+                "Title": "Gurley 2008 (0.25 mg PO) - Plasma",
+                "SimulationDuration": 6,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Gurley2008_Control",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Gurley 2008b - Control to Perpetrator Clarithromycin - Digoxin - PO - 0.25 mg - Serum - agg. (n=18)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Control (without Clarithromycin)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Gurley2008_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Gurley 2008b - with Perpetrator (Clarithomycin) - Digoxin - PO - 0.25 mg - Serum - agg. (n=18)",
+                        "StartTime": 146,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Treatment (with Clarithromycin)",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "clarithromycin-digoxin-ddi-timeprofile",
+                "Title": "Gurley 2006 (0.4 mg PO) - Plasma",
+                "SimulationDuration": 6,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Gurley2006_Control",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Gurley 2006 - day 1 plasma before Clarithromycin - Digoxin - PO - 0.4 mg - serum - agg. (n=16)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Control (without Clarithromycin)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Gurley2006_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Gurley 2006 - day 7 plasma + Clarithromycin - Digoxin - PO - 0.4 mg - serum - agg. (n=16)",
+                        "StartTime": 146,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Treatment (with Clarithromycin)",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "clarithromycin-digoxin-ddi-timeprofile",
+                "Title": "Gurley 2007 (0.5 mg PO) - Plasma",
+                "SimulationDuration": 6,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Gurley2007_Control",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Gurley 2007 - control to Clarithromycin - Digoxin - PO - 0.5 mg - serum - agg. (n=20)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Control (without Clarithromycin)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Gurley2007_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Gurley 2007 - Digoxin + Clarithromycin - Digoxin - PO - 0.5 mg - serum - agg. (n=20)",
+                        "StartTime": 146,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Treatment (with Clarithromycin)",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "clarithromycin-digoxin-ddi-timeprofile",
+                "Title": "Kurata 2002 (0.5 mg IV) - Plasma",
+                "SimulationDuration": 8,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Kurata2002_Control_IV",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Kurata 2002 - G/G2677C/C3435_Digoxin day 1 - Digoxin - IV - 0.5 mg - serum - agg. (n=5)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Control (without Clarithromycin)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Kurata2002_Control_IV",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Kurata 2002 - G/T2677C/T3435_Digoxin day 1 - Digoxin - IV - 0.5 mg - serum - agg. (n=5)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#557dba",
+                        "Caption": "Control (without Clarithromycin)",
+                        "Symbol": "Triangle"
+                    },
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Kurata2002_Control_IV",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Kurata 2002 - T/T2677T/T3435_Digoxin day 1 - Digoxin - IV - 0.5 mg - serum - agg. (n=5)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#7a96c8",
+                        "Caption": "Control (without Clarithromycin)",
+                        "Symbol": "Diamond"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "clarithromycin-digoxin-ddi-timeprofile",
+                "Title": "Kurata 2002 (0.5 mg PO) - Plasma",
+                "SimulationDuration": 8,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Kurata2002_Control_PO",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Kurata 2002 - T/T2677T/T3435_Digoxin day 1 - Digoxin - PO - 0.5 mg - serum - agg. (n=5)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#7a96c8",
+                        "Caption": "Control (without Clarithromycin)",
+                        "Symbol": "Diamond"
+                    },
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Kurata2002_Control_PO",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Kurata 2002 - G/T2677C/T3435_Digoxin day 1 - Digoxin - PO - 0.5 mg - serum - agg. (n=5)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#557dba",
+                        "Caption": "Control (without Clarithromycin)",
+                        "Symbol": "Triangle"
+                    },
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Kurata2002_Control_PO",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Kurata 2002 - G/G2677C/C3435_Digoxin day 1 - Digoxin - PO - 0.5 mg - Serum - agg. (n=5)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Control (without Clarithromycin)",
+                        "Symbol": "Circle"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "clarithromycin-digoxin-ddi-timeprofile",
+                "Title": "Kurata 2002 (0.25 mg IV) - Plasma",
+                "SimulationDuration": 8,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Kurata2002_Treatment_IV",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Kurata 2002 - G/T2677C/T3435_Digoxin day 16 + Clarithromycin - Digoxin - IV - 0.25 mg - serum - agg. (n=5)",
+                        "StartTime": 120,
+                        "TimeUnit": "h",
+                        "Color": "#009900",
+                        "Caption": "Treatment (with Clarithromycin)",
+                        "Symbol": "Triangle"
+                    },
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Kurata2002_Treatment_IV",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Kurata 2002 - G/G2677C/C3435_Digoxin day 16 + Clarithromycin - Digoxin - IV - 0.25 mg - serum - agg. (n=5)",
+                        "StartTime": 120,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Treatment (with Clarithromycin)",
+                        "Symbol": "Square"
+                    },
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Kurata2002_Treatment_IV",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Kurata 2002 - T/T2677T/T3435_Digoxin day 16 + Clarithromycin - Digoxin - IV - 0.25 mg - serum - agg. (n=5)",
+                        "StartTime": 120,
+                        "TimeUnit": "h",
+                        "Color": "#000000",
+                        "Caption": "Treatment (with Clarithromycin)",
+                        "Symbol": "Diamond"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "clarithromycin-digoxin-ddi-timeprofile",
+                "Title": "Kurata 2002 (0.25 mg PO) - Plasma",
+                "SimulationDuration": 8,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Kurata2002_Treatment_PO",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Kurata 2002 - T/T2677T/T3435_Digoxin day 16 + Clarithromycin - Digoxin - PO - 0.25 mg - serum - agg. (n=5)",
+                        "StartTime": 120,
+                        "TimeUnit": "h",
+                        "Color": "#000000",
+                        "Caption": "Treatment (with Clarithromycin)",
+                        "Symbol": "Diamond"
+                    },
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Kurata2002_Treatment_PO",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Kurata 2002 - G/T2677C/T3435_Digoxin day 16 + Clarithromycin - Digoxin - PO - 0.25 mg - serum - agg. (n=5)",
+                        "StartTime": 120,
+                        "TimeUnit": "h",
+                        "Color": "#009900",
+                        "Caption": "Treatment (with Clarithromycin)",
+                        "Symbol": "Triangle"
+                    },
+                    {
+                        "Project": "Clarithromycin-Digoxin-DDI",
+                        "Simulation": "Kurata2002_Treatment_PO",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Kurata 2002 - G/G2677C/C3435_Digoxin day 16 + Clarithromycin - Digoxin - PO - 0.25 mg - serum - agg. (n=5)",
+                        "StartTime": 120,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Treatment (with Clarithromycin)",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "erythromycin-digoxin-ddi-timeprofile",
+                "Title": "Tsutsumi 2002 - Plasma",
+                "SimulationDuration": 96,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Erythromycin-Digoxin-DDI",
+                        "Simulation": "Tsutsumi2002_ControlPhase",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Tsutsumi 2002 - 0.5mg iv - Digoxin - IV - 0.5 mg - Plasma - agg. (n=9)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Control (without Erythromycin)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Erythromycin-Digoxin-DDI",
+                        "Simulation": "Tsutsumi2002_TreatmentPhase",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Tsutsumi 2002 - 0.5mg iv with erythromycin - Digoxin - IV - 0.5 mg - Plasma - agg. (n=9)",
+                        "StartTime": 24,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Treatment (with Erythromycin)",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "itraconazole-digoxin-ddi-timeprofile",
+                "Title": "Jalava 1997",
+                "SimulationDuration": 48,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Itraconazole-Digoxin-DDI",
+                        "Simulation": "Jalava1997_Control",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Jalava 1997 - po Control (Perpetrator Placebo) - Digoxin - PO - 0.5 mg - Serum - agg. (n=10)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Digoxin Control",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Itraconazole-Digoxin-DDI",
+                        "Simulation": "Jalava1997_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Jalava 1997 - po with Perpetrator (Itraconazole) - Digoxin - PO - 0.5 mg - Serum - agg. (n=10)",
+                        "StartTime": 49,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Itraconazole",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "itraconazole-digoxin-ddi-timeprofile",
+                "Title": "Partanen 1996 - Group 1",
+                "SimulationDuration": 480,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Itraconazole-Digoxin-DDI",
+                        "Simulation": "Partanen1996_Group1",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Partanen 1996 - Digoxin + Itraconazole Group 1 - Digoxin - PO - 0.25 mg - serum - agg. (n=5)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Digoxin (Group 1)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Itraconazole-Digoxin-DDI",
+                        "Simulation": "Partanen1996_Group1",
+                        "Output": "Organism|PeripheralVenousBlood|Itraconazole|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Partanen 1996 - Digoxin + Itraconazole Group 1 - Itraconazole - PO - 200 mg - serum - agg. (n=5)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#00B050",
+                        "Caption": "Itraconazole (Group 1)",
+                        "Symbol": "Cross"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "itraconazole-digoxin-ddi-timeprofile",
+                "Title": "Partanen 1996 - Group 2",
+                "SimulationDuration": 480,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Itraconazole-Digoxin-DDI",
+                        "Simulation": "Partanen1996_Group2",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Partanen 1996 - Digoxin + Itraconazole Group 2 - Digoxin - PO - 0.25 mg - serum - agg. (n=5)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Digoxin (Group 2)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Itraconazole-Digoxin-DDI",
+                        "Simulation": "Partanen1996_Group2",
+                        "Output": "Organism|PeripheralVenousBlood|Itraconazole|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Partanen 1996 - Digoxin + Itraconazole Group 2 - Itraconazole - PO - 200 mg - serum - agg. (n=5)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#00B050",
+                        "Caption": "Itraconazole (Group 2)",
+                        "Symbol": "Cross"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "verapamil-digoxin-ddi-timeprofile",
+                "Title": "Johnson 1987",
+                "SimulationDuration": 72.25,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 1 mg iv, Control, Johnson 1987, n=12",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Johnson et al. 1987 - Digoxin IV control - Digoxin - IV - 1 mg - Serum - agg. (n=12)",
+                        "StartTime": 288,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Control (without verapamil)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 1 mg iv, DDI, Johnson 1987, n=12",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Johnson et al. 1987 - Digoxin IV + Verapamil - Digoxin - IV - 1 mg - Serum - agg. (n=12)",
+                        "StartTime": 288,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Verapamil",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "verapamil-digoxin-ddi-timeprofile",
+                "Title": "Rodin 1988",
+                "SimulationDuration": 12,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.25 mg po BID, Control, Rodin 1988, n=10",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Rodin 1988 - 2x0.25mg po md - Digoxin - PO - 0.25 mg - Plasma - agg. (n=10)",
+                        "StartTime": 312,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Control (without verapamil)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.25 mg po BID, DDI, Rodin 1988, n=10",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Rodin 1988 - 2x0.25mg po md with verapamil - Digoxin - PO - 0.25 mg - Plasma - agg. (n=10)",
+                        "StartTime": 312,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Verapamil",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "verapamil-digoxin-ddi-timeprofile",
+                "Title": "Wiebe 2020",
+                "SimulationDuration": 73,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.25 mg po SD (Cocktail), Control, Wiebe 2020, n=12",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Wiebe 2020 - Control digoxin - plasma - Digoxin - PO - 0.25 mg - Plasma - agg. (n=12)",
+                        "StartTime": 1,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Control (without verapamil)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.25 mg po SD (Cocktail), DDI, Wiebe 2020, n=12",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Wiebe 2020 - DDI digoxin + verapamil - plasma - Digoxin - PO - 0.25 mg - Plasma - agg. (n=12)",
+                        "StartTime": 1,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Verapamil",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "verapamil-digoxin-ddi-timeprofile",
+                "Title": "Klein 1982",
+                "SimulationDuration": 984,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.25 mg po QD, DDI, Klein 1982, n=7, patients",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Klein et al. 1982 - Digoxin and Verapamil in MD setting - Digoxin - PO - 0.25 mg - Serum - agg. (n=7)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Verapamil",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "verapamil-digoxin-ddi-timeprofile",
+                "Title": "Schwartz 1982",
+                "SimulationDuration": 2025,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.46 mg po QD, DDI, Schwartz 1982, n=10, patients",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Schwartz et al. 1982 - Digoxin and Verapamil in MD setting - Digoxin - PO - 0.46 mg - Serum - agg. (n=10)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Verapamil",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "verapamil-digoxin-ddi-timeprofile",
+                "Title": "Belz 1983",
+                "SimulationDuration": 24,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.125 mg po TID, Control, Belz 1983, n=12",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Belz et al. 1983 - Digoxin control to 80mg Verapamil - Digoxin - PO - 0.125 mg - Plasma - agg. (n=12)",
+                        "StartTime": 312,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Control (without verapamil)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.125 mg po TID, DDI  80 mg, Belz 1983, n=12",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Belz et al. 1983 - Digoxin + 80mg Verapamil - Digoxin - PO - 0.125 mg - Plasma - agg. (n=12)",
+                        "StartTime": 312,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Verapamil",
+                        "Symbol": "Square"
+                    },
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.125 mg po TID, Control, Belz 1983, n=12",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Belz et al. 1983 - Digoxin control to 120mg Verapamil - Digoxin - PO - 0.125 mg - Plasma - agg. (n=12)",
+                        "StartTime": 312,
+                        "TimeUnit": "h",
+                        "Color": "#009900",
+                        "Caption": "Control (without verapamil)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.125 mg po TID, DDI 120 mg, Belz 1983, n=12",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Belz et al. 1983 - Digoxin + 120mg Verapamil - Digoxin - PO - 0.125 mg - Plasma - agg. (n=12)",
+                        "StartTime": 312,
+                        "TimeUnit": "h",
+                        "Color": "#000000",
+                        "Caption": "Digoxin + Verapamil",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "verapamil-digoxin-ddi-timeprofile",
+                "Title": "Doering 1983",
+                "SimulationDuration": 24,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.125 mg po TID, Control, Doering 1983, n=9",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Doering et al. 1983 - Digoxin control - Digoxin - PO - 0.125 mg - Serum - agg. (n=9)",
+                        "StartTime": 144,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Control (without verapamil) - first week",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.125 mg po TID, Control, Doering 1983, n=9",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Doering et al. 1983 - Digoxin control - Digoxin - PO - 0.125 mg - Serum - agg. (n=9)",
+                        "StartTime": 312,
+                        "TimeUnit": "h",
+                        "Color": "#009900",
+                        "Caption": "Control (without verapamil) - second week",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.125 mg po TID, DDI, Doering 1983, n=9",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Doering et al. 1983 - Digoxin+ 80mg Verapamil - Digoxin - PO - 0.125 mg - Serum - agg. (n=9)",
+                        "StartTime": 144,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Verapamil - first week",
+                        "Symbol": "Square"
+                    },
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.125 mg po TID, DDI, Doering 1983, n=9",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Doering et al. 1983 - Digoxin+ 80mg Verapamil - Digoxin - PO - 0.125 mg - Serum - agg. (n=9)",
+                        "StartTime": 312,
+                        "TimeUnit": "h",
+                        "Color": "#000000",
+                        "Caption": "Digoxin + Verapamil - second week",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "verapamil-digoxin-ddi-timeprofile",
+                "Title": "Pedersen 1983",
+                "SimulationDuration": 101,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 1 mg iv, Control, Pedersen 1983, n=1",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Pedersen et al. 1983 - Digoxin IV control - Digoxin - IV - 1 mg - Plasma - indiv.",
+                        "StartTime": 168,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Control (without verapamil)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 1 mg iv, DDI, Pedersen 1983, n=1",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Pedersen et al. 1983 - Digoxin IV + Verapamil - Digoxin - IV - 1 mg - Plasma - indiv.",
+                        "StartTime": 168,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Verapamil",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "verapamil-digoxin-ddi-timeprofile",
+                "Title": "Pedersen 1982",
+                "SimulationDuration": 2568,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.0625 mg po BID, Pedersen 1982, n=7",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Pedersen et al. 1982 - Digoxin control - Digoxin - PO - 1/0.0625 mg - Plasma - agg. (n=7)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Control (without verapamil)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.0625 mg po BID, Pedersen 1982, n=7",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Pedersen et al. 1982 - Digoxin and Verapamil in MD setting - Digoxin - PO - 1/0.0625/0.125 mg - Plasma - agg. (n=7)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Verapamil",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "verapamil-digoxin-ddi-timeprofile",
+                "Title": "Belz 1981",
+                "SimulationDuration": 12,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.125 mg po TID, Control, Belz 1981, n=12",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Belz 1981 - Digoxin + Placebo - Digoxin - PO - 0.125 mg - Plasma - agg. (n=12)",
+                        "StartTime": 328,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Control (without verapamil)",
+                        "Symbol": "Square"
+                    },
+                    {
+                        "Project": "Verapamil-Digoxin-DDI",
+                        "Simulation": "DDI_Verapamil-Digoxin 0.125 mg po TID, DDI  80 mg, Belz 1981, n=12",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Belz 1981 - Digoxin + Verapamil - Digoxin - PO - 0.125 mg - Plasma - agg. (n=12)",
+                        "StartTime": 328,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Verapamil",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "rifampicin-digoxin-ddi-timeprofile",
+                "Title": "Drescher 2003",
+                "SimulationDuration": 24,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Drescher2003_Digoxin-IV_Control",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": [],
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Digoxin (iv) Control",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Drescher2003_Digoxin-IV_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": [],
+                        "StartTime": 228,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin (iv) + Rifampicin",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "rifampicin-digoxin-ddi-timeprofile",
+                "Title": "Greiner 1999 (iv)",
+                "SimulationDuration": 12,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Greiner1999_Digoxin-IV_Control",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Greiner 1999 - iv Control (Perpetrator Placebo) - Digoxin - IV - 1 mg - Plasma - agg. (n=8)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Digoxin (iv) Control",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Greiner1999_Digoxin-IV_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Greiner 1999 - iv with Perpetrator (Rifampicin) - Digoxin - IV - 1 mg - Plasma - agg. (n=8)",
+                        "StartTime": 240,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin (iv) + Rifampicin",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "rifampicin-digoxin-ddi-timeprofile",
+                "Title": "Greiner 1999 (po)",
+                "SimulationDuration": 12,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Greiner1999_Digoxin-PO_Control",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Greiner 1999 - po Control (Perpetrator Placebo) - Digoxin - PO - 1 mg - Plasma - agg. (n=8)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Digoxin Control",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Greiner1999_Digoxin-PO_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Greiner 1999 - po with Perpetrator (Rifampicin) - Digoxin - PO - 1 mg - Plasma - agg. (n=8)",
+                        "StartTime": 240,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Rifampicin",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "rifampicin-digoxin-ddi-timeprofile",
+                "Title": "Gurley 2006",
+                "SimulationDuration": 12,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Gurley2006_Control",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Gurley 2006 - day 1 plasma before Rifampicin - Digoxin - PO - 0.4 mg - serum - agg. (n=16)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Digoxin Control",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Gurley2006_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Gurley 2006 - day 7 plasma + Rifampin - Digoxin - PO - 0.4 mg - serum - agg. (n=16)",
+                        "StartTime": 146,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Rifampicin",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "rifampicin-digoxin-ddi-timeprofile",
+                "Title": "Gurley 2007",
+                "SimulationDuration": 12,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Gurley2007_Control",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Gurley 2007 - control to Rifampicin - Digoxin - PO - 0.5 mg - serum - agg. (n=20)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Digoxin Control",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Gurley2007_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Gurley 2007 - Digoxin + Rifampicin - Digoxin - PO - 0.5 mg - serum - agg. (n=20)",
+                        "StartTime": 146,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Rifampicin",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "rifampicin-digoxin-ddi-timeprofile",
+                "Title": "Gurley 2008",
+                "SimulationDuration": 12,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Gurley2008b_Control",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Gurley 2008b - Control to Perpetrator Rifampicin - Digoxin - PO - 0.25 mg - Serum - agg. (n=18)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Digoxin Control",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Gurley2008b_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Gurley 2008b - with Perpetrator (Rifampicin) - Digoxin - PO - 0.25 mg - Serum - agg. (n=18)",
+                        "StartTime": 146,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Rifampicin",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "rifampicin-digoxin-ddi-timeprofile",
+                "Title": "Kirby 2012",
+                "SimulationDuration": 48,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Kirby2012_Control",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Kirby 2012 - Study 1 - Staggered Administration Control - Digoxin - PO - 0.5 mg - Plasma - agg. (n=16)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Digoxin Control (Study 1: staggered)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Kirby2012_Control",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Kirby 2012 - Study 2 - Simultaneous Administration Control - Digoxin - PO - 0.5 mg - Plasma - agg. (n=9)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#557dba",
+                        "Caption": "Digoxin Control (Study 2: simultaneous)",
+                        "Symbol": "Triangle"
+                    },
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Kirby2012_Study1_StaggeredAdministration_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Kirby 2012 - Study 1 - Staggered Administration with RIF - Digoxin - PO - 0.5 mg - Plasma - agg. (n=16)",
+                        "StartTime": 324,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Rifampicin (Study 1: staggered)",
+                        "Symbol": "Square"
+                    },
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Kirby2012_Study2_SimultaneousAdministration_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Kirby 2012 - Study 2 - Simultaneous Administration with RIF - Digoxin - PO - 0.5 mg - Plasma - agg. (n=9)",
+                        "StartTime": 336,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Rifampicin (Study 2: simultaneous)",
+                        "Symbol": "Diamond"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "rifampicin-digoxin-ddi-timeprofile",
+                "Title": "Larsen 2007",
+                "SimulationDuration": 12,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Larsen2007_Control",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Larsen 2007 - Control (Perpetrator Placebo) - Digoxin - PO - 0.5 mg - Serum - typical (n=10)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Digoxin Control",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Larsen2007_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Larsen 2007 - with Perpetrator (Rifampicin) - Digoxin - PO - 0.5 mg - Serum - typical (n=10)",
+                        "StartTime": 144,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin + Rifampicin",
+                        "Symbol": "Square"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "rifampicin-digoxin-ddi-timeprofile",
+                "Title": "Reitman 2011",
+                "SimulationDuration": 12,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Reitmann2011_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Reitman 2011 - Week 4 after Perpetrator (Rifampicin) - Digoxin - PO - 0.5 mg - Plasma - agg. (n=11)",
+                        "StartTime": 1321,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Digoxin Week 4 (Controll)",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Reitmann2011_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Reitman 2011 - Week 0 after Perpetrator (Rifampicin) - Digoxin - PO - 0.5 mg - Plasma - agg. (n=11)",
+                        "StartTime": 649,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin Week 0",
+                        "Symbol": "Square"
+                    },
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Reitmann2011_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Reitman 2011 - Week 1 after Perpetrator (Rifampicin) - Digoxin - PO - 0.5 mg - Plasma - agg. (n=11)",
+                        "StartTime": 817,
+                        "TimeUnit": "h",
+                        "Color": "#009900",
+                        "Caption": "Digoxin Week 1 ",
+                        "Symbol": "Triangle"
+                    },
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Reitmann2011_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Reitman 2011 - Week 2 after Perpetrator (Rifampicin) - Digoxin - PO - 0.5 mg - Plasma - agg. (n=11)",
+                        "StartTime": 985,
+                        "TimeUnit": "h",
+                        "Color": "#d6706b",
+                        "Caption": "Digoxin Week 2",
+                        "Symbol": "Diamond"
+                    }
+                ]
+            },
+            {
+                "SectionReference": "rifampicin-digoxin-ddi-timeprofile",
+                "Title": "Wiebe 2020",
+                "SimulationDuration": 48,
+                "TimeUnit": "h",
+                "OutputMappings": [
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Wiebe2020_Control",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Wiebe 2020 - Digoxin + Placebo - Digoxin - PO - 0.25 mg - Plasma - agg. (n=12)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#2166ac",
+                        "Caption": "Digoxin (Cocktail) Control",
+                        "Symbol": "Circle"
+                    },
+                    {
+                        "Project": "Rifampicin-Digoxin-DDI",
+                        "Simulation": "Wiebe2020_Treatment",
+                        "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                        "ObservedData": "Wiebe 2020 - Digoxin (Cocktail) + Rifampin - Digoxin - PO - 0.25 mg - Plasma - agg. (n=12)",
+                        "StartTime": 0,
+                        "TimeUnit": "h",
+                        "Color": "#b2182b",
+                        "Caption": "Digoxin (Cocktail) + Rifampin",
+                        "Symbol": "Square"
+                    }
+                ]
+            }
+        ],
+        "DDIRatioPlots": [
+            {
+                "SectionReference": "qualification-of-use-case-pgp-mediated-ddi",
+                "Title": "Pgp DDI",
+                "PKParameters": [
+                    "AUC_tEnd",
+                    "C_max"
+                ],
+                "PlotTypes": [
+                    "predictedVsObserved",
+                    "residualsVsObserved"
+                ],
+                "Artifacts": [
+                    "Plot",
+                    "GMFE",
+                    "Measure",
+                    "Table"
+                ],
+                "Subunits": [
+                    "Mechanism",
+                    "Perpetrator",
+                    "Victim"
+                ],
+                "Groups": [
+                    {
+                        "Caption": "Clarithromycin + Digoxin (IV)",
+                        "Color": "#FF0000",
+                        "Symbol": "Square",
+                        "DDIRatios": [
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16409,
+                                "SimulationControl": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Rengelshausen2003_Control_IV",
+                                    "StartTime": 0,
+                                    "EndTime": 24,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Rengelshausen2003_Treatment_IV",
+                                    "StartTime": 26,
+                                    "EndTime": 50,
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 3029,
+                                "SimulationControl": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Tsutsumi2002_Control",
+                                    "StartTime": 0,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Tsutsumi2002_Treatment",
+                                    "StartTime": 24,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16307,
+                                "SimulationControl": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Kurata2002_Control_IV",
+                                    "StartTime": 0,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Kurata2002_Treatment_IV",
+                                    "StartTime": 120,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16311,
+                                "SimulationControl": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Kurata2002_Control_IV",
+                                    "StartTime": 0,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Kurata2002_Treatment_IV",
+                                    "StartTime": 120,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16315,
+                                "SimulationControl": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Kurata2002_Control_IV",
+                                    "StartTime": 0,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Kurata2002_Treatment_IV",
+                                    "StartTime": 120,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "Caption": "Clarithromycin + Digoxin (PO)",
+                        "Color": "#FF0000",
+                        "Symbol": "Circle",
+                        "DDIRatios": [
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16411,
+                                "SimulationControl": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Rengelshausen2003_Control_PO",
+                                    "StartTime": 0,
+                                    "EndTime": 24,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Rengelshausen2003_Treatment_PO",
+                                    "StartTime": 24.5,
+                                    "EndTime": 48.5,
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 229,
+                                "SimulationControl": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Gurley2008_Control",
+                                    "StartTime": 0,
+                                    "EndTime": 24,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Gurley2008_Treatment",
+                                    "StartTime": 146,
+                                    "EndTime": 170,
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16324,
+                                "SimulationControl": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Gurley2006_Control",
+                                    "StartTime": 0,
+                                    "EndTime": 24,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Gurley2006_Treatment",
+                                    "StartTime": 146,
+                                    "EndTime": 170,
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16328,
+                                "SimulationControl": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Gurley2007_Control",
+                                    "StartTime": 0,
+                                    "EndTime": 24,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Gurley2007_Treatment",
+                                    "StartTime": 146,
+                                    "EndTime": 170,
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16305,
+                                "SimulationControl": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Kurata2002_Control_PO",
+                                    "StartTime": 0,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Kurata2002_Treatment_PO",
+                                    "StartTime": 120,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16309,
+                                "SimulationControl": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Kurata2002_Control_PO",
+                                    "StartTime": 0,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Kurata2002_Treatment_PO",
+                                    "StartTime": 120,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16313,
+                                "SimulationControl": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Kurata2002_Control_PO",
+                                    "StartTime": 0,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Clarithromycin-Digoxin-DDI",
+                                    "Simulation": "Kurata2002_Treatment_PO",
+                                    "StartTime": 120,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "Caption": "Erythromycin + Digoxin (IV)",
+                        "Color": "#0000FF",
+                        "Symbol": "Square",
+                        "DDIRatios": [
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 3028,
+                                "SimulationControl": {
+                                    "Project": "Erythromycin-Digoxin-DDI",
+                                    "Simulation": "Tsutsumi2002_ControlPhase",
+                                    "StartTime": 0,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Erythromycin-Digoxin-DDI",
+                                    "Simulation": "Tsutsumi2002_TreatmentPhase",
+                                    "StartTime": 24,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "Caption": "Itraconazole + Digoxin (po)",
+                        "Color": "#008000",
+                        "Symbol": "Circle",
+                        "DDIRatios": [
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 271,
+                                "SimulationControl": {
+                                    "Project": "Itraconazole-Digoxin-DDI",
+                                    "Simulation": "Jalava1997_Control",
+                                    "StartTime": 0,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Itraconazole-Digoxin-DDI",
+                                    "Simulation": "Jalava1997_Treatment",
+                                    "StartTime": 49,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16329,
+                                "SimulationControl": {
+                                    "Project": "Itraconazole-Digoxin-DDI",
+                                    "Simulation": "Partanen1996_Group1",
+                                    "StartTime": 456,
+                                    "EndTime": 480,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Itraconazole-Digoxin-DDI",
+                                    "Simulation": "Partanen1996_Group1",
+                                    "StartTime": 216,
+                                    "EndTime": 240,
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16330,
+                                "SimulationControl": {
+                                    "Project": "Itraconazole-Digoxin-DDI",
+                                    "Simulation": "Partanen1996_Group2",
+                                    "StartTime": 216,
+                                    "EndTime": 240,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Itraconazole-Digoxin-DDI",
+                                    "Simulation": "Partanen1996_Group2",
+                                    "StartTime": 456,
+                                    "EndTime": 480,
+                                    "TimeUnit": "h"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "Caption": "Verapamil + Digoxin (iv)",
+                        "Color": "#FF00FF",
+                        "Symbol": "Square",
+                        "DDIRatios": [
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16159,
+                                "SimulationControl": {
+                                    "Project": "Verapamil-Digoxin-DDI",
+                                    "Simulation": "DDI_Verapamil-Digoxin 1 mg iv, Control, Johnson 1987, n=12",
+                                    "StartTime": 288,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Verapamil-Digoxin-DDI",
+                                    "Simulation": "DDI_Verapamil-Digoxin 1 mg iv, DDI, Johnson 1987, n=12",
+                                    "StartTime": 288,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16162,
+                                "SimulationControl": {
+                                    "Project": "Verapamil-Digoxin-DDI",
+                                    "Simulation": "DDI_Verapamil-Digoxin 1 mg iv, Control, Pedersen 1983, n=1",
+                                    "StartTime": 168,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Verapamil-Digoxin-DDI",
+                                    "Simulation": "DDI_Verapamil-Digoxin 1 mg iv, DDI, Pedersen 1983, n=1",
+                                    "StartTime": 168,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16638,
+                                "SimulationControl": {
+                                    "Project": "Verapamil-Digoxin-DDI",
+                                    "Simulation": "DDI_Verapamil-Digoxin 1 mg iv, Control, Pedersen 1981, n=7",
+                                    "StartTime": 0.25,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Verapamil-Digoxin-DDI",
+                                    "Simulation": "DDI_Verapamil-Digoxin 0.75 mg iv, DDI,  Pedersen 1981, n=7",
+                                    "StartTime": 216.25,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "Caption": "Verapamil + Digoxin (po)",
+                        "Color": "#FF00FF",
+                        "Symbol": "Circle",
+                        "DDIRatios": [
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16172,
+                                "SimulationControl": {
+                                    "Project": "Verapamil-Digoxin-DDI",
+                                    "Simulation": "DDI_Verapamil-Digoxin 0.25 mg po SD (Cocktail), Control, Wiebe 2020, n=12",
+                                    "StartTime": 1,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Verapamil-Digoxin-DDI",
+                                    "Simulation": "DDI_Verapamil-Digoxin 0.25 mg po SD (Cocktail), DDI, Wiebe 2020, n=12",
+                                    "StartTime": 1,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 3063,
+                                "SimulationControl": {
+                                    "Project": "Verapamil-Digoxin-DDI",
+                                    "Simulation": "DDI_Verapamil-Digoxin 0.25 mg po BID, Control, Rodin 1988, n=10",
+                                    "StartTime": 312,
+                                    "EndTime": 324,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Verapamil-Digoxin-DDI",
+                                    "Simulation": "DDI_Verapamil-Digoxin 0.25 mg po BID, DDI, Rodin 1988, n=10",
+                                    "StartTime": 312,
+                                    "EndTime": 324,
+                                    "TimeUnit": "h"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "Caption": "Rifampicin + Digoxin (iv)",
+                        "Color": "#FF8000",
+                        "Symbol": "Square",
+                        "DDIRatios": [
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16319,
+                                "SimulationControl": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Drescher2003_Digoxin-IV_Control",
+                                    "StartTime": 0,
+                                    "EndTime": 96,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Drescher2003_Digoxin-IV_Treatment",
+                                    "StartTime": 228,
+                                    "EndTime": 324,
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 193,
+                                "SimulationControl": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Greiner1999_Digoxin-IV_Control",
+                                    "StartTime": 0,
+                                    "EndTime": 144,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Greiner1999_Digoxin-IV_Treatment",
+                                    "StartTime": 240,
+                                    "EndTime": 384,
+                                    "TimeUnit": "h"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "Caption": "Rifampicin + Digoxin (po)",
+                        "Color": "#FF8000",
+                        "Symbol": "Circle",
+                        "DDIRatios": [
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 191,
+                                "SimulationControl": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Greiner1999_Digoxin-PO_Control",
+                                    "StartTime": 0,
+                                    "EndTime": 144,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Greiner1999_Digoxin-PO_Treatment",
+                                    "StartTime": 240,
+                                    "EndTime": 384,
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16322,
+                                "SimulationControl": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Gurley2006_Control",
+                                    "StartTime": 0,
+                                    "EndTime": 24,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Gurley2006_Treatment",
+                                    "StartTime": 146,
+                                    "EndTime": 170,
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16326,
+                                "SimulationControl": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Gurley2007_Control",
+                                    "StartTime": 0,
+                                    "EndTime": 24,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Gurley2007_Treatment",
+                                    "StartTime": 146,
+                                    "EndTime": 170,
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 227,
+                                "SimulationControl": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Gurley2008b_Control",
+                                    "StartTime": 0,
+                                    "EndTime": 24,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Gurley2008b_Treatment",
+                                    "StartTime": 146,
+                                    "EndTime": 170,
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 314,
+                                "SimulationControl": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Kirby2012_Control",
+                                    "StartTime": 0,
+                                    "EndTime": 24,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Kirby2012_Study1_StaggeredAdministration_Treatment",
+                                    "StartTime": 324,
+                                    "EndTime": 348,
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 316,
+                                "SimulationControl": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Kirby2012_Control",
+                                    "StartTime": 0,
+                                    "EndTime": 24,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Kirby2012_Study2_SimultaneousAdministration_Treatment",
+                                    "StartTime": 336,
+                                    "EndTime": 360,
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 337,
+                                "SimulationControl": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Larsen2007_Control",
+                                    "StartTime": 0,
+                                    "EndTime": 24,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Larsen2007_Treatment",
+                                    "StartTime": 144,
+                                    "EndTime": 168,
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 396,
+                                "SimulationControl": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Reitmann2011_Treatment",
+                                    "StartTime": 1321,
+                                    "EndTime": 1324,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Reitmann2011_Treatment",
+                                    "StartTime": 649,
+                                    "EndTime": 652,
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 397,
+                                "SimulationControl": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Reitmann2011_Treatment",
+                                    "StartTime": 1321,
+                                    "EndTime": 1324,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Reitmann2011_Treatment",
+                                    "StartTime": 817,
+                                    "EndTime": 820,
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 398,
+                                "SimulationControl": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Reitmann2011_Treatment",
+                                    "StartTime": 1321,
+                                    "EndTime": 1324,
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Reitmann2011_Treatment",
+                                    "StartTime": 985,
+                                    "EndTime": 988,
+                                    "TimeUnit": "h"
+                                }
+                            },
+                            {
+                                "Output": "Organism|PeripheralVenousBlood|Digoxin|Plasma (Peripheral Venous Blood)",
+                                "ObservedData": "DDI Ratios",
+                                "ObservedDataRecordId": 16301,
+                                "SimulationControl": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Wiebe2020_Control",
+                                    "StartTime": 0,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                },
+                                "SimulationDDI": {
+                                    "Project": "Rifampicin-Digoxin-DDI",
+                                    "Simulation": "Wiebe2020_Treatment",
+                                    "StartTime": 0,
+                                    "EndTime": "Inf",
+                                    "TimeUnit": "h"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "Inputs": [],
+    "Sections": [
+        {
+            "Reference": "introduction",
+            "Title": "Introduction",
+            "Sections": [
+                {
+                    "Reference": "objective",
+                    "Title": "Objective",
+                    "Content": "Content/Qualification_DDI_P-gp_objective.md"
+                },
+                {
+                    "Reference": "pgp-ddi-network",
+                    "Title": "Pgp DDI Network",
+                    "Content": "Content/Qualification_DDI_P-gp_network_description.md",
+                    "Sections": [
+                        {
+                            "Reference": "clarithromycin-digoxin-ddi",
+                            "Title": "Clarithromycin - Digoxin DDI",
+                            "Content": "Content/Clarithromycin-Digoxin-DDI.md"
+                        },
+                        {
+                            "Reference": "erythromycin-digoxin-ddi",
+                            "Title": "Erythromycin - Digoxin DDI",
+                            "Content": "Content/Erythromycin-Digoxin-DDI.md"
+                        },
+                        {
+                            "Reference": "itraconazole-digoxin-ddi",
+                            "Title": "Itraconazole - Digoxin DDI",
+                            "Content": "Content/Itraconazole-Digoxin-DDI.md"
+                        },
+                        {
+                            "Reference": "verapamil-digoxin-ddi",
+                            "Title": "Verapamil - Digoxin DDI",
+                            "Content": "Content/Verapamil-Digoxin-DDI.md"
+                        },
+                        {
+                            "Reference": "rifampicin-digoxin-ddi",
+                            "Title": "Rifampicin - Digoxin DDI",
+                            "Content": "Content/Rifampicin-Digoxin-DDI.md"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Reference": "qualification-of-use-case-pgp-mediated-ddi",
+            "Title": "Qualification of Use Case Pgp-mediated DDI",
+            "Content": "Content/Intro_evaluation_DDI_network.md"
+        },
+        {
+            "Reference": "concentration-time-profiles",
+            "Title": "Concentration-Time Profiles",
+            "Content": "Content/Intro_evaluation_CTprofiles.md",
+            "Sections": [
+                {
+                    "Reference": "clarithromycin-digoxin-ddi-timeprofile",
+                    "Title": "Clarithromycin - Digoxin DDI"
+                },
+                {
+                    "Reference": "erythromycin-digoxin-ddi-timeprofile",
+                    "Title": "Erythromycin - Digoxin DDI"
+                },
+                {
+                    "Reference": "itraconazole-digoxin-ddi-timeprofile",
+                    "Title": "Itraconazole - Digoxin DDI"
+                },
+                {
+                    "Reference": "verapamil-digoxin-ddi-timeprofile",
+                    "Title": "Verapamil - Digoxin DDI"
+                },
+                {
+                    "Reference": "rifampicin-digoxin-ddi-timeprofile",
+                    "Title": "Rifampicin - Digoxin DDI"
+                }
+            ]
+        },
+        {
+            "Reference": "references",
+            "Title": "References",
+            "Content": "Content/References.md"
+        },
+        {
+            "Reference": "appendix",
+            "Title": "Appendix",
+            "Sections": [
+                {
+                    "Reference": "osp-introduction",
+                    "Title": "Open Systems Pharmacology Suite (OSPS) Introduction",
+                     "Content": "https://raw.githubusercontent.com/Open-Systems-Pharmacology/Qualification-text-modules/v1.3/OSPS_Introduction.md"
+                },
+                {
+                    "Reference": "mathematical-implementation-of-ddi",
+                    "Title": "Mathematical Implementation of Drug-Drug Interactions",
+                     "Content": "https://raw.githubusercontent.com/Open-Systems-Pharmacology/Qualification-text-modules/v1.3/Mathematical_Implementation_of_DDI.md"
+                },
+                {
+                    "Reference": "automatic-requalification-workflow",
+                    "Title": "Automatic (re)-qualification workflow",
+                    "Content": "https://raw.githubusercontent.com/Open-Systems-Pharmacology/Qualification-text-modules/v1.3/Qualification_Workflow.md"
+                }
+            ]
+        }
+    ],
+    "Intro": [
+        {
+            "Path": "Content/titlepage.md"
+          }
+    ]
+}

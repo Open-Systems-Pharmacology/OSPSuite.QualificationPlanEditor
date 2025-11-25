@@ -1,8 +1,8 @@
 test_that("getProjectsFromQualification handles empty Projects list", {
   qualificationContent <- list(Projects = list())
-  
+
   result <- getProjectsFromQualification(qualificationContent)
-  
+
   expect_s3_class(result, "data.frame")
   expect_equal(nrow(result), 0)
   expect_equal(colnames(result), c("Id", "Path"))
@@ -12,9 +12,9 @@ test_that("getProjectsFromQualification handles empty Projects list", {
 
 test_that("getProjectsFromQualification handles NULL Projects", {
   qualificationContent <- list(Projects = NULL)
-  
+
   result <- getProjectsFromQualification(qualificationContent)
-  
+
   expect_s3_class(result, "data.frame")
   expect_equal(nrow(result), 0)
   expect_equal(colnames(result), c("Id", "Path"))
@@ -27,9 +27,9 @@ test_that("getProjectsFromQualification works with valid Projects", {
       list(Id = "Project2", Path = "path/to/project2.json")
     )
   )
-  
+
   result <- getProjectsFromQualification(qualificationContent)
-  
+
   expect_equal(nrow(result), 2)
   expect_equal(result$Id, c("Project1", "Project2"))
   expect_equal(result$Path, c("path/to/project1.json", "path/to/project2.json"))
@@ -37,9 +37,9 @@ test_that("getProjectsFromQualification works with valid Projects", {
 
 test_that("getObsDataFromQualification handles empty ObservedDataSets list", {
   qualificationContent <- list(ObservedDataSets = list())
-  
+
   result <- getObsDataFromQualification(qualificationContent)
-  
+
   expect_s3_class(result, "data.frame")
   expect_equal(nrow(result), 0)
   expect_equal(colnames(result), c("Id", "Path", "Type"))
@@ -50,9 +50,9 @@ test_that("getObsDataFromQualification handles empty ObservedDataSets list", {
 
 test_that("getObsDataFromQualification handles NULL ObservedDataSets", {
   qualificationContent <- list(ObservedDataSets = NULL)
-  
+
   result <- getObsDataFromQualification(qualificationContent)
-  
+
   expect_s3_class(result, "data.frame")
   expect_equal(nrow(result), 0)
   expect_equal(colnames(result), c("Id", "Path", "Type"))
@@ -65,9 +65,9 @@ test_that("getObsDataFromQualification works with valid ObservedDataSets", {
       list(Id = "Obs2", Path = "path/to/obs2.csv", Type = "DDIRatio")
     )
   )
-  
+
   result <- getObsDataFromQualification(qualificationContent)
-  
+
   expect_equal(nrow(result), 2)
   expect_equal(result$Id, c("Obs1", "Obs2"))
   expect_equal(result$Type, c("TimeProfile", "DDIRatio"))
@@ -75,9 +75,9 @@ test_that("getObsDataFromQualification works with valid ObservedDataSets", {
 
 test_that("getBBDataFromQualification handles empty Projects list", {
   qualificationContent <- list(Projects = list())
-  
+
   result <- getBBDataFromQualification(qualificationContent)
-  
+
   expect_s3_class(result, "data.frame")
   expect_equal(nrow(result), 0)
   expect_equal(colnames(result), c("Project", "BB-Type", "BB-Name", "Parent-Project"))
@@ -85,9 +85,9 @@ test_that("getBBDataFromQualification handles empty Projects list", {
 
 test_that("getBBDataFromQualification handles NULL Projects", {
   qualificationContent <- list(Projects = NULL)
-  
+
   result <- getBBDataFromQualification(qualificationContent)
-  
+
   expect_s3_class(result, "data.frame")
   expect_equal(nrow(result), 0)
 })
@@ -99,9 +99,9 @@ test_that("getBBDataFromQualification handles Projects with no BuildingBlocks", 
       list(Id = "Project2", BuildingBlocks = NULL)
     )
   )
-  
+
   result <- getBBDataFromQualification(qualificationContent)
-  
+
   expect_s3_class(result, "data.frame")
   expect_equal(nrow(result), 0)
   expect_equal(colnames(result), c("Project", "BB-Type", "BB-Name", "Parent-Project"))
@@ -119,9 +119,9 @@ test_that("getBBDataFromQualification handles mixed Projects (some with Building
       )
     )
   )
-  
+
   result <- getBBDataFromQualification(qualificationContent)
-  
+
   expect_s3_class(result, "data.frame")
   expect_equal(nrow(result), 1)
   expect_equal(result$Project, "Project2")
@@ -147,9 +147,9 @@ test_that("getBBDataFromQualification works with valid Projects with BuildingBlo
       )
     )
   )
-  
+
   result <- getBBDataFromQualification(qualificationContent)
-  
+
   expect_equal(nrow(result), 3)
   expect_equal(result$Project, c("Project1", "Project2", "Project2"))
   expect_equal(result$`BB-Type`, c("Individual", "Simulation", "Compound"))
