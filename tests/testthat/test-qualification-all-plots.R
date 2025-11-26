@@ -28,10 +28,15 @@ test_that("AllPlots without reference are not exported", {
       "SectionReference" = c("section-1", "section-1", "section-2")
     )
   )
-  testAllPlotsDataMissingSectionRef[["Section Reference"]] <- NA
+  testAllPlotsDataAllNA <- data.frame(
+    "Project" = c("A", "A", "B", "C"), 
+    "Simulation" = c("One", "Two", "One", "Two"), 
+    "Section Reference" = rep(NA, 4), 
+    check.names = FALSE
+  )
   
   expect_equal(
-    ospsuite.qualificationplaneditor:::getAllPlotsFromExcel(testAllPlotsDataMissingSectionRef),
+    ospsuite.qualificationplaneditor:::getAllPlotsFromExcel(testAllPlotsDataAllNA),
     list()
   )
     
