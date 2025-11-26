@@ -1,0 +1,99 @@
+ExcelSheet,ExcelColumn,QualificationPlanField,QualificationPlanSelector
+GlobalPlotSettings,ChartWidth,ChartWidth,
+GlobalPlotSettings,ChartHeight,ChartHeight,
+GlobalPlotSettings,AxisSize,AxisSize,Fonts
+GlobalPlotSettings,LegendSize,LegendSize,Fonts
+GlobalPlotSettings,OriginSize,OriginSize,Fonts
+GlobalPlotSettings,FontFamilyName,FontFamilyName,Fonts
+GlobalPlotSettings,WatermarkSize,WatermarkSize,Fonts
+Projects,Id,Id,
+Projects,Path,Path,
+Simulations_Outputs,Project,,
+Simulations_Outputs,Simulation,,
+Simulations_Outputs,Output,,
+Simulations_ObsData,Project,,
+Simulations_ObsData,Simulation,,
+Simulations_ObsData,Observed Data,,
+ObsData,ID,Id,
+ObsData,Path,Path,
+ObsData,Type,Type,
+BB,Project,,
+BB,BB-Type,Type,
+BB,BB-Name,Name,
+BB,Parent-Project,Project,
+SimParam,Project,,
+SimParam,Parent Project,,
+SimParam,Parent Simulation,,
+SimParam,Path,,
+SimParam,TargetSimulation,,
+All_Plots,Project,Project,
+All_Plots,Simulation,Simulation,
+All_Plots,Section Reference,SectionReference,
+CT_Plots,Title,Title,
+CT_Plots,Section Reference,SectionReference,
+CT_Plots,Simulation Duration,SimulationDuration,
+CT_Plots,TimeUnit,TimeUnit,
+CT_Mapping,Project,Project,
+CT_Mapping,Simulation,Simulation,
+CT_Mapping,Output,Output,
+CT_Mapping,Observed data,ObservedData,
+CT_Mapping,Plot Title,,
+CT_Mapping,StartTime,StartTime,
+CT_Mapping,TimeUnit,TimeUnit,
+CT_Mapping,Color,Color,
+CT_Mapping,Caption,Caption,
+CT_Mapping,Symbol,Symbol,
+GOF_Plots,Title,Title,
+GOF_Plots,Section Reference,SectionReference,
+GOF_Plots,Plot Type,PlotTypes,
+GOF_Plots,Artifacts,Artifacts,
+GOF_Plots,Group Caption,Caption,Groups
+GOF_Plots,Group Symbol,Symbol,Groups
+GOF_Mapping,Project,Project,
+GOF_Mapping,Simulation,Simulation,
+GOF_Mapping,Output,Output,
+GOF_Mapping,Observed data,ObservedData,
+GOF_Mapping,Plot Title,,
+GOF_Mapping,Group Title,,
+GOF_Mapping,Color,Color,
+DDIRatio_Plots,Title,Title,
+DDIRatio_Plots,Section Ref,SectionReference,
+DDIRatio_Plots,PK-Parameter,PKParameters,
+DDIRatio_Plots,Plot Type,PlotTypes,
+DDIRatio_Plots,Subunits,Subunits,
+DDIRatio_Plots,Artifacts,Artifacts,
+DDIRatio_Plots,Group Caption,Caption,Groups
+DDIRatio_Plots,Group Color,Color,Groups
+DDIRatio_Plots,Group Symbol,Symbol,Groups
+DDIRatio_Mapping,Project,Project,SimulationControl
+DDIRatio_Mapping,Project,Project,SimulationDDI
+DDIRatio_Mapping,Simulation_Control,Simulation,SimulationControl
+DDIRatio_Mapping,Control StartTime,StartTime,SimulationControl
+DDIRatio_Mapping,Control EndTime,EndTime,SimulationControl
+DDIRatio_Mapping,Control TimeUnit,TimeUnit,SimulationControl
+DDIRatio_Mapping,Simulation_Treatment,Simulation,SimulationDDI
+DDIRatio_Mapping,Treatment StartTime,StartTime,SimulationDDI
+DDIRatio_Mapping,Treatment EndTime,EndTime,SimulationDDI
+DDIRatio_Mapping,Treatment TimeUnit,TimeUnit,SimulationDDI
+DDIRatio_Mapping,Output,Output,
+DDIRatio_Mapping,Plot Title,,
+DDIRatio_Mapping,Group Title,,
+DDIRatio_Mapping,Observed data,ObservedData,
+DDIRatio_Mapping,ObsDataRecordID,ObservedDataRecordId,
+PKRatio_Plots,Title,Title,
+PKRatio_Plots,Section Reference,SectionReference,
+PKRatio_Plots,PK-Parameter,PKParameters,
+PKRatio_Plots,Group Caption,Caption,Groups
+PKRatio_Plots,Group Color,Color,Groups
+PKRatio_Plots,Group Symbol,Symbol,Groups
+PKRatio_Mapping,Project,Project,
+PKRatio_Mapping,Simulation,Simulation,
+PKRatio_Mapping,Output,Output,PKRatios
+PKRatio_Mapping,Observed data,ObservedData,PKRatios
+PKRatio_Mapping,ObservedDataRecordId,ObservedDataRecordId,PKRatios
+PKRatio_Mapping,Plot Title,,
+PKRatio_Mapping,Group Title,,
+Inputs,Project,Project,
+Inputs,BB-Type,Type,
+Inputs,BB-Name,Name,
+Inputs,Section Reference,SectionReference,

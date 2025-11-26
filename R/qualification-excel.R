@@ -315,12 +315,7 @@ getAllPlotsFromExcel <- function(data) {
   if (nrow(data) == 0) {
     return(NA)
   }
-  allPlotsDictionary <- data.frame(
-    Excel = c("Project", "Simulation", "Section Reference"),
-    Qualification = c("Project", "Simulation", "SectionReference")
-  )
-  allPlotsData <- dplyr::select(.data = data, dplyr::matches(allPlotsDictionary$Excel))
-  names(allPlotsData) <- allPlotsDictionary$Qualification
+  allPlotsData <- mapToQualification(data, sheetName = "All_Plots")
   return(allPlotsData)
 }
 
@@ -333,27 +328,15 @@ getAllPlotsFromExcel <- function(data) {
 #' @keywords internal
 getCTPlotsFromExcel <- function(data, mapping) {
   ctPlots <- vector(mode = "list", length = nrow(data))
-  ctDictionary <- data.frame(
-    Excel = c("Project", "Simulation", "Output", "Observed data", "StartTime", "TimeUnit", "Color", "Caption", "Symbol"),
-    Qualification = c("Project", "Simulation", "Output", "ObservedData", "StartTime", "TimeUnit", "Color", "Caption", "Symbol")
-  )
-
-  for (plotIndex in seq_len(nrow(data))) {
-    plotData <- dplyr::filter(
+  ctData <- mapToQualification(data, sheetName = "CT_Plots")
+  for (plotIndex in seq_along(ctPlots)) {
+    mappingsData <- dplyr::filter(
       .data = mapping,
-      .data[["Plot Title"]] %in% data[plotIndex, "Title"]
+      .data[["Plot Title"]] %in% ctData[plotIndex, "Title"]
     )
-    plotData <- dplyr::select(.data = plotData, dplyr::matches(ctDictionary$Excel))
-    names(plotData) <- ctDictionary$Qualification
-
-    ctPlots[[plotIndex]] <- list(
-      Title = data$Title[plotIndex],
-      SectionReference = data$`Section Reference`[plotIndex],
-      SimulationDuration = data$`Simulation Duration`[plotIndex],
-      TimeUnit = data$TimeUnit[plotIndex],
-      OutputMappings = plotData
-      # TODO: handle plot and axes settings if defined
-    )
+    mappingsData <- mapToQualification(mappingsData, sheetName = "CT_Mapping")
+    ctPlots[[plotIndex]] <- c(ctData[plotIndex, ], list(OutputMappings = mappingsData))
+    # TODO: handle plot and axes settings if defined
   }
   return(ctPlots)
 }
@@ -367,42 +350,46 @@ getCTPlotsFromExcel <- function(data, mapping) {
 #' @keywords internal
 #' @importFrom stats na.exclude
 getGOFPlotsFromExcel <- function(data, mapping) {
+  # Identify plot title rows as they are separated by multiple NAs
   plotRows <- cummax(seq_along(data$Title) * !is.na(data$Title))
   gofPlotInfo <- split(data, plotRows)
   gofPlots <- vector(mode = "list", length = dplyr::n_distinct(plotRows))
-  gofDictionary <- data.frame(
-    Excel = c("Project", "Simulation", "Output", "Observed data", "Color"),
-    Qualification = c("Project", "Simulation", "Output", "ObservedData", "Color")
-  )
 
   for (plotIndex in seq_along(gofPlots)) {
     # Regular Fields
-    plotTitle <- stats::na.exclude(gofPlotInfo[[plotIndex]]$Title)
-    gofPlots[[plotIndex]]$Title <- plotTitle
-    gofPlots[[plotIndex]]$SectionReference <- stats::na.exclude(gofPlotInfo[[plotIndex]]$`Section Reference`)
-    gofPlots[[plotIndex]]$PlotTypes <- stats::na.exclude(gofPlotInfo[[plotIndex]]$`Plot Type`)
-    gofPlots[[plotIndex]]$Artifacts <- stats::na.exclude(gofPlotInfo[[plotIndex]]$`Artifacts`)
-    # TODO: handle plot and axes settings if defined
-
+    gofPlotData <- lapply(as.list(gofPlotInfo[[plotIndex]]), stats::na.exclude)
+    # Do not export plots without a section reference
+    if (ospsuite.utils::isEmpty(gofPlotData[["Section Reference"]])) {
+      gofPlots[[plotIndex]] <- NULL
+      next
+    }
+    gofData <- mapToQualification(gofPlotData, sheetName = "GOF_Plots")
+    plotTitle <- gofData[["Title"]]
     # Groups
-    # TODO: handle if an NA is within these 2 columns
-    groupInfo <- stats::na.exclude(gofPlotInfo[[plotIndex]][, c("Group Caption", "Group Symbol")])
-    gofPlots[[plotIndex]]$Groups <- vector(mode = "list", length = nrow(groupInfo))
-    for (groupIndex in seq_len(nrow(groupInfo))) {
-      groupTitle <- groupInfo$`Group Caption`[groupIndex]
-      gofPlots[[plotIndex]]$Groups[[groupIndex]]$Caption <- groupTitle
-      gofPlots[[plotIndex]]$Groups[[groupIndex]]$Symbol <- groupInfo$`Group Symbol`[groupIndex]
+    gofGroupData <- mapToQualification(
+      gofPlotData,
+      sheetName = "GOF_Plots",
+      qualificationPlanSelector = "Groups"
+    )
+    gofGroupData <- as.data.frame(gofGroupData)
+    # TODO: handle plot and axes settings if defined
+    gofGroups <- vector(mode = "list", length = nrow(gofGroupData))
+    for (groupIndex in seq_along(gofGroups)) {
+      groupTitle <- gofGroupData[groupIndex, "Caption"]
       # Get all relevant GOF mapping
       outputMappings <- dplyr::filter(
         .data = mapping,
         .data[["Plot Title"]] %in% plotTitle,
         .data[["Group Title"]] %in% groupTitle
       )
-      outputMappings <- dplyr::select(.data = outputMappings, dplyr::matches(gofDictionary$Excel))
-      names(outputMappings) <- gofDictionary$Qualification
-      gofPlots[[plotIndex]]$Groups[[groupIndex]]$OutputMappings <- outputMappings
+      outputMappings <- mapToQualification(outputMappings, sheetName = "GOF_Mapping")
+      gofGroups[[groupIndex]] <- c(gofGroupData[groupIndex, ], list(OutputMappings = outputMappings))
     }
+    gofPlots[[plotIndex]] <- c(gofData, list(Groups = gofGroups))
   }
+  # Remove NULLs from exported plots
+  indicesToKeep <- which(!sapply(gofPlots, is.null))
+  gofPlots <- gofPlots[indicesToKeep]
   return(gofPlots)
 }
 
@@ -417,59 +404,62 @@ getDDIPlotsFromExcel <- function(data, mapping) {
   plotRows <- cummax(seq_along(data$Title) * !is.na(data$Title))
   ddiPlotInfo <- split(data, plotRows)
   ddiPlots <- vector(mode = "list", length = dplyr::n_distinct(plotRows))
-
   for (plotIndex in seq_along(ddiPlots)) {
     # Regular Fields
-    plotTitle <- stats::na.exclude(ddiPlotInfo[[plotIndex]]$Title)
-    ddiPlots[[plotIndex]]$Title <- plotTitle
-    ddiPlots[[plotIndex]]$SectionReference <- stats::na.exclude(ddiPlotInfo[[plotIndex]]$`Section Ref`)
-    ddiPlots[[plotIndex]]$PKParameters <- stats::na.exclude(ddiPlotInfo[[plotIndex]]$`PK-Parameter`)
-    ddiPlots[[plotIndex]]$PlotTypes <- stats::na.exclude(ddiPlotInfo[[plotIndex]]$`Plot Type`)
-    ddiPlots[[plotIndex]]$Artifacts <- stats::na.exclude(ddiPlotInfo[[plotIndex]]$`Artifacts`)
-    ddiPlots[[plotIndex]]$Subunits <- stats::na.exclude(ddiPlotInfo[[plotIndex]]$`Subunits`)
-    # TODO: handle plot and axes settings if defined
-
+    ddiPlotData <- lapply(as.list(ddiPlotInfo[[plotIndex]]), stats::na.exclude)
+    # Do not export plots without a section reference
+    if (ospsuite.utils::isEmpty(ddiPlotData[["Section Ref"]])) {
+      ddiPlots[[plotIndex]] <- NULL
+      next
+    }
+    ddiData <- mapToQualification(ddiPlotData, sheetName = "DDIRatio_Plots")
+    plotTitle <- ddiData[["Title"]]
     # Groups
-    # TODO: handle if an NA is within these 3 columns
-    groupInfo <- stats::na.exclude(ddiPlotInfo[[plotIndex]][, c("Group Caption", "Group Color", "Group Symbol")])
-    ddiPlots[[plotIndex]]$Groups <- vector(mode = "list", length = nrow(groupInfo))
-    for (groupIndex in seq_len(nrow(groupInfo))) {
-      groupTitle <- groupInfo$`Group Caption`[groupIndex]
-      ddiPlots[[plotIndex]]$Groups[[groupIndex]]$Caption <- groupTitle
-      ddiPlots[[plotIndex]]$Groups[[groupIndex]]$Color <- groupInfo$`Group Color`[groupIndex]
-      ddiPlots[[plotIndex]]$Groups[[groupIndex]]$Symbol <- groupInfo$`Group Symbol`[groupIndex]
-      # Get all relevant DDI Ratios from mapping
-      ddiRatios <- dplyr::filter(
+    ddiGroupData <- mapToQualification(
+      ddiPlotData,
+      sheetName = "DDIRatio_Plots",
+      qualificationPlanSelector = "Groups"
+    )
+    ddiGroupData <- as.data.frame(ddiGroupData)
+    # TODO: handle plot and axes settings if defined
+    ddiGroups <- vector(mode = "list", length = nrow(ddiGroupData))
+    for (groupIndex in seq_along(ddiGroups)) {
+      groupTitle <- ddiGroupData[groupIndex, "Caption"]
+      # Get all relevant DDI Ratios
+      ddiRatiosData <- dplyr::filter(
         .data = mapping,
         .data[["Plot Title"]] %in% plotTitle,
         .data[["Group Title"]] %in% groupTitle
       )
-      ddiPlots[[plotIndex]]$Groups[[groupIndex]]$DDIRatios <- lapply(
-        seq_len(nrow(ddiRatios)),
-        function(ddiRatioIndex) {
-          list(
-            Output = ddiRatios$Output[ddiRatioIndex],
-            ObservedData = ddiRatios$`Observed data`[ddiRatioIndex],
-            ObservedDataRecordId = ddiRatios$ObsDataRecordID[ddiRatioIndex],
-            SimulationControl = list(
-              Project = ddiRatios$Project[ddiRatioIndex],
-              Simulation = ddiRatios$Simulation_Control[ddiRatioIndex],
-              StartTime = ddiRatios$`Control StartTime`[ddiRatioIndex],
-              EndTime = ddiRatios$`Control EndTime`[ddiRatioIndex],
-              TimeUnit = ddiRatios$`Control TimeUnit`[ddiRatioIndex]
-            ),
-            SimulationDDI = list(
-              Project = ddiRatios$Project[ddiRatioIndex],
-              Simulation = ddiRatios$Simulation_Treatment[ddiRatioIndex],
-              StartTime = ddiRatios$`Treatment StartTime`[ddiRatioIndex],
-              EndTime = ddiRatios$`Treatment EndTime`[ddiRatioIndex],
-              TimeUnit = ddiRatios$`Treatment TimeUnit`[ddiRatioIndex]
-            )
+      ddiRatiosOutputs <- mapToQualification(ddiRatiosData, sheetName = "DDIRatio_Mapping")
+      ddiRatiosControl <- mapToQualification(
+        ddiRatiosData,
+        sheetName = "DDIRatio_Mapping",
+        qualificationPlanSelector = "SimulationControl"
+      )
+      ddiRatiosTreatment <- mapToQualification(
+        ddiRatiosData,
+        sheetName = "DDIRatio_Mapping",
+        qualificationPlanSelector = "SimulationDDI"
+      )
+      # Format DDI Ratios as an array of lists corresponding for each row of the ddiRatiosData
+      ddiRatios <- lapply(
+        seq_len(nrow(ddiRatiosData)),
+        function(ddiRatiosIndex) {
+          c(
+            ddiRatiosOutputs[ddiRatiosIndex, ],
+            list(SimulationControl = ddiRatiosControl[ddiRatiosIndex, ]),
+            list(SimulationDDI = ddiRatiosTreatment[ddiRatiosIndex, ])
           )
         }
       )
+      ddiGroups[[groupIndex]] <- c(ddiGroupData[groupIndex, ], list(DDIRatios = ddiRatios))
     }
+    ddiPlots[[plotIndex]] <- c(ddiData, list(Groups = ddiGroups))
   }
+  # Remove NULLs from exported plots
+  indicesToKeep <- which(!sapply(ddiPlots, is.null))
+  ddiPlots <- ddiPlots[indicesToKeep]
   return(ddiPlots)
 }
 
@@ -516,4 +506,24 @@ getPlotSettingsFromExcel <- function(data) {
     )
   )
   return(plotSettings)
+}
+
+#' @title mapToQualification
+#' @description
+#' Map and rename qualification data.frame or list using dictionray
+#' @param data A data.frame or a list
+#' @param sheetName Selected Excel sheet name
+#' @param qualificationPlanSelector Qualification Plan selector for sub-fields
+#' @return A data.frame or a list
+#' @keywords internal
+mapToQualification <- function(data, sheetName, qualificationPlanSelector = NA) {
+  dictionary <- dplyr::filter(
+    .data = EXCEL_MAPPING,
+    .data[["ExcelSheet"]] %in% sheetName,
+    !is.na(.data[["QualificationPlanField"]]),
+    .data[["QualificationPlanSelector"]] %in% qualificationPlanSelector
+  )
+  selectedData <- data[dictionary$ExcelColumn]
+  names(selectedData) <- dictionary$QualificationPlanField
+  return(selectedData)
 }
