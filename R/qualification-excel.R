@@ -312,8 +312,11 @@ getProjectsFromExcel <- function(projectData, bbData) {
 #' @return A data.frame with columns 'Project', 'Simulation', and 'Section Reference', or NA if no data
 #' @keywords internal
 getAllPlotsFromExcel <- function(data) {
+  data <- dplyr::filter(.data = data, !is.na(.data[["Section Reference"]]))
   if (nrow(data) == 0) {
-    return(NA)
+    # Returns an empty list that will be converted as [] in json
+    # to match expected qualification json structure
+    return(list())
   }
   allPlotsDictionary <- data.frame(
     Excel = c("Project", "Simulation", "Section Reference"),
@@ -332,6 +335,10 @@ getAllPlotsFromExcel <- function(data) {
 #' @return A list of ComparisonTimeProfile plots
 #' @keywords internal
 getCTPlotsFromExcel <- function(data, mapping) {
+  data <- dplyr::filter(.data = data, !is.na(.data[["Section Reference"]]))
+  if (nrow(data) == 0) {
+    return(list())
+  }
   ctPlots <- vector(mode = "list", length = nrow(data))
   ctDictionary <- data.frame(
     Excel = c("Project", "Simulation", "Output", "Observed data", "StartTime", "TimeUnit", "Color", "Caption", "Symbol"),
@@ -347,8 +354,8 @@ getCTPlotsFromExcel <- function(data, mapping) {
     names(plotData) <- ctDictionary$Qualification
 
     ctPlots[[plotIndex]] <- list(
-      Title = data$Title[plotIndex],
       SectionReference = data$`Section Reference`[plotIndex],
+      Title = data$Title[plotIndex],
       SimulationDuration = data$`Simulation Duration`[plotIndex],
       TimeUnit = data$TimeUnit[plotIndex],
       OutputMappings = plotData
@@ -367,6 +374,9 @@ getCTPlotsFromExcel <- function(data, mapping) {
 #' @keywords internal
 #' @importFrom stats na.exclude
 getGOFPlotsFromExcel <- function(data, mapping) {
+  if (nrow(data) == 0) {
+    return(list())
+  }
   plotRows <- cummax(seq_along(data$Title) * !is.na(data$Title))
   gofPlotInfo <- split(data, plotRows)
   gofPlots <- vector(mode = "list", length = dplyr::n_distinct(plotRows))
@@ -414,6 +424,9 @@ getGOFPlotsFromExcel <- function(data, mapping) {
 #' @return A list of DDIRatio plots
 #' @keywords internal
 getDDIPlotsFromExcel <- function(data, mapping) {
+  if (nrow(data) == 0) {
+    return(list())
+  }
   plotRows <- cummax(seq_along(data$Title) * !is.na(data$Title))
   ddiPlotInfo <- split(data, plotRows)
   ddiPlots <- vector(mode = "list", length = dplyr::n_distinct(plotRows))
