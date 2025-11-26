@@ -17,6 +17,6 @@ mapToQualification(data, sheetName, qualificationPlanSelector = NA)
 A data.frame or a list
 }
 \description{
-Map and rename qualification data.frame or list using dictionray
+Map and rename qualification data.frame or list using dictionary
 }
 \keyword{internal}
