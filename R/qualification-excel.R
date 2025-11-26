@@ -510,7 +510,7 @@ getPlotSettingsFromExcel <- function(data) {
 
 #' @title mapToQualification
 #' @description
-#' Map and rename qualification data.frame or list using dictionray
+#' Map and rename qualification data.frame or list using dictionary
 #' @param data A data.frame or a list
 #' @param sheetName Selected Excel sheet name
 #' @param qualificationPlanSelector Qualification Plan selector for sub-fields
