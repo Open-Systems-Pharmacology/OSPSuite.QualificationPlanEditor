@@ -11,7 +11,7 @@ testAllPlotsDataMissingSectionRef <- data.frame(
   check.names = FALSE
   )
 
-test_that("Empty Excel sheet leads to NA", {
+test_that("Empty Excel sheet returns empty list", {
   expect_equal(
     ospsuite.qualificationplaneditor:::getAllPlotsFromExcel(testEmptyAllPlotsData),
     list()
