@@ -263,12 +263,12 @@ getQualificationAllPlots <- function(qualificationContent, simulationsOutputs) {
     )
   }
   # Add Project and Simulation that are not already defined
-  newPlotData <- dplyr::filter(
-    .data = simulationsOutputs,
-    !(paste(.data[["Project"]], .data[["Simulation"]]) %in% paste(allPlotsData$Project, allPlotsData$Simulation))
-  )
-  newPlotData <- dplyr::mutate(.data = newPlotData, `Section Reference` = NA)
-  newPlotData <- dplyr::select(.data = newPlotData, -dplyr::matches("Output"))
+  newPlotData <- simulationsOutputs |>
+    dplyr::filter(
+      !(paste(.data[["Project"]], .data[["Simulation"]]) %in% paste(allPlotsData$Project, allPlotsData$Simulation))
+      ) |>
+    dplyr::mutate(`Section Reference` = NA) |>
+    dplyr::select(-dplyr::matches("Output"))
   return(rbind(allPlotsData, newPlotData))
 }
 
@@ -561,11 +561,10 @@ formatGlobalAxesSettings <- function(axesSettings, plotName) {
       Scaling = NA
     ))
   }
-  axesSettingsData <- dplyr::bind_rows(lapply(axesSettings, as.data.frame))
-  axesSettingsData <- dplyr::mutate(
-    .data = axesSettingsData,
-    Plot = plotName,
-    .before = dplyr::everything()
-  )
+  axesSettingsData <- dplyr::bind_rows(lapply(axesSettings, as.data.frame)) |>
+    dplyr::mutate(
+      Plot = plotName,
+      .before = dplyr::everything()
+      )
   return(axesSettingsData)
 }

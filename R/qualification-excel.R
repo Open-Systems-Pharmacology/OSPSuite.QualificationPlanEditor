@@ -242,21 +242,18 @@ parseSectionsToNestedList <- function(sectionsIn, sectionData) {
 groupAxesSettings <- function(qualificationAxesSettings) {
   exportedSettings <- list()
   for (plotName in ALL_EXCEL_AXES) {
-    axesSetting <- dplyr::filter(
-      .data = qualificationAxesSettings,
-      .data[["Plot"]] %in% plotName
-    )
+    axesSetting <- qualificationAxesSettings |>
+      dplyr::filter(.data[["Plot"]] %in% plotName)
+
     if (nrow(axesSetting) == 0) {
       next
     }
     if (nrow(axesSetting) < 2) {
       cli::cli_abort("GlobalAxes sheet: {.strong {plotName}} plot only has {.val 1} axis defined")
     }
-    exportedSettings[[plotName]] <- dplyr::select(.data = axesSetting, -dplyr::matches("Plot"))
-    exportedSettings[[plotName]] <- dplyr::mutate(
-      .data = exportedSettings[[plotName]],
-      Unit = ifelse(is.na(.data[["Unit"]]), "", .data[["Unit"]])
-    )
+    exportedSettings[[plotName]] <- axesSetting |>
+      dplyr::select(-dplyr::matches("Plot")) |>
+      dplyr::mutate(Unit = ifelse(is.na(.data[["Unit"]]), "", .data[["Unit"]]))
   }
   return(exportedSettings)
 }
@@ -273,14 +270,12 @@ getProjectsFromExcel <- function(projectData, bbData) {
   if (all(noBB)) {
     return(projectData)
   }
-  bbData <- dplyr::filter(.data = bbData, !noBB)
+  bbData <- bbData |> dplyr::filter(!noBB)
   updatedProjects <- lapply(
     seq_len(nrow(projectData)),
     function(rowIndex) {
-      selectedBBData <- dplyr::filter(
-        .data = bbData,
-        .data[["Project"]] %in% projectData$Id[rowIndex]
-      )
+      selectedBBData <- bbData |>
+        dplyr::filter(.data[["Project"]] %in% projectData$Id[rowIndex])
       if (nrow(selectedBBData) == 0) {
         updatedProject <- list(
           Id = projectData$Id[rowIndex],
@@ -288,11 +283,7 @@ getProjectsFromExcel <- function(projectData, bbData) {
         )
         return(updatedProject)
       }
-      selectedBBData <- dplyr::select(
-        .data = selectedBBData,
-        dplyr::matches(c("BB-Type", "BB-Name", "Parent-Project"))
-      )
-      names(selectedBBData) <- c("Type", "Name", "Project")
+      selectedBBData <- mapToQualification(selectedBBData, sheetName = "BB")
 
       updatedProject <- list(
         Id = projectData$Id[rowIndex],
@@ -312,7 +303,8 @@ getProjectsFromExcel <- function(projectData, bbData) {
 #' @return A data.frame with columns 'Project', 'Simulation', and 'Section Reference', or NA if no data
 #' @keywords internal
 getAllPlotsFromExcel <- function(data) {
-  data <- dplyr::filter(.data = data, !is.na(.data[["Section Reference"]]))
+  data <- data |>
+    dplyr::filter(!is.na(.data[["Section Reference"]]))
   if (nrow(data) == 0) {
     # Returns an empty list that will be converted as [] in json
     # to match expected qualification json structure
@@ -330,18 +322,18 @@ getAllPlotsFromExcel <- function(data) {
 #' @return A list of ComparisonTimeProfile plots
 #' @keywords internal
 getCTPlotsFromExcel <- function(data, mapping) {
-  data <- dplyr::filter(.data = data, !is.na(.data[["Section Reference"]]))
+  data <- data |>
+    dplyr::filter(!is.na(.data[["Section Reference"]]))
   if (nrow(data) == 0) {
     return(list())
   }
   ctPlots <- vector(mode = "list", length = nrow(data))
   ctData <- mapToQualification(data, sheetName = "CT_Plots")
   for (plotIndex in seq_along(ctPlots)) {
-    mappingsData <- dplyr::filter(
-      .data = mapping,
-      .data[["Plot Title"]] %in% ctData[plotIndex, "Title"]
-    )
-    mappingsData <- mapToQualification(mappingsData, sheetName = "CT_Mapping")
+    mappingsData <- mapping |>
+      dplyr::filter(.data[["Plot Title"]] %in% ctData[plotIndex, "Title"]) |>
+      mapToQualification(sheetName = "CT_Mapping")
+
     ctPlots[[plotIndex]] <- c(ctData[plotIndex, ], list(OutputMappings = mappingsData))
     # TODO: handle plot and axes settings if defined
   }
@@ -379,19 +371,19 @@ getGOFPlotsFromExcel <- function(data, mapping) {
       gofPlotData,
       sheetName = "GOF_Plots",
       qualificationPlanSelector = "Groups"
-    )
-    gofGroupData <- as.data.frame(gofGroupData)
+    ) |> as.data.frame()
     # TODO: handle plot and axes settings if defined
     gofGroups <- vector(mode = "list", length = nrow(gofGroupData))
     for (groupIndex in seq_along(gofGroups)) {
       groupTitle <- gofGroupData[groupIndex, "Caption"]
       # Get all relevant GOF mapping
-      outputMappings <- dplyr::filter(
-        .data = mapping,
-        .data[["Plot Title"]] %in% plotTitle,
-        .data[["Group Title"]] %in% groupTitle
-      )
-      outputMappings <- mapToQualification(outputMappings, sheetName = "GOF_Mapping")
+      outputMappings <- mapping |>
+        dplyr::filter(
+          .data[["Plot Title"]] %in% plotTitle,
+          .data[["Group Title"]] %in% groupTitle
+        ) |>
+        mapToQualification(sheetName = "GOF_Mapping")
+
       gofGroups[[groupIndex]] <- c(gofGroupData[groupIndex, ], list(OutputMappings = outputMappings))
     }
     gofPlots[[plotIndex]] <- c(gofData, list(Groups = gofGroups))
@@ -431,18 +423,18 @@ getDDIPlotsFromExcel <- function(data, mapping) {
       ddiPlotData,
       sheetName = "DDIRatio_Plots",
       qualificationPlanSelector = "Groups"
-    )
-    ddiGroupData <- as.data.frame(ddiGroupData)
+    ) |> as.data.frame()
+
     # TODO: handle plot and axes settings if defined
     ddiGroups <- vector(mode = "list", length = nrow(ddiGroupData))
     for (groupIndex in seq_along(ddiGroups)) {
       groupTitle <- ddiGroupData[groupIndex, "Caption"]
       # Get all relevant DDI Ratios
-      ddiRatiosData <- dplyr::filter(
-        .data = mapping,
-        .data[["Plot Title"]] %in% plotTitle,
-        .data[["Group Title"]] %in% groupTitle
-      )
+      ddiRatiosData <- mapping |>
+        dplyr::filter(
+          .data[["Plot Title"]] %in% plotTitle,
+          .data[["Group Title"]] %in% groupTitle
+        )
       ddiRatiosOutputs <- mapToQualification(ddiRatiosData, sheetName = "DDIRatio_Mapping")
       ddiRatiosControl <- mapToQualification(
         ddiRatiosData,
@@ -485,13 +477,8 @@ getInputsFromExcel <- function(data) {
   if (nrow(data) == 0) {
     return()
   }
-  inputDictionary <- data.frame(
-    Excel = c("Project", "BB-Type", "BB-Name", "Section Reference"),
-    Qualification = c("Project", "Type", "Name", "SectionReference")
-  )
-  data <- dplyr::select(.data = data, dplyr::matches(inputDictionary$Excel))
-  names(data) <- inputDictionary$Qualification
-  return(data)
+  inputsData <- mapToQualification(data, sheetName = "Inputs")
+  return(inputsData)
 }
 
 #' @title getPlotSettingsFromExcel
@@ -505,7 +492,7 @@ getPlotSettingsFromExcel <- function(data) {
     return(NA)
   }
   # Keep only first row
-  data <- dplyr::filter(.data = data, dplyr::row_number() == 1)
+  data <- data |> dplyr::filter(dplyr::row_number() == 1)
   plotSettings <- list(
     ChartWidth = data$ChartWidth,
     ChartHeight = data$ChartHeight,
@@ -529,12 +516,12 @@ getPlotSettingsFromExcel <- function(data) {
 #' @return A data.frame or a list
 #' @keywords internal
 mapToQualification <- function(data, sheetName, qualificationPlanSelector = NA) {
-  dictionary <- dplyr::filter(
-    .data = EXCEL_MAPPING,
-    .data[["ExcelSheet"]] %in% sheetName,
-    !is.na(.data[["QualificationPlanField"]]),
-    .data[["QualificationPlanSelector"]] %in% qualificationPlanSelector
-  )
+  dictionary <- EXCEL_MAPPING |>
+    dplyr::filter(
+      .data[["ExcelSheet"]] %in% sheetName,
+      !is.na(.data[["QualificationPlanField"]]),
+      .data[["QualificationPlanSelector"]] %in% qualificationPlanSelector
+    )
   selectedData <- data[dictionary$ExcelColumn]
   names(selectedData) <- dictionary$QualificationPlanField
   return(selectedData)
