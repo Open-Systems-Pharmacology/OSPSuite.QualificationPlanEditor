@@ -79,9 +79,9 @@ utils::globalVariables(c(".data"))
 
 #' @title EXCEL_MAPPING
 #' @description
-#' Dicotionary mapping Excel to Qualification variables
+#' Dictionary mapping Excel to Qualification variables
 #' @keywords internal
-EXCEL_MAPPING <- read.csv(
+EXCEL_MAPPING <- read.csv( # nolint
   system.file("excel-qualification-dictionary.csv", package = "ospsuite.qualificationplaneditor"),
   na.strings = "",
   stringsAsFactors = FALSE

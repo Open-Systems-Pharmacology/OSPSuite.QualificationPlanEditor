@@ -11,6 +11,6 @@ An object of class \code{data.frame} with 98 rows and 4 columns.
 EXCEL_MAPPING
 }
 \description{
-Dicotionary mapping Excel to Qualification variables
+Dictionary mapping Excel to Qualification variables
 }
 \keyword{internal}

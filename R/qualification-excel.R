@@ -442,7 +442,7 @@ getDDIPlotsFromExcel <- function(data, mapping) {
         sheetName = "DDIRatio_Mapping",
         qualificationPlanSelector = "SimulationDDI"
       )
-      # Format DDI Ratios as an array of lists corresponding for each row of the ddiRatiosData
+      # Format DDI Ratios as an array of lists corresponding to each row of the ddiRatiosData
       ddiRatios <- lapply(
         seq_len(nrow(ddiRatiosData)),
         function(ddiRatiosIndex) {
