@@ -30,7 +30,7 @@ Imports:
     jsonlite,
     openxlsx,
     ospsuite.utils (>= 1.7.0)
-Remotes: 
+Remotes:  
     ospsuite=Open-Systems-Pharmacology/OSPSuite-R@*release,
     ospsuite.utils=Open-Systems-Pharmacology/OSPSuite.RUtils@*release
 Suggests: 
