@@ -32,8 +32,7 @@ ALL_BUILDING_BLOCKS <- c( # nolint
   "Event",
   "Formulation",
   "ObserverSet",
-  "ExpressionProfile",
-  "Simulation"
+  "ExpressionProfile"
 )
 
 #' @title ALL_EXCEL_AXES
