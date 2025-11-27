@@ -29,14 +29,14 @@ Imports:
     dplyr,
     jsonlite,
     openxlsx,
-    ospsuite.utils (>= 1.7.0)
-Remotes:  
+    ospsuite.utils (>= 1.7.0),
+    readxl
+Remotes: 
     ospsuite=Open-Systems-Pharmacology/OSPSuite-R@*release,
     ospsuite.utils=Open-Systems-Pharmacology/OSPSuite.RUtils@*release
 Suggests: 
     devtools,
     knitr,
-    readxl,
     rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

@@ -1,3 +1,18 @@
+# Prevent warning when using dplyr
+utils::globalVariables(c(".data"))
+
+#' @title lookupData
+#' @description
+#' data.frame of all lookup values
+#' Allowing all definitions to be centralized in Qualification-Template
+#' @importFrom readxl read_xlsx
+#' @keywords internal
+lookupData <- readxl::read_xlsx(
+  system.file("Qualification-Template.xlsx", package = "ospsuite.qualificationplaneditor"),
+  sheet = "Lookup",
+  na = ""
+)
+
 #' @title EXCEL_OPTIONS
 #' @description
 #' List of default Excel options
@@ -24,58 +39,28 @@ EXCEL_OPTIONS <- list( # nolint
 #' @description
 #' Allowed Building Blocks values
 #' @keywords internal
-ALL_BUILDING_BLOCKS <- c( # nolint
-  "Individual",
-  "Population",
-  "Compound",
-  "Protocol",
-  "Event",
-  "Formulation",
-  "ObserverSet",
-  "ExpressionProfile",
-  "Simulation"
-)
+#' @importFrom stats na.exclude
+ALL_BUILDING_BLOCKS <- stats::na.exclude(lookupData[["BuildingBlock"]]) # nolint
 
 #' @title ALL_EXCEL_AXES
 #' @description
 #' Allowed Excel Axes
 #' @keywords internal
-ALL_EXCEL_AXES <- c( # nolint
-  "GOFMergedPlotsPredictedVsObserved",
-  "GOFMergedPlotsResidualsOverTime",
-  "DDIRatioPlotsPredictedVsObserved",
-  "DDIRatioPlotsResidualsVsObserved",
-  "ComparisonTimeProfile",
-  "PKRatioPlots"
-)
+ALL_EXCEL_AXES <- stats::na.exclude(lookupData[["AxesSettingsPlots"]]) # nolint
 
 #' @title ALL_EXCEL_DIMENSIONS
 #' @description
 #' Allowed Excel Dimensions Blocks values
 #' @keywords internal
-ALL_EXCEL_DIMENSIONS <- c( # nolint
-  "Age",
-  "Amount",
-  "Concentration (mass)",
-  "Concentration (molar)",
-  "Fraction",
-  "Mass",
-  "Time",
-  "Dimensionless"
-)
+#' @importFrom stats na.exclude
+ALL_EXCEL_DIMENSIONS <- stats::na.exclude(lookupData[["Dimension"]]) # nolint
 
 #' @title ALL_EXCEL_SHEETS
 #' @description
 #' Required Excel sheets to be read by UI
 #' @keywords internal
-ALL_EXCEL_SHEETS <- c( # nolint
-  "MetaInfo", "Projects", "Simulations_Outputs", "Simulations_ObsData", "ObsData", "BB", "SimParam",
-  paste0(c("All", "CT", "GOF", "DDIRatio", "PKRatio"), "_Plots"),
-  paste0(c("CT", "GOF", "DDIRatio", "PKRatio"), "_Mapping"),
-  "Sections", "Inputs", "GlobalPlotSettings", "GlobalAxesSettings"
-)
-
-utils::globalVariables(c(".data"))
+#' @importFrom readxl excel_sheets
+ALL_EXCEL_SHEETS <- readxl::excel_sheets(system.file("Qualification-Template.xlsx", package = "ospsuite.qualificationplaneditor")) # nolint
 
 #' @title EXCEL_MAPPING
 #' @description
