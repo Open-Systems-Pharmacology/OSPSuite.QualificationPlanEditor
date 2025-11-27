@@ -157,7 +157,17 @@ getQualificationStyles <- function(data, commonProjects, qualificationProjects, 
 #' @return A data.frame with `Section Reference`, `Title`, `Content` and `Parent Section` columns
 #' @keywords internal
 getQualificationSections <- function(qualificationContent) {
-  return(parseSectionsToDataFrame(qualificationContent$Sections))
+  sectionsData <- parseSectionsToDataFrame(qualificationContent$Sections)
+  if (ospsuite.utils::isEmpty(sectionsData)) {
+    sectionsData <- data.frame(
+      "Section Reference" = character(),
+      "Title" = character(),
+      "Content" = character(),
+      "Parent Section" = character(),
+      check.names = FALSE
+    )
+  }
+  return(sectionsData)
 }
 
 #' @title parseSectionsToDataFrame
@@ -214,10 +224,10 @@ getQualificationInputs <- function(qualificationContent) {
   qualificationInputs <- qualificationContent$Inputs
   if (ospsuite.utils::isEmpty(qualificationInputs)) {
     inputsData <- data.frame(
-      "Project" = NULL,
-      "BB-Type" = NULL,
-      "BB-Name" = NULL,
-      "Section Reference" = NULL,
+      "Project" = character(),
+      "BB-Type" = character(),
+      "BB-Name" = character(),
+      "Section Reference" = character(),
       check.names = FALSE
     )
     return(inputsData)
@@ -250,7 +260,12 @@ getQualificationInputs <- function(qualificationContent) {
 #' @keywords internal
 #' @import dplyr
 getQualificationAllPlots <- function(qualificationContent, simulationsOutputs) {
-  allPlotsData <- data.frame()
+  allPlotsData <- data.frame(
+    Project = character(),
+    Simulation = character(),
+    "Section Reference" = character(),
+    check.names = FALSE
+  )
   for (allPlot in qualificationContent$Plots$AllPlots) {
     allPlotsData <- rbind(
       allPlotsData,
@@ -266,7 +281,7 @@ getQualificationAllPlots <- function(qualificationContent, simulationsOutputs) {
   newPlotData <- simulationsOutputs |>
     dplyr::filter(
       !(paste(.data[["Project"]], .data[["Simulation"]]) %in% paste(allPlotsData$Project, allPlotsData$Simulation))
-      ) |>
+    ) |>
     dplyr::mutate(`Section Reference` = NA) |>
     dplyr::select(-dplyr::matches("Output"))
   return(rbind(allPlotsData, newPlotData))
@@ -281,7 +296,13 @@ getQualificationAllPlots <- function(qualificationContent, simulationsOutputs) {
 #' `Title`, `Section Reference`, `Simulation Duration`, `TimeUnit` and plot settings
 #' @keywords internal
 getQualificationCTPlots <- function(qualificationContent) {
-  ctProfiles <- data.frame()
+  ctProfiles <- data.frame(
+    Title = character(),
+    "Section Reference" = character(),
+    "Simulation Duration" = character(),
+    TimeUnit = character(),
+    check.names = FALSE
+  )
   for (ctPlot in qualificationContent$Plots$ComparisonTimeProfilePlots) {
     ctProfile <- cbind(
       data.frame(
@@ -308,7 +329,19 @@ getQualificationCTPlots <- function(qualificationContent) {
 #' `Project`, `Simulation`, `Output` and relevant CT fields
 #' @keywords internal
 getQualificationCTMapping <- function(qualificationContent) {
-  ctMappings <- data.frame()
+  ctMappings <- data.frame(
+    Project = character(),
+    Simulation = character(),
+    Output = character(),
+    "Observed data" = character(),
+    "Plot Title" = character(),
+    StartTime = character(),
+    TimeUnit = character(),
+    Color = character(),
+    Caption = character(),
+    Symbol = character(),
+    check.names = FALSE
+  )
   for (ctPlot in qualificationContent$Plots$ComparisonTimeProfilePlots) {
     for (outputMapping in ctPlot$OutputMappings) {
       ctMapping <- data.frame(
@@ -339,7 +372,15 @@ getQualificationCTMapping <- function(qualificationContent) {
 #' `Title`, `Section Reference`, `Artifacts`, `PlotTypes`, `Groups` and plot settings
 #' @keywords internal
 getQualificationGOFPlots <- function(qualificationContent) {
-  gofPlots <- data.frame()
+  gofPlots <- data.frame(
+    Title = character(),
+    "Section Reference" = character(),
+    Artifacts = character(),
+    "Plot Type" = character(),
+    "Group Caption" = character(),
+    "Group Symbol" = character(),
+    check.names = FALSE
+  )
   for (gofPlot in qualificationContent$Plots$GOFMergedPlots) {
     gofPlotSettings <- list(
       Title = gofPlot$Title,
@@ -379,7 +420,17 @@ getQualificationGOFPlots <- function(qualificationContent) {
 #' `Project`, `Simulation`, `Output` and relevant GOF fields
 #' @keywords internal
 getQualificationGOFMapping <- function(qualificationContent) {
-  gofMappings <- data.frame()
+  gofMappings <- data.frame(
+    Project = character(),
+    Simulation = character(),
+    Output = character(),
+    "Observed data" = character(),
+    "Plot Title" = character(),
+    "Group Title" = character(),
+    Color = character(),
+    check.names = FALSE
+  )
+
   for (gofPlot in qualificationContent$Plots$GOFMergedPlots) {
     for (gofGroup in gofPlot$Groups) {
       for (outputMapping in gofGroup$OutputMappings) {
@@ -408,7 +459,18 @@ getQualificationGOFMapping <- function(qualificationContent) {
 #' `Title`, `Section Ref`, `PK-Parameter`, `Plot Type`, `Subunits`, `Artifacts` and legend settings
 #' @keywords internal
 getQualificationDDIRatio <- function(qualificationContent) {
-  ddiRatios <- data.frame()
+  ddiRatios <- data.frame(
+    Title = character(),
+    "Section Ref" = character(),
+    "PK-Parameter" = character(),
+    "Plot Type" = character(),
+    Subunits = character(),
+    Artifacts = character(),
+    "Group Caption" = character(),
+    "Group Color" = character(),
+    "Group Symbol" = character(),
+    check.names = FALSE
+  )
   for (ddiPlot in qualificationContent$Plots$DDIRatioPlots) {
     ddiPlotSettings <- list(
       Title = ddiPlot$Title,
@@ -449,7 +511,23 @@ getQualificationDDIRatio <- function(qualificationContent) {
 #' `Project`, `Simulation_Control`, `Simulation_Treatment`, `Output` and control/treatment settings
 #' @keywords internal
 getQualificationDDIRatioMapping <- function(qualificationContent) {
-  ddiMappings <- data.frame()
+  ddiMappings <- data.frame(
+    Project = character(),
+    Simulation_Control = character(),
+    "Control StartTime" = character(),
+    "Control EndTime" = character(),
+    "Control TimeUnit" = character(),
+    Simulation_Treatment = character(),
+    "Treatment StartTime" = character(),
+    "Treatment EndTime" = character(),
+    "Treatment TimeUnit" = character(),
+    Output = character(),
+    "Plot Title" = character(),
+    "Group Title" = character(),
+    "Observed data" = character(),
+    ObsDataRecordID = character(),
+    check.names = FALSE
+  )
   for (ddiPlot in qualificationContent$Plots$DDIRatioPlots) {
     for (ddiGroup in ddiPlot$Groups) {
       for (ddiRatios in ddiGroup$DDIRatios) {
@@ -565,6 +643,6 @@ formatGlobalAxesSettings <- function(axesSettings, plotName) {
     dplyr::mutate(
       Plot = plotName,
       .before = dplyr::everything()
-      )
+    )
   return(axesSettingsData)
 }

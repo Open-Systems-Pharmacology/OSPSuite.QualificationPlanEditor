@@ -148,16 +148,13 @@ excelUI <- function(fileName = "qualification.xlsx",
     )
   }
   writeDataToSheet(data = observedData, sheetName = "ObsData", excelObject = excelObject)
-  # Type column uses a drop down list
-  ospsuite.utils::validateIsIncluded("Type", names(observedData))
-  typeColIndex <- which(names(observedData) == "Type")
-  openxlsx::dataValidation(
-    excelObject,
-    sheet = "ObsData",
-    cols = typeColIndex,
-    rows = 1 + seq_len(nrow(observedData)),
-    type = "list",
-    value = "'Lookup'!$L$2:$L$4"
+  # Drop down list for Obs Data Type column
+  applyDataValidation(
+    value = excelListingValue(lookupData, "ObservedDataType", "Lookup"),
+    data = observedData,
+    sheetName = "ObsData",
+    columnNames = "Type",
+    excelObject = excelObject
   )
 
   #---- Building Blocks ----
@@ -173,16 +170,13 @@ excelUI <- function(fileName = "qualification.xlsx",
     )
   }
   writeDataToSheet(data = bbData, sheetName = "BB", excelObject = excelObject)
-  # Parent-Project column uses a drop down list
-  ospsuite.utils::validateIsIncluded("Parent-Project", names(bbData))
-  parentProjectColIndex <- which(names(bbData) == "Parent-Project")
-  openxlsx::dataValidation(
-    excelObject,
-    sheet = "BB",
-    cols = parentProjectColIndex,
-    rows = 1 + seq_len(nrow(bbData)),
-    type = "list",
-    value = paste0("'Projects'!$A$2:$A$", 1 + nrow(projectData))
+  # Drop down list for Parent-Project column
+  applyDataValidation(
+    value = excelListingValue(projectData, "Id", "Projects"),
+    data = bbData,
+    sheetName = "BB",
+    columnNames = "Parent-Project",
+    excelObject = excelObject
   )
   if (useQualification) {
     bbDataStyles <- getQualificationStyles(
@@ -217,30 +211,56 @@ excelUI <- function(fileName = "qualification.xlsx",
     # Sections
     sectionsData <- getQualificationSections(qualificationContent)
     writeDataToSheet(data = sectionsData, sheetName = "Sections", excelObject = excelObject)
+    # Drop down list for Parent Section column
+    sectionReferenceListing <- excelListingValue(sectionsData, "Section Reference", "Sections")
+    applyDataValidation(
+      value = sectionReferenceListing,
+      data = sectionsData,
+      sheetName = "Sections",
+      columnNames = "Parent Section",
+      excelObject = excelObject
+    )
+
     cli::cli_progress_step("Exporting {.field Intro and Inputs}")
-    # Inputs
+    # Intro
     writeDataToSheet(
       data = getQualificationIntro(qualificationContent),
       sheetName = "Intro",
       excelObject = excelObject
     )
+    # Inputs
     inputsData <- getQualificationInputs(qualificationContent)
-    writeDataToSheet(
+    writeDataToSheet(data = inputsData, sheetName = "Inputs", excelObject = excelObject)
+    # Drop down list for Project, BB-Type, BB-Name, Section Reference columns
+    applyDataValidation(
+      value = excelListingValue(projectData, "Id", "Projects"),
       data = inputsData,
       sheetName = "Inputs",
+      columnNames = "Project",
       excelObject = excelObject
     )
-    if (nrow(inputsData) > 0) {
-      sectionColIndex <- which(names(inputsData) %in% "Section Reference")
-      openxlsx::dataValidation(
-        excelObject,
-        sheet = "Inputs",
-        cols = sectionColIndex,
-        rows = 1 + seq_len(nrow(inputsData)),
-        type = "list",
-        value = paste0("'Sections'!$A$2:$A$", 1 + nrow(sectionsData))
-      )
-    }
+    applyDataValidation(
+      value = excelListingValue(bbData, "BB-Type", "BB"),
+      data = inputsData,
+      sheetName = "Inputs",
+      columnNames = "BB-Type",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(bbData, "BB-Name", "BB"),
+      data = inputsData,
+      sheetName = "Inputs",
+      columnNames = "BB-Name",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = sectionReferenceListing,
+      data = inputsData,
+      sheetName = "Inputs",
+      columnNames = "Section Reference",
+      excelObject = excelObject
+    )
+
     # TODO: extract and export Sim Param information
 
     cli::cli_progress_step("Exporting {.field All Plots} Settings")
@@ -258,88 +278,327 @@ excelUI <- function(fileName = "qualification.xlsx",
       sheetName = "All_Plots",
       excelObject = excelObject
     )
-    # TODO when fixing issue #32: wrap dataValidation to prevent run when empty data
-    if (nrow(allPlotsData) > 0) {
-      openxlsx::dataValidation(
-        excelObject,
-        sheet = "All_Plots",
-        cols = which(names(allPlotsData) %in% "Section Reference"),
-        rows = 1 + seq_len(nrow(allPlotsData)),
-        type = "list",
-        value = paste0("'Sections'!$A$2:$A$", nrow(sectionsData) + 1)
-      )
-    }
+    # Drop down list for Project, Simulation, and Section Reference column
+    applyDataValidation(
+      value = excelListingValue(projectData, "Id", "Projects"),
+      data = allPlotsData,
+      sheetName = "All_Plots",
+      columnNames = "Project",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(simulationsOutputs, "Simulation", "Simulations_Outputs"),
+      data = allPlotsData,
+      sheetName = "All_Plots",
+      columnNames = "Simulation",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = sectionReferenceListing,
+      data = allPlotsData,
+      sheetName = "All_Plots",
+      columnNames = "Section Reference",
+      excelObject = excelObject
+    )
 
     cli::cli_progress_step("Exporting {.field Comparison Time Profile} Plot Settings")
     # Comparison Time (CT) Profile
-    writeDataToSheet(
-      data = getQualificationCTPlots(qualificationContent),
+    ctPlotsData <- getQualificationCTPlots(qualificationContent)
+    writeDataToSheet(data = ctPlotsData, sheetName = "CT_Plots", excelObject = excelObject)
+    # Drop down list for Section Reference column
+    applyDataValidation(
+      value = sectionReferenceListing,
+      data = ctPlotsData,
       sheetName = "CT_Plots",
+      columnNames = "Section Reference",
+      excelObject = excelObject
+    )
+    # Drop down list for TimeUnit column
+    applyDataValidation(
+      value = excelListingValue(lookupData, "TimeUnit", "Lookup"),
+      data = ctPlotsData,
+      sheetName = "CT_Plots",
+      columnNames = "TimeUnit",
       excelObject = excelObject
     )
     # CT Mapping
     ctMapping <- getQualificationCTMapping(qualificationContent)
-    writeDataToSheet(
+    writeDataToSheet(data = ctMapping, sheetName = "CT_Mapping", excelObject = excelObject)
+    # Color CT Mapping
+    styleColorMapping(mapping = ctMapping, sheetName = "CT_Mapping", excelObject = excelObject)
+    # Drop down lists for Project, Simulation, Output, Plot Title, TimeUnit, Color and Symbol columns
+    applyDataValidation(
+      value = excelListingValue(projectData, "Id", "Projects"),
       data = ctMapping,
       sheetName = "CT_Mapping",
+      columnNames = "Project",
       excelObject = excelObject
     )
-    # Color CT Mapping
-    styleColorMapping(
-      mapping = ctMapping,
+    applyDataValidation(
+      value = excelListingValue(simulationsOutputs, "Simulation", "Simulations_Outputs"),
+      data = ctMapping,
       sheetName = "CT_Mapping",
+      columnNames = "Simulation",
       excelObject = excelObject
     )
+    applyDataValidation(
+      value = excelListingValue(simulationsOutputs, "Output", "Simulations_Outputs"),
+      data = ctMapping,
+      sheetName = "CT_Mapping",
+      columnNames = "Output",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(ctPlotsData, "Title", "CT_Plots"),
+      data = ctMapping,
+      sheetName = "CT_Mapping",
+      columnNames = "Plot Title",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "TimeUnit", "Lookup"),
+      data = ctMapping,
+      sheetName = "CT_Mapping",
+      columnNames = "TimeUnit",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "Color", "Lookup"),
+      data = ctMapping,
+      sheetName = "CT_Mapping",
+      columnNames = "Color",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "Symbol", "Lookup"),
+      data = ctMapping,
+      sheetName = "CT_Mapping",
+      columnNames = "Symbol",
+      excelObject = excelObject
+    )
+
+
     cli::cli_progress_step("Exporting {.field GOF Merged} Plot Settings")
     # Goodness of fit (GOF) Plots
-    writeDataToSheet(
-      data = getQualificationGOFPlots(qualificationContent),
+    gofPlotsData <- getQualificationGOFPlots(qualificationContent)
+    writeDataToSheet(data = gofPlotsData, sheetName = "GOF_Plots", excelObject = excelObject)
+    # Drop down lists for Section Reference, Plot Type, Artifacts and Group Symbol columns
+    applyDataValidation(
+      value = sectionReferenceListing,
+      data = gofPlotsData,
       sheetName = "GOF_Plots",
+      columnNames = "Section Reference",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "GOFMergedPlotType", "Lookup"),
+      data = gofPlotsData,
+      sheetName = "GOF_Plots",
+      columnNames = "Plot Type",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "ArtifactsGOFPlots", "Lookup"),
+      data = gofPlotsData,
+      sheetName = "GOF_Plots",
+      columnNames = "Artifacts",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "Symbol", "Lookup"),
+      data = gofPlotsData,
+      sheetName = "GOF_Plots",
+      columnNames = "Group Symbol",
       excelObject = excelObject
     )
     # GOF Mapping
     gofMapping <- getQualificationGOFMapping(qualificationContent)
-    writeDataToSheet(
+    writeDataToSheet(data = gofMapping, sheetName = "GOF_Mapping", excelObject = excelObject)
+    # Color GOF Mapping
+    styleColorMapping(mapping = gofMapping, sheetName = "GOF_Mapping", excelObject = excelObject)
+    # Drop down lists for Project, Simulation, Output, Plot Title, Group Title, and Color columns
+    applyDataValidation(
+      value = excelListingValue(projectData, "Id", "Projects"),
       data = gofMapping,
       sheetName = "GOF_Mapping",
+      columnNames = "Project",
       excelObject = excelObject
     )
-    # Color GOF Mapping
-    styleColorMapping(
-      mapping = gofMapping,
+    applyDataValidation(
+      value = excelListingValue(simulationsOutputs, "Simulation", "Simulations_Outputs"),
+      data = gofMapping,
       sheetName = "GOF_Mapping",
+      columnNames = "Simulation",
       excelObject = excelObject
     )
+    applyDataValidation(
+      value = excelListingValue(simulationsOutputs, "Output", "Simulations_Outputs"),
+      data = gofMapping,
+      sheetName = "GOF_Mapping",
+      columnNames = "Output",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(gofPlotsData, "Title", "GOF_Plots"),
+      data = gofMapping,
+      sheetName = "GOF_Mapping",
+      columnNames = "Plot Title",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(gofPlotsData, "Group Caption", "GOF_Plots"),
+      data = gofMapping,
+      sheetName = "GOF_Mapping",
+      columnNames = "Group Title",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "Color", "Lookup"),
+      data = gofMapping,
+      sheetName = "GOF_Mapping",
+      columnNames = "Color",
+      excelObject = excelObject
+    )
+
     cli::cli_progress_step("Exporting {.field DDI Ratio} Plot Settings")
     # DDI Ratio
-    ddiRatio <- getQualificationDDIRatio(qualificationContent)
-    writeDataToSheet(
-      data = ddiRatio,
-      sheetName = "DDIRatio_Plots",
-      excelObject = excelObject
-    )
+    ddiRatioPlotsData <- getQualificationDDIRatio(qualificationContent)
+    writeDataToSheet(data = ddiRatioPlotsData, sheetName = "DDIRatio_Plots", excelObject = excelObject)
     # Color DDI Ratios
-    styleColorMapping(
-      mapping = ddiRatio,
+    styleColorMapping(mapping = ddiRatioPlotsData, sheetName = "DDIRatio_Plots", excelObject = excelObject, columnName = "Group Color")
+    # Drop down lists for Section Ref, PK-Parameter, Plot Type, Subunits, Artifacts, Group Color and Group Symbol columns
+    applyDataValidation(
+      value = sectionReferenceListing,
+      data = ddiRatioPlotsData,
       sheetName = "DDIRatio_Plots",
-      excelObject = excelObject,
-      columnName = "Group Color"
-    )
-    # DDI Ratio Mapping
-    writeDataToSheet(
-      data = getQualificationDDIRatioMapping(qualificationContent),
-      sheetName = "DDIRatio_Mapping",
+      columnNames = "Section Ref",
       excelObject = excelObject
     )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "PK Parameter", "Lookup"),
+      data = ddiRatioPlotsData,
+      sheetName = "DDIRatio_Plots",
+      columnNames = "PK-Parameter",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "DDIRatioPlotType", "Lookup"),
+      data = ddiRatioPlotsData,
+      sheetName = "DDIRatio_Plots",
+      columnNames = "Plot Type",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "subunitsDDIRatioPlots", "Lookup"),
+      data = ddiRatioPlotsData,
+      sheetName = "DDIRatio_Plots",
+      columnNames = "Subunits",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "ArtifactsRatioPlots", "Lookup"),
+      data = ddiRatioPlotsData,
+      sheetName = "DDIRatio_Plots",
+      columnNames = "Artifacts",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "Color", "Lookup"),
+      data = ddiRatioPlotsData,
+      sheetName = "DDIRatio_Plots",
+      columnNames = "Group Color",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "Symbol", "Lookup"),
+      data = ddiRatioPlotsData,
+      sheetName = "DDIRatio_Plots",
+      columnNames = "Group Symbol",
+      excelObject = excelObject
+    )
+
+    # DDI Ratio Mapping
+    ddiRatioMapping <- getQualificationDDIRatioMapping(qualificationContent)
+    writeDataToSheet(data = ddiRatioMapping, sheetName = "DDIRatio_Mapping", excelObject = excelObject)
+    # Drop down lists for Output, Project, Simulation_Control, Simulation_Treatment, 
+    # Plot Title, Group Title, Observed data, Control TimeUnit, and Treatment TimeUnit columns
+    applyDataValidation(
+      value = excelListingValue(projectData, "Id", "Projects"),
+      data = ddiRatioMapping,
+      sheetName = "DDIRatio_Mapping",
+      columnNames = "Project",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(simulationsOutputs, "Output", "Simulations_Outputs"),
+      data = ddiRatioMapping,
+      sheetName = "DDIRatio_Mapping",
+      columnNames = "Output",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(simulationsOutputs, "Simulation", "Simulations_Outputs"),
+      data = ddiRatioMapping,
+      sheetName = "DDIRatio_Mapping",
+      columnNames = "Simulation_Control",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(simulationsOutputs, "Simulation", "Simulations_Outputs"),
+      data = ddiRatioMapping,
+      sheetName = "DDIRatio_Mapping",
+      columnNames = "Simulation_Treatment",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(ddiRatioPlotsData, "Title", "DDIRatio_Plots"),
+      data = ddiRatioMapping,
+      sheetName = "DDIRatio_Mapping",
+      columnNames = "Plot Title",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(ddiRatioPlotsData, "Group Caption", "DDIRatio_Plots"),
+      data = ddiRatioMapping,
+      sheetName = "DDIRatio_Mapping",
+      columnNames = "Group Title",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(observedData, "Id", "ObsData"),
+      data = ddiRatioMapping,
+      sheetName = "DDIRatio_Mapping",
+      columnNames = "Observed data",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "TimeUnit", "Lookup"),
+      data = ddiRatioMapping,
+      sheetName = "DDIRatio_Mapping",
+      columnNames = "Control TimeUnit",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "TimeUnit", "Lookup"),
+      data = ddiRatioMapping,
+      sheetName = "DDIRatio_Mapping",
+      columnNames = "Treatment TimeUnit",
+      excelObject = excelObject
+    )
+
     # PK Ratio
     # TODO: same workflow as PK Ratio (issue #26)
 
     # Global Plot Settings
     cli::cli_progress_step("Exporting {.field Global Plot Settings}")
     globalPlotSettings <- formatPlotSettings(qualificationContent$Plots$PlotSettings)
-    writeDataToSheet(
+    writeDataToSheet(data = globalPlotSettings, sheetName = "GlobalPlotSettings", excelObject = excelObject)
+    # Drop down lists for FontFamilyName
+    applyDataValidation(
+      value = excelListingValue(lookupData, "FontFamilyName", "Lookup"),
       data = globalPlotSettings,
       sheetName = "GlobalPlotSettings",
+      columnNames = "FontFamilyName",
       excelObject = excelObject
     )
 
@@ -355,9 +614,27 @@ excelUI <- function(fileName = "qualification.xlsx",
       }
     )
     ddiAxesSettings <- do.call("rbind", ddiAxesSettings)
-    writeDataToSheet(
+    writeDataToSheet(data = ddiAxesSettings, sheetName = "GlobalAxesSettings", excelObject = excelObject)
+    # Drop down lists for Dimension, GridLines, and Scaling
+    applyDataValidation(
+      value = excelListingValue(lookupData, "Dimension", "Lookup"),
       data = ddiAxesSettings,
       sheetName = "GlobalAxesSettings",
+      columnNames = "Dimension",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "Boolean", "Lookup"),
+      data = ddiAxesSettings,
+      sheetName = "GlobalAxesSettings",
+      columnNames = "GridLines",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "Scaling", "Lookup"),
+      data = ddiAxesSettings,
+      sheetName = "GlobalAxesSettings",
+      columnNames = "Scaling",
       excelObject = excelObject
     )
   }
@@ -365,65 +642,4 @@ excelUI <- function(fileName = "qualification.xlsx",
   cli::cli_progress_step("Saving extracted data into {.file {fileName}}")
   openxlsx::saveWorkbook(excelObject, file = fileName, overwrite = TRUE)
   return(invisible(TRUE))
-}
-
-#' @title writeDataToSheet
-#' @description
-#' Write a data.frame to a specific sheet in an Excel file
-#' @param data A data.frame to write to the sheet
-#' @param sheetName Character string. Name of the sheet to write to
-#' @param excelObject An openxlsx workbook object
-#' @return Invisibly returns `NULL`. Side effect: mutates the workbook by writing data and freezing the header row.
-#' @import openxlsx
-#' @keywords internal
-writeDataToSheet <- function(data, sheetName, excelObject) {
-  # Input validation
-  ospsuite.utils::validateIsOfType(data, "data.frame")
-  ospsuite.utils::validateIsCharacter(sheetName)
-  ospsuite.utils::validateIsOfLength(sheetName, 1)
-  ospsuite.utils::validateIsIncluded(sheetName, names(excelObject))
-  if (nrow(data) == 0) {
-    return(invisible())
-  }
-  openxlsx::writeDataTable(
-    excelObject,
-    sheet = sheetName,
-    x = data,
-    headerStyle = EXCEL_OPTIONS$headerStyle,
-    withFilter = TRUE
-  )
-  openxlsx::freezePane(excelObject, sheet = sheetName, firstRow = TRUE)
-  return(invisible())
-}
-
-#' @title styleColorMapping
-#' @description
-#' Apply background color to mapping data.frame in excel object
-#' @param mapping A data.frame
-#' @param sheetName Character string. Name of the sheet to write to
-#' @param excelObject An openxlsx workbook object
-#' @param columnName Character string. Name of the column where colors are defined
-#' @return Invisibly returns `NULL`. Side effect: mutates the workbook by writing data and freezing the header row.
-#' @import openxlsx
-#' @keywords internal
-styleColorMapping <- function(mapping, sheetName, excelObject, columnName = "Color") {
-  if (nrow(mapping) == 0) {
-    return(invisible())
-  }
-  ospsuite.utils::validateIsIncluded(columnName, names(mapping))
-  colorColIndex <- which(names(mapping) == columnName)
-  for (rowIndex in seq_along(mapping[[columnName]])) {
-    colorValue <- mapping[rowIndex, columnName]
-    if (is.na(colorValue)) {
-      next
-    }
-    openxlsx::addStyle(
-      excelObject,
-      sheet = sheetName,
-      style = openxlsx::createStyle(fgFill = colorValue, fontColour = colorValue),
-      rows = 1 + rowIndex,
-      cols = colorColIndex
-    )
-  }
-  return(invisible())
 }
