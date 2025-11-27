@@ -5,7 +5,7 @@
 \alias{ALL_BUILDING_BLOCKS}
 \title{ALL_BUILDING_BLOCKS}
 \format{
-An object of class \code{character} of length 9.
+An object of class \code{character} of length 8.
 }
 \usage{
 ALL_BUILDING_BLOCKS
