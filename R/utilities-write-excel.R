@@ -4,7 +4,7 @@
 #' @param data A data.frame to write to the sheet
 #' @param sheetName Character string. Name of the sheet to write to
 #' @param excelObject An openxlsx workbook object
-#' @return Invisibly returns `NULL`. 
+#' @return Invisibly returns `NULL`.
 #' **Side effect**: mutates the workbook by writing data and freezing the header row.
 #' @import openxlsx
 #' @export
@@ -66,14 +66,14 @@ styleColorMapping <- function(mapping, sheetName, excelObject, columnName = "Col
 #' @description
 #' Write a dataValidation listing to cells in an Excel sheet
 #' @param value Character string. Data validation listing as an Excel expression.
-#' For instance `"'Lookup'!$L$2:$L$4"` to use values 
+#' For instance `"'Lookup'!$L$2:$L$4"` to use values
 #' from `'Lookup'` Excel sheet between `L2` and `L4` cells.
 #' @param data A data.frame previously added to the Excel sheet `sheetName`
 #' @param sheetName Character string. Name of the sheet
 #' @param columnNames Character string. Names of column variable to apply the dataValidation
 #' @param excelObject An openxlsx workbook object
 #' @param additionalRows Integer. Additional rows to apply dataValidation
-#' @return Invisibly returns `NULL`. 
+#' @return Invisibly returns `NULL`.
 #' **Side effect**: mutates the workbook by writing dataValidation listing
 #' @import openxlsx
 #' @export
@@ -82,8 +82,8 @@ applyDataValidation <- function(value, data, sheetName, columnNames, excelObject
   ospsuite.utils::validateIsOfType(data, "data.frame")
   ospsuite.utils::validateIsIncluded(columnNames, names(data))
   columnIndices <- which(names(data) %in% columnNames)
-  rowIndices <- 1 + seq_len(nrow(data)+additionalRows)
-  
+  rowIndices <- 1 + seq_len(nrow(data) + additionalRows)
+
   openxlsx::dataValidation(
     excelObject,
     sheet = sheetName,
@@ -105,7 +105,7 @@ applyDataValidation <- function(value, data, sheetName, columnNames, excelObject
 #' @import openxlsx
 #' @export
 #' @keywords Excel
-excelListingValue <- function(data, columnName, sheetName){
+excelListingValue <- function(data, columnName, sheetName) {
   ospsuite.utils::validateIsOfType(data, "data.frame")
   ospsuite.utils::validateIsIncluded(columnName, names(data))
   columnValue <- openxlsx::int2col(which(names(data) %in% columnName))

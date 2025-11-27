@@ -14,7 +14,7 @@ writeDataToSheet(data, sheetName, excelObject)
 \item{excelObject}{An openxlsx workbook object}
 }
 \value{
-Invisibly returns `NULL`. 
+Invisibly returns `NULL`.
 **Side effect**: mutates the workbook by writing data and freezing the header row.
 }
 \description{

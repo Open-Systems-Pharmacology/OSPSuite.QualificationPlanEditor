@@ -15,7 +15,7 @@ applyDataValidation(
 }
 \arguments{
 \item{value}{Character string. Data validation listing as an Excel expression.
-For instance `"'Lookup'!$L$2:$L$4"` to use values 
+For instance `"'Lookup'!$L$2:$L$4"` to use values
 from `'Lookup'` Excel sheet between `L2` and `L4` cells.}
 
 \item{data}{A data.frame previously added to the Excel sheet `sheetName`}
@@ -29,7 +29,7 @@ from `'Lookup'` Excel sheet between `L2` and `L4` cells.}
 \item{additionalRows}{Integer. Additional rows to apply dataValidation}
 }
 \value{
-Invisibly returns `NULL`. 
+Invisibly returns `NULL`.
 **Side effect**: mutates the workbook by writing dataValidation listing
 }
 \description{

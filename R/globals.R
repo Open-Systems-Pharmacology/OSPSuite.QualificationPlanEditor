@@ -40,27 +40,37 @@ EXCEL_OPTIONS <- list( # nolint
 #' Allowed Building Blocks values
 #' @keywords internal
 #' @importFrom stats na.exclude
-ALL_BUILDING_BLOCKS <- stats::na.exclude(lookupData[["BuildingBlock"]]) # nolint
+ALL_BUILDING_BLOCKS <- lookupData[["BuildingBlock"]] |> # nolint
+  stats::na.exclude() |>
+  as.character()
 
 #' @title ALL_EXCEL_AXES
 #' @description
 #' Allowed Excel Axes
 #' @keywords internal
-ALL_EXCEL_AXES <- stats::na.exclude(lookupData[["AxesSettingsPlots"]]) # nolint
+ALL_EXCEL_AXES <- lookupData[["AxesSettingsPlots"]] |> # nolint
+  stats::na.exclude() |>
+  as.character()
 
 #' @title ALL_EXCEL_DIMENSIONS
 #' @description
 #' Allowed Excel Dimensions Blocks values
 #' @keywords internal
 #' @importFrom stats na.exclude
-ALL_EXCEL_DIMENSIONS <- stats::na.exclude(lookupData[["Dimension"]]) # nolint
+ALL_EXCEL_DIMENSIONS <- lookupData[["Dimension"]] |> # nolint
+  stats::na.exclude() |>
+  as.character()
 
 #' @title ALL_EXCEL_SHEETS
 #' @description
 #' Required Excel sheets to be read by UI
 #' @keywords internal
 #' @importFrom readxl excel_sheets
-ALL_EXCEL_SHEETS <- readxl::excel_sheets(system.file("Qualification-Template.xlsx", package = "ospsuite.qualificationplaneditor")) # nolint
+ALL_EXCEL_SHEETS <- system.file( # nolint
+  "Qualification-Template.xlsx",
+  package = "ospsuite.qualificationplaneditor"
+) |>
+  readxl::excel_sheets()
 
 #' @title EXCEL_MAPPING
 #' @description
@@ -70,4 +80,4 @@ EXCEL_MAPPING <- read.csv( # nolint
   system.file("excel-qualification-dictionary.csv", package = "ospsuite.qualificationplaneditor"),
   na.strings = "",
   stringsAsFactors = FALSE
-  )
+)
