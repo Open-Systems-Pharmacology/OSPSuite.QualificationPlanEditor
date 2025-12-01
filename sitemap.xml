@@ -11,6 +11,8 @@
 <url><loc>/reference/ALL_EXCEL_SHEETS.html</loc></url>
 <url><loc>/reference/EXCEL_MAPPING.html</loc></url>
 <url><loc>/reference/EXCEL_OPTIONS.html</loc></url>
+<url><loc>/reference/applyDataValidation.html</loc></url>
+<url><loc>/reference/excelListingValue.html</loc></url>
 <url><loc>/reference/excelToQualificationPlan.html</loc></url>
 <url><loc>/reference/excelUI.html</loc></url>
 <url><loc>/reference/formatAxesSettings.html</loc></url>
@@ -47,6 +49,7 @@
 <url><loc>/reference/getSimulationsOutputsFromProjects.html</loc></url>
 <url><loc>/reference/groupAxesSettings.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/lookupData.html</loc></url>
 <url><loc>/reference/mapToQualification.html</loc></url>
 <url><loc>/reference/parseSectionsToDataFrame.html</loc></url>
 <url><loc>/reference/parseSectionsToNestedList.html</loc></url>
