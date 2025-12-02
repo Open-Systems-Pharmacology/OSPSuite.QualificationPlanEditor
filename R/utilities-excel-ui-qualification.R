@@ -249,6 +249,46 @@ getQualificationInputs <- function(qualificationContent) {
   return(inputsData)
 }
 
+#' @title getQualificationSimParam
+#' @description
+#' Get a data.frame of qualification simulation parameters
+#' with columns 'Project', 'BB-Type', 'BB-Name', and 'Section Reference'
+#' @param qualificationContent Content of a qualification plan
+#' @return data.frame with columns 'Project', 'BB-Type', 'BB-Name', and 'Section Reference'
+#' @keywords internal
+getQualificationSimParam <- function(qualificationContent) {
+  qualificationSimParam <- qualificationContent$Inputs
+  simParamData <- data.frame(
+    Project = character(),
+    "Parent Project" = character(),
+    "Parent Simulation" = character(),
+    Path = character(),
+    TargetSimulation = character(),
+    check.names = FALSE
+  )
+  for(projectContent in qualificationContent$Projects){
+    if (ospsuite.utils::isEmpty(projectContent$SimulationParameters)) {
+      next
+    }
+    simParamProjectData <- lapply(
+      projectContent$SimulationParameters,
+      function(simParamContent){
+        data.frame(
+          Project = projectContent$Id,
+          "Parent Project" = simParamContent$Project,
+          "Parent Simulation" = simParamContent$Simulation,
+          Path = simParamContent$Path,
+          TargetSimulation = as.character(simParamContent$TargetSimulations),
+          check.names = FALSE
+        )
+      }
+    )
+    simParamProjectData <- do.call(rbind.data.frame, simParamProjectData)
+    simParamData <- rbind.data.frame(simParamData, simParamProjectData)
+  }
+  return(simParamData)
+}
+
 #' @title getQualificationAllPlots
 #' @description
 #' Extract a data.frame containing All Plots information
