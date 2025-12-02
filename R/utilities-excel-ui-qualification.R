@@ -252,9 +252,9 @@ getQualificationInputs <- function(qualificationContent) {
 #' @title getQualificationSimParam
 #' @description
 #' Get a data.frame of qualification simulation parameters
-#' with columns 'Project', 'BB-Type', 'BB-Name', and 'Section Reference'
+#' with columns 'Project', 'Parent Project', 'Parent Simulation', 'Path', and 'TargetSimulation'
 #' @param qualificationContent Content of a qualification plan
-#' @return data.frame with columns 'Project', 'BB-Type', 'BB-Name', and 'Section Reference'
+#' @return data.frame with columns 'Project', 'Parent Project', 'Parent Simulation', 'Path', and 'TargetSimulation'
 #' @keywords internal
 getQualificationSimParam <- function(qualificationContent) {
   simParamData <- data.frame(
@@ -265,7 +265,7 @@ getQualificationSimParam <- function(qualificationContent) {
     TargetSimulation = character(),
     check.names = FALSE
   )
-  for(projectContent in qualificationContent$Projects){
+  for (projectContent in qualificationContent$Projects){
     if (ospsuite.utils::isEmpty(projectContent$SimulationParameters)) {
       next
     }

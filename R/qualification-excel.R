@@ -281,7 +281,7 @@ groupAxesSettings <- function(qualificationAxesSettings) {
 #' Get qualification project if building blocks
 #' @param projectData A data.frame of project Id and Path
 #' @param bbData A data.frame mapping Building Block to parent project
-#' @param simParam A data.frame mapping SimulationParameters to parent project
+#' @param simParamData A data.frame mapping SimulationParameters to parent project
 #' @return A list of Project with their building blocks and simulation parameters
 #' @keywords internal
 getProjectsFromExcel <- function(projectData, bbData, simParamData) {
@@ -303,7 +303,7 @@ getProjectsFromExcel <- function(projectData, bbData, simParamData) {
         BuildingBlocks = selectedBBData,
         SimulationParameters = selectedSimParamData
       )
-      # Remove NULLs from exported plots
+      # Remove NULL fields from updated project
       fieldsToKeep <- which(!sapply(updatedProject, is.null))
       updatedProject <- updatedProject[fieldsToKeep]
       return(updatedProject)
