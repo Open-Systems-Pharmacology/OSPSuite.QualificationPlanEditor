@@ -257,7 +257,6 @@ getQualificationInputs <- function(qualificationContent) {
 #' @return data.frame with columns 'Project', 'BB-Type', 'BB-Name', and 'Section Reference'
 #' @keywords internal
 getQualificationSimParam <- function(qualificationContent) {
-  qualificationSimParam <- qualificationContent$Inputs
   simParamData <- data.frame(
     Project = character(),
     "Parent Project" = character(),
