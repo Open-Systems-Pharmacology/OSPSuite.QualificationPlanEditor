@@ -605,10 +605,10 @@ getQualificationPKRatio <- function(qualificationContent) {
 
 #' @title getQualificationPKRatioMapping
 #' @description
-#' Extract a data.frame mapping DDI ratio identifiers to relevant PK Ratio fields
+#' Extract a data.frame mapping PK ratio identifiers to relevant PK Ratio fields
 #' @param qualificationContent Content of a qualification plan
-#' @return A data.frame with the following columns
-#' `Project`, `Simulation_Control`, `Simulation_Treatment`, `Output` and control/treatment settings
+#' @return A data.frame with the following columns:
+#' `Project`, `Simulation`, `Output`, `Plot Title`, `Group Title`, `Observed data`, and `ObservedDataRecordId`
 #' @keywords internal
 getQualificationPKRatioMapping <- function(qualificationContent) {
   pkMappings <- data.frame(

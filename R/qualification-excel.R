@@ -509,7 +509,7 @@ getPKPlotsFromExcel <- function(data, mapping) {
     pkGroups <- vector(mode = "list", length = nrow(pkGroupData))
     for (groupIndex in seq_along(pkGroups)) {
       groupTitle <- pkGroupData[groupIndex, "Caption"]
-      # Get all relevant GOF mapping
+      # Get all relevant PK Ratio mapping
       pkRatioMappings <- mapping |>
         dplyr::filter(
           .data[["Plot Title"]] %in% plotTitle,

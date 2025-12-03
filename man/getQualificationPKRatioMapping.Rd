@@ -10,10 +10,10 @@ getQualificationPKRatioMapping(qualificationContent)
 \item{qualificationContent}{Content of a qualification plan}
 }
 \value{
-A data.frame with the following columns
-`Project`, `Simulation_Control`, `Simulation_Treatment`, `Output` and control/treatment settings
+A data.frame with the following columns:
+`Project`, `Simulation`, `Output`, `Plot Title`, `Group Title`, `Observed data`, and `ObservedDataRecordId`
 }
 \description{
-Extract a data.frame mapping DDI ratio identifiers to relevant PK Ratio fields
+Extract a data.frame mapping PK ratio identifiers to relevant PK Ratio fields
 }
 \keyword{internal}

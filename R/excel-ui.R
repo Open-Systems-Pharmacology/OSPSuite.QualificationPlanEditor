@@ -589,7 +589,7 @@ excelUI <- function(fileName = "qualification.xlsx",
     # PK Ratio
     pkRatioPlotsData <- getQualificationPKRatio(qualificationContent)
     writeDataToSheet(data = pkRatioPlotsData, sheetName = "PKRatio_Plots", excelObject = excelObject)
-    # Color DDI Ratios
+    # Color PK Ratios
     styleColorMapping(mapping = pkRatioPlotsData, sheetName = "PKRatio_Plots", excelObject = excelObject, columnName = "Group Color")
     # Drop down lists for Section Reference, PK-Parameter, Artifacts, Group Color and Group Symbol columns
     applyDataValidation(

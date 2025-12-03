@@ -86,6 +86,7 @@ PKRatio_Plots,PK-Parameter,PKParameters,
 PKRatio_Plots,Group Caption,Caption,Groups
 PKRatio_Plots,Group Color,Color,Groups
 PKRatio_Plots,Group Symbol,Symbol,Groups
+PKRatio_Plots,Artifacts,Artifacts,
 PKRatio_Mapping,Project,Project,
 PKRatio_Mapping,Simulation,Simulation,
 PKRatio_Mapping,Output,Output,
