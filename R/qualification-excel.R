@@ -49,12 +49,15 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   # ObservedDataSets
   cli::cli_progress_step("Exporting {.field Observed Data}")
   qualificationObsDataSets <- readxl::read_excel(excelFile, sheet = "ObsData", col_types = "text")
+  allowedDataTypes <- lookupData$ObservedDataType |>
+    stats::na.exclude() |>
+    as.character()
   ospsuite.utils::validateColumns(
     qualificationObsDataSets,
     columnSpecs = list(
       Id = list(type = "character", naAllowed = FALSE, nullAllowed = TRUE),
       Path = list(type = "character", naAllowed = FALSE, nullAllowed = TRUE),
-      Type = list(type = "character", allowedValues = c("DDIRatio", "TimeProfile"), naAllowed = TRUE, nullAllowed = TRUE)
+      Type = list(type = "character", allowedValues = allowedDataTypes, naAllowed = TRUE, nullAllowed = TRUE)
     )
   )
   # Plots: list that includes
@@ -114,7 +117,11 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   ddiMapping <- readxl::read_excel(excelFile, sheet = "DDIRatio_Mapping")
   ddiPlots <- getDDIPlotsFromExcel(ddiData, ddiMapping)
 
-  # TODO: PKRatioPlots
+  # PKRatioPlots
+  cli::cli_progress_step("Exporting {.field PK Ratio} Plot Settings")
+  pkData <- readxl::read_excel(excelFile, sheet = "PKRatio_Plots")
+  pkMapping <- readxl::read_excel(excelFile, sheet = "PKRatio_Mapping")
+  pkPlots <- getPKPlotsFromExcel(pkData, pkMapping)
 
   qualificationPlots <- list(
     AxesSettings = qualificationAxesSettings,
@@ -123,7 +130,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
     GOFMergedPlots = gofPlots,
     ComparisonTimeProfilePlots = ctPlots,
     DDIRatioPlots = ddiPlots,
-    PKRatioPlots = NA
+    PKRatioPlots = pkPlots
   )
 
   # Sections
@@ -465,6 +472,59 @@ getDDIPlotsFromExcel <- function(data, mapping) {
   indicesToKeep <- which(!sapply(ddiPlots, is.null))
   ddiPlots <- ddiPlots[indicesToKeep]
   return(ddiPlots)
+}
+
+#' @title getPKPlotsFromExcel
+#' @description
+#' Get qualification settings for PK Ratio plots
+#' @param data A data.frame of plot settings
+#' @param mapping A data.frame mapping plot information to projects
+#' @return A list of PKRatio plots
+#' @keywords internal
+getPKPlotsFromExcel <- function(data, mapping) {
+  if (nrow(data) == 0) {
+    return(list())
+  }
+  plotRows <- cummax(seq_along(data$Title) * !is.na(data$Title))
+  pkPlotInfo <- split(data, plotRows)
+  pkPlots <- vector(mode = "list", length = dplyr::n_distinct(plotRows))
+
+  for (plotIndex in seq_along(pkPlots)) {
+    # Regular Fields
+    pkPlotData <- lapply(as.list(pkPlotInfo[[plotIndex]]), stats::na.exclude)
+    # Do not export plots without a section reference
+    if (ospsuite.utils::isEmpty(pkPlotData[["Section Reference"]])) {
+      pkPlots[[plotIndex]] <- NULL
+      next
+    }
+    pkData <- mapToQualification(pkPlotData, sheetName = "PKRatio_Plots")
+    plotTitle <- pkData[["Title"]]
+    # Groups
+    pkGroupData <- mapToQualification(
+      pkPlotData,
+      sheetName = "PKRatio_Plots",
+      qualificationPlanSelector = "Groups"
+    ) |> as.data.frame()
+    # TODO: handle plot and axes settings if defined
+    pkGroups <- vector(mode = "list", length = nrow(pkGroupData))
+    for (groupIndex in seq_along(pkGroups)) {
+      groupTitle <- pkGroupData[groupIndex, "Caption"]
+      # Get all relevant GOF mapping
+      pkRatioMappings <- mapping |>
+        dplyr::filter(
+          .data[["Plot Title"]] %in% plotTitle,
+          .data[["Group Title"]] %in% groupTitle
+        ) |>
+        mapToQualification(sheetName = "PKRatio_Mapping")
+
+      pkGroups[[groupIndex]] <- c(pkGroupData[groupIndex, ], list(PKRatios = pkRatioMappings))
+    }
+    pkPlots[[plotIndex]] <- c(pkData, list(Groups = pkGroups))
+  }
+  # Remove NULLs from exported plots
+  indicesToKeep <- which(!sapply(pkPlots, is.null))
+  pkPlots <- pkPlots[indicesToKeep]
+  return(pkPlots)
 }
 
 #' @title getInputsFromExcel

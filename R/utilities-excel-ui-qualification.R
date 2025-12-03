@@ -555,6 +555,92 @@ getQualificationDDIRatioMapping <- function(qualificationContent) {
   return(ddiMappings)
 }
 
+#' @title getQualificationPKRatio
+#' @description
+#' Extract PK ratio data from a qualification plan and return it as a data.frame with relevant columns
+#' @param qualificationContent Content of a qualification plan
+#' @return A data.frame with following columns:
+#' `Title`, `Section Reference`, `PK-Parameter`, `Artifacts` and Group settings
+#' @keywords internal
+getQualificationPKRatio <- function(qualificationContent) {
+  pkRatios <- data.frame(
+    Title = character(),
+    "Section Reference" = character(),
+    "PK-Parameter" = character(),
+    Artifacts = character(),
+    "Group Caption" = character(),
+    "Group Color" = character(),
+    "Group Symbol" = character(),
+    check.names = FALSE
+  )
+  for (pkPlot in qualificationContent$Plots$PKRatioPlots) {
+    pkPlotSettings <- list(
+      Title = pkPlot$Title,
+      "Section Reference" = pkPlot$SectionReference,
+      "PK-Parameter" = unlist(pkPlot$PKParameters),
+      Artifacts = unlist(pkPlot$Artifacts) %||% NA,
+      "Group Caption" = sapply(pkPlot$Groups, function(group) group$Caption),
+      "Group Color" = sapply(pkPlot$Groups, function(group) group$Color),
+      "Group Symbol" = sapply(pkPlot$Groups, function(group) group$Symbol)
+    )
+    maxRows <- max(sapply(pkPlotSettings, length), 4)
+    pkPlotSettings <- sapply(
+      pkPlotSettings,
+      function(pkField) {
+        pkField <- c(pkField, rep(NA, maxRows - length(pkField)))
+        return(pkField)
+      },
+      simplify = FALSE,
+      USE.NAMES = TRUE
+    )
+    pkPlotSettings <- cbind(
+      data.frame(pkPlotSettings, check.names = FALSE),
+      formatPlotSettings(pkPlot$PlotSettings),
+      formatAxesSettings(pkPlot$AxesSettings)
+    )
+    pkRatios <- rbind(pkRatios, pkPlotSettings)
+  }
+  return(pkRatios)
+}
+
+#' @title getQualificationPKRatioMapping
+#' @description
+#' Extract a data.frame mapping DDI ratio identifiers to relevant PK Ratio fields
+#' @param qualificationContent Content of a qualification plan
+#' @return A data.frame with the following columns
+#' `Project`, `Simulation_Control`, `Simulation_Treatment`, `Output` and control/treatment settings
+#' @keywords internal
+getQualificationPKRatioMapping <- function(qualificationContent) {
+  pkMappings <- data.frame(
+    Project = character(),
+    Simulation = character(),
+    Output = character(),
+    "Plot Title" = character(),
+    "Group Title" = character(),
+    "Observed data" = character(),
+    ObservedDataRecordId = character(),
+    check.names = FALSE
+  )
+  for (pkPlot in qualificationContent$Plots$PKRatioPlots) {
+    for (pkGroup in pkPlot$Groups) {
+      for (pkRatios in pkGroup$PKRatios) {
+        pkMapping <- data.frame(
+          Project = pkRatios$Project,
+          Simulation = pkRatios$Simulation,
+          Output = pkRatios$Output,
+          "Plot Title" = pkPlot$Title,
+          "Group Title" = pkGroup$Caption,
+          "Observed data" = pkRatios$ObservedData,
+          ObservedDataRecordId = pkRatios$ObservedDataRecordId,
+          check.names = FALSE
+        )
+        pkMappings <- rbind(pkMappings, pkMapping)
+      }
+    }
+  }
+  return(pkMappings)
+}
+
 
 #' @title formatPlotSettings
 #' @description
