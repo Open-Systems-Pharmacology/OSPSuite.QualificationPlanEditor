@@ -261,8 +261,39 @@ excelUI <- function(fileName = "qualification.xlsx",
       excelObject = excelObject
     )
 
-    # TODO: extract and export Sim Param information
-
+    cli::cli_progress_step("Exporting {.field Simulation Parameters} Settings")
+    # Sim Param
+    simParamData <- getQualificationSimParam(qualificationContent)
+    writeDataToSheet(data = simParamData, sheetName = "SimParam", excelObject = excelObject)
+    applyDataValidation(
+      value = excelListingValue(projectData, "Id", "Projects"),
+      data = simParamData,
+      sheetName = "SimParam",
+      columnNames = "Project",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(projectData, "Id", "Projects"),
+      data = simParamData,
+      sheetName = "SimParam",
+      columnNames = "Parent Project",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(simulationsOutputs, "Simulation", "Simulations_Outputs"),
+      data = simParamData,
+      sheetName = "SimParam",
+      columnNames = "Parent Simulation",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(simulationsOutputs, "Simulation", "Simulations_Outputs"),
+      data = simParamData,
+      sheetName = "SimParam",
+      columnNames = "TargetSimulation",
+      excelObject = excelObject
+    )
+    
     cli::cli_progress_step("Exporting {.field All Plots} Settings")
     # AllPlots
     allPlotsData <- getQualificationAllPlots(qualificationContent, simulationsOutputs)

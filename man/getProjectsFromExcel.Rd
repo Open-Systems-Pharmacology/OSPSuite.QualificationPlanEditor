@@ -4,15 +4,17 @@
 \alias{getProjectsFromExcel}
 \title{getProjectsFromExcel}
 \usage{
-getProjectsFromExcel(projectData, bbData)
+getProjectsFromExcel(projectData, bbData, simParamData)
 }
 \arguments{
 \item{projectData}{A data.frame of project Id and Path}
 
 \item{bbData}{A data.frame mapping Building Block to parent project}
+
+\item{simParam}{A data.frame mapping SimulationParameters to parent project}
 }
 \value{
-A list of Project with their building blocks
+A list of Project with their building blocks and simulation parameters
 }
 \description{
 Get qualification project if building blocks

@@ -44,7 +44,25 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
       "Parent-Project" = list(type = "character", allowedValues = qualificationProjects$Id, naAllowed = TRUE, nullAllowed = TRUE)
     )
   )
-  exportedQualificationProjects <- getProjectsFromExcel(qualificationProjects, qualificationBB)
+
+  # SimulationParameters
+  qualificationSimParam <- readxl::read_excel(excelFile, sheet = "SimParam", col_types = "text")
+  ospsuite.utils::validateColumns(
+    qualificationSimParam,
+    columnSpecs = list(
+      "Project" = list(type = "character", allowedValues = qualificationProjects$Id, naAllowed = FALSE, nullAllowed = TRUE),
+      "Parent Project" = list(type = "character", allowedValues = qualificationProjects$Id, naAllowed = FALSE, nullAllowed = TRUE),
+      "Parent Simulation" = list(type = "character", naAllowed = FALSE, nullAllowed = TRUE),
+      "Path" = list(type = "character", naAllowed = FALSE, nullAllowed = TRUE),
+      "TargetSimulation" = list(type = "character", naAllowed = FALSE, nullAllowed = TRUE)
+    )
+  )
+
+  exportedQualificationProjects <- getProjectsFromExcel(
+    qualificationProjects,
+    qualificationBB,
+    qualificationSimParam
+  )
 
   # ObservedDataSets
   cli::cli_progress_step("Exporting {.field Observed Data}")
@@ -270,37 +288,73 @@ groupAxesSettings <- function(qualificationAxesSettings) {
 #' Get qualification project if building blocks
 #' @param projectData A data.frame of project Id and Path
 #' @param bbData A data.frame mapping Building Block to parent project
-#' @return A list of Project with their building blocks
+#' @param simParamData A data.frame mapping SimulationParameters to parent project
+#' @return A list of Project with their building blocks and simulation parameters
 #' @keywords internal
-getProjectsFromExcel <- function(projectData, bbData) {
+getProjectsFromExcel <- function(projectData, bbData, simParamData) {
   noBB <- is.na(bbData[["Parent-Project"]])
-  if (all(noBB)) {
+  noSimParam <- is.na(simParamData[["Parent Project"]])
+  if (all(noBB, noSimParam)) {
     return(projectData)
   }
   bbData <- bbData |> dplyr::filter(!noBB)
+  simParamData <- simParamData |> dplyr::filter(!noSimParam)
   updatedProjects <- lapply(
     seq_len(nrow(projectData)),
     function(rowIndex) {
-      selectedBBData <- bbData |>
-        dplyr::filter(.data[["Project"]] %in% projectData$Id[rowIndex])
-      if (nrow(selectedBBData) == 0) {
-        updatedProject <- list(
-          Id = projectData$Id[rowIndex],
-          Path = projectData$Path[rowIndex]
-        )
-        return(updatedProject)
-      }
-      selectedBBData <- mapToQualification(selectedBBData, sheetName = "BB")
-
+      selectedBBData <- mapDataToProject(projectData$Id[rowIndex], bbData, "BB")
+      selectedSimParamData <- mapDataToProject(projectData$Id[rowIndex], simParamData, "SimParam")
       updatedProject <- list(
         Id = projectData$Id[rowIndex],
         Path = projectData$Path[rowIndex],
-        BuildingBlocks = selectedBBData
+        BuildingBlocks = selectedBBData,
+        SimulationParameters = selectedSimParamData
       )
+      # Remove NULL fields from updated project
+      fieldsToKeep <- which(!sapply(updatedProject, is.null))
+      updatedProject <- updatedProject[fieldsToKeep]
       return(updatedProject)
     }
   )
   return(updatedProjects)
+}
+
+#' @title mapDataToProject
+#' @description
+#' Map building block or simulation parameter data to a project
+#' @param projectId A character identifier of project
+#' @param data A data.frame of Building Block or Simulation Parameter data
+#' @param type A character `"BB"` for Building Block and `"SimParam"` for Simulation Parameter data
+#' @return A formatted list or data.frame mapped to the Project
+#' @keywords internal
+mapDataToProject <- function(projectId, data, type) {
+  # Get all data associated to project Id
+  selectedData <- data |> dplyr::filter(.data[["Project"]] %in% projectId)
+  if (nrow(selectedData) == 0) {
+    return(NULL)
+  }
+  selectedData <- mapToQualification(selectedData, sheetName = type)
+  # BB keep data.frame as is
+  if (ospsuite.utils::isIncluded(type, "BB")) {
+    return(selectedData)
+  }
+  # SimParam need to be split by Project, Simulation and Path
+  selectedData <- split(
+    selectedData,
+    list(
+      selectedData[["Project"]],
+      selectedData[["Simulation"]],
+      selectedData[["Path"]]
+    )
+  ) |> unname()
+  # Remove all duplicated Project, Simulation and Path values from each list
+  selectedData <- lapply(
+    selectedData,
+    function(dataContent) {
+      lapply(as.list(dataContent), unique)
+    }
+  )
+  return(selectedData)
 }
 
 #' @title getAllPlotsFromExcel
