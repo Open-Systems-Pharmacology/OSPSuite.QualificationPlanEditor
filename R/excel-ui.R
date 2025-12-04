@@ -618,7 +618,94 @@ excelUI <- function(fileName = "qualification.xlsx",
     )
 
     # PK Ratio
-    # TODO: same workflow as PK Ratio (issue #26)
+    pkRatioPlotsData <- getQualificationPKRatio(qualificationContent)
+    writeDataToSheet(data = pkRatioPlotsData, sheetName = "PKRatio_Plots", excelObject = excelObject)
+    # Color PK Ratios
+    styleColorMapping(mapping = pkRatioPlotsData, sheetName = "PKRatio_Plots", excelObject = excelObject, columnName = "Group Color")
+    # Drop down lists for Section Reference, PK-Parameter, Artifacts, Group Color and Group Symbol columns
+    applyDataValidation(
+      value = sectionReferenceListing,
+      data = pkRatioPlotsData,
+      sheetName = "PKRatio_Plots",
+      columnNames = "Section Reference",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "PK Parameter", "Lookup"),
+      data = pkRatioPlotsData,
+      sheetName = "PKRatio_Plots",
+      columnNames = "PK-Parameter",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "ArtifactsRatioPlots", "Lookup"),
+      data = pkRatioPlotsData,
+      sheetName = "PKRatio_Plots",
+      columnNames = "Artifacts",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "Color", "Lookup"),
+      data = pkRatioPlotsData,
+      sheetName = "PKRatio_Plots",
+      columnNames = "Group Color",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(lookupData, "Symbol", "Lookup"),
+      data = pkRatioPlotsData,
+      sheetName = "PKRatio_Plots",
+      columnNames = "Group Symbol",
+      excelObject = excelObject
+    )
+
+    # PK Ratio Mapping
+    pkRatioMapping <- getQualificationPKRatioMapping(qualificationContent)
+    writeDataToSheet(data = pkRatioMapping, sheetName = "PKRatio_Mapping", excelObject = excelObject)
+    # Drop down lists for Output, Project, Simulation,
+    # Plot Title, Group Title, Observed data columns
+    applyDataValidation(
+      value = excelListingValue(projectData, "Id", "Projects"),
+      data = pkRatioMapping,
+      sheetName = "PKRatio_Mapping",
+      columnNames = "Project",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(simulationsOutputs, "Simulation", "Simulations_Outputs"),
+      data = pkRatioMapping,
+      sheetName = "PKRatio_Mapping",
+      columnNames = "Simulation",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(simulationsOutputs, "Output", "Simulations_Outputs"),
+      data = pkRatioMapping,
+      sheetName = "PKRatio_Mapping",
+      columnNames = "Output",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(pkRatioPlotsData, "Title", "PKRatio_Plots"),
+      data = pkRatioMapping,
+      sheetName = "PKRatio_Mapping",
+      columnNames = "Plot Title",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(pkRatioPlotsData, "Group Caption", "PKRatio_Plots"),
+      data = pkRatioMapping,
+      sheetName = "PKRatio_Mapping",
+      columnNames = "Group Title",
+      excelObject = excelObject
+    )
+    applyDataValidation(
+      value = excelListingValue(observedData, "Id", "ObsData"),
+      data = pkRatioMapping,
+      sheetName = "PKRatio_Mapping",
+      columnNames = "Observed data",
+      excelObject = excelObject
+    )
 
     # Global Plot Settings
     cli::cli_progress_step("Exporting {.field Global Plot Settings}")
