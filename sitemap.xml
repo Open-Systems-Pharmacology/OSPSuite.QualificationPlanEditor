@@ -29,6 +29,7 @@
 <url><loc>/reference/getInputsFromExcel.html</loc></url>
 <url><loc>/reference/getObsDataFromList.html</loc></url>
 <url><loc>/reference/getObsDataFromQualification.html</loc></url>
+<url><loc>/reference/getPKPlotsFromExcel.html</loc></url>
 <url><loc>/reference/getPlotSettingsFromExcel.html</loc></url>
 <url><loc>/reference/getProjectsFromExcel.html</loc></url>
 <url><loc>/reference/getProjectsFromList.html</loc></url>
@@ -42,6 +43,8 @@
 <url><loc>/reference/getQualificationGOFPlots.html</loc></url>
 <url><loc>/reference/getQualificationInputs.html</loc></url>
 <url><loc>/reference/getQualificationIntro.html</loc></url>
+<url><loc>/reference/getQualificationPKRatio.html</loc></url>
+<url><loc>/reference/getQualificationPKRatioMapping.html</loc></url>
 <url><loc>/reference/getQualificationSections.html</loc></url>
 <url><loc>/reference/getQualificationSimParam.html</loc></url>
 <url><loc>/reference/getQualificationStyles.html</loc></url>
