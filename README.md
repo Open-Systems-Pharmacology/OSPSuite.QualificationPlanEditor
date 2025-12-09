@@ -61,30 +61,6 @@ utils::browseURL(excelQualification)
 
 ```
 
-## Get Latest Released Paths
-
-The package provides a function to automatically fetch the latest released versions of projects and observed data from GitHub:
-
-``` r
-# Get latest released paths from a qualification plan
-latestPaths <- getLatestReleasedPaths(
-  qualificationPlan = "path/to/qualification_plan.json"
-)
-
-# Access the results
-latestProjectPaths <- latestPaths$projects
-latestObservedDataPaths <- latestPaths$observedData
-
-# You can customize the behavior
-latestPaths <- getLatestReleasedPaths(
-  qualificationPlan = "path/to/qualification_plan.json",
-  includePreReleases = FALSE,      # Exclude pre-releases
-  returnUpdatedOnly = TRUE,         # Only return updated paths
-  projectsToIgnore = c("ProjectA"), # Ignore specific projects
-  observedDataToIgnore = NULL       # Or observed data
-)
-```
-
 ## Code of conduct
 
 Everyone interacting in the Open Systems Pharmacology community (codebases, issue trackers, chat rooms, mailing lists etc.) is expected to follow the Open Systems Pharmacology [code of conduct](https://github.com/Open-Systems-Pharmacology/Suite/blob/master/CODE_OF_CONDUCT.md).

@@ -234,14 +234,21 @@ getLatestReleaseTag <- function(owner, repo, includePreReleases) {
   # GitHub API endpoint for releases
   apiUrl <- sprintf("https://api.github.com/repos/%s/%s/releases", owner, repo)
   
-  # Fetch releases with User-Agent header
-  # Note: GitHub API requires a User-Agent header
+  # Fetch releases using httr with proper headers
   releases <- tryCatch(
     {
-      # Read with custom options to include User-Agent
-      # jsonlite::fromJSON doesn't directly support headers, but we can use httr if needed
-      # For now, we'll use the simple approach and handle rate limiting via error messages
-      jsonlite::fromJSON(apiUrl, simplifyVector = TRUE)
+      # use httr to fetch and jsonlite to parse
+      res <- httr::GET(
+        apiUrl,
+        httr::add_headers(
+          Accept = "application/vnd.github.v3+json",
+          `User-Agent` = "R (OSPSuite.QualificationPlanEditor)"
+        ),
+        httr::timeout(30)
+      )
+      httr::stop_for_status(res)
+      txt <- httr::content(res, as = "text", encoding = "UTF-8")
+      jsonlite::fromJSON(txt, simplifyVector = TRUE)
     },
     error = function(e) {
       error_msg <- e$message
