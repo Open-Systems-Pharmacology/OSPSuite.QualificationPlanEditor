@@ -234,13 +234,23 @@ getLatestReleaseTag <- function(owner, repo, includePreReleases) {
   # GitHub API endpoint for releases
   apiUrl <- sprintf("https://api.github.com/repos/%s/%s/releases", owner, repo)
   
-  # Fetch releases
+  # Fetch releases with User-Agent header
+  # Note: GitHub API requires a User-Agent header
   releases <- tryCatch(
     {
+      # Read with custom options to include User-Agent
+      # jsonlite::fromJSON doesn't directly support headers, but we can use httr if needed
+      # For now, we'll use the simple approach and handle rate limiting via error messages
       jsonlite::fromJSON(apiUrl, simplifyVector = TRUE)
     },
     error = function(e) {
-      cli::cli_warn("Failed to fetch releases from GitHub API: {e$message}")
+      error_msg <- e$message
+      # Check for rate limiting (HTTP 403)
+      if (grepl("403", error_msg)) {
+        cli::cli_warn("GitHub API rate limit may be exceeded for {.val {owner}/{repo}}. Consider authenticating for higher limits.")
+      } else {
+        cli::cli_warn("Failed to fetch releases from GitHub API for {.val {owner}/{repo}}: {error_msg}")
+      }
       return(NULL)
     }
   )
@@ -249,10 +259,22 @@ getLatestReleaseTag <- function(owner, repo, includePreReleases) {
     return(NULL)
   }
   
+  # Ensure releases is a data.frame
+  if (!is.data.frame(releases)) {
+    cli::cli_warn("Unexpected structure from GitHub API for {.val {owner}/{repo}}")
+    return(NULL)
+  }
+  
+  # Check for required fields
+  if (!("prerelease" %in% names(releases)) || !("tag_name" %in% names(releases)) || !("published_at" %in% names(releases))) {
+    cli::cli_warn("Missing required fields in releases data for {.val {owner}/{repo}}")
+    return(NULL)
+  }
+  
   # Filter releases based on includePreReleases
   if (!includePreReleases) {
-    # Filter out pre-releases
-    releases <- releases[!releases$prerelease, ]
+    # Filter out pre-releases, handling NA values properly
+    releases <- releases[releases$prerelease == FALSE & !is.na(releases$prerelease), ]
   }
   
   if (nrow(releases) == 0) {
@@ -260,7 +282,24 @@ getLatestReleaseTag <- function(owner, repo, includePreReleases) {
   }
   
   # Sort by published_at (chronologically latest first)
-  releases <- releases[order(as.POSIXct(releases$published_at), decreasing = TRUE), ]
+  # Handle potential date parsing issues
+  published_dates <- tryCatch(
+    {
+      as.POSIXct(releases$published_at)
+    },
+    error = function(e) {
+      cli::cli_warn("Failed to parse published_at dates for {.val {owner}/{repo}}")
+      return(NULL)
+    }
+  )
+  
+  if (is.null(published_dates) || all(is.na(published_dates))) {
+    # Fallback: return the first release if date parsing fails
+    cli::cli_warn("Could not parse release dates for {.val {owner}/{repo}}, using first release")
+    return(releases$tag_name[1])
+  }
+  
+  releases <- releases[order(published_dates, decreasing = TRUE), ]
   
   # Return the tag name of the latest release
   return(releases$tag_name[1])
