@@ -251,12 +251,12 @@ getLatestReleaseTag <- function(owner, repo, includePreReleases) {
       jsonlite::fromJSON(txt, simplifyVector = TRUE)
     },
     error = function(e) {
-      error_msg <- e$message
+      errorMsg <- e$message
       # Check for rate limiting (HTTP 403)
-      if (grepl("403", error_msg)) {
+      if (grepl("403", errorMsg)) {
         cli::cli_warn("GitHub API rate limit may be exceeded for {.val {owner}/{repo}}. Consider authenticating for higher limits.")
       } else {
-        cli::cli_warn("Failed to fetch releases from GitHub API for {.val {owner}/{repo}}: {error_msg}")
+        cli::cli_warn("Failed to fetch releases from GitHub API for {.val {owner}/{repo}}: {errorMsg}")
       }
       return(NULL)
     }
@@ -290,7 +290,7 @@ getLatestReleaseTag <- function(owner, repo, includePreReleases) {
   
   # Sort by published_at (chronologically latest first)
   # Handle potential date parsing issues
-  published_dates <- tryCatch(
+  publishedDates <- tryCatch(
     {
       as.POSIXct(releases$published_at)
     },
@@ -300,13 +300,13 @@ getLatestReleaseTag <- function(owner, repo, includePreReleases) {
     }
   )
   
-  if (is.null(published_dates) || all(is.na(published_dates))) {
+  if (is.null(publishedDates) || all(is.na(publishedDates))) {
     # Fallback: return the first release if date parsing fails
     cli::cli_warn("Could not parse release dates for {.val {owner}/{repo}}, using first release")
     return(releases$tag_name[1])
   }
   
-  releases <- releases[order(published_dates, decreasing = TRUE), ]
+  releases <- releases[order(publishedDates, decreasing = TRUE), ]
   
   # Return the tag name of the latest release
   return(releases$tag_name[1])
