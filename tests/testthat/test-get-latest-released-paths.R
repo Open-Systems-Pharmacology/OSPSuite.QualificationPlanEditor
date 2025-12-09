@@ -146,7 +146,7 @@ test_that("getLatestReleasedPaths validates input parameters", {
   
   expect_error(
     getLatestReleasedPaths(123),
-    "string"
+    "character"
   )
   
   expect_error(
