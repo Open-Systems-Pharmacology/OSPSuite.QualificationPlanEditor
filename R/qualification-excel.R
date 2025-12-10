@@ -589,7 +589,7 @@ getPKPlotsFromExcel <- function(data, mapping) {
 #' @keywords internal
 getInputsFromExcel <- function(data) {
   if (nrow(data) == 0) {
-    return()
+    return(list())
   }
   inputsData <- mapToQualification(data, sheetName = "Inputs")
   return(inputsData)
