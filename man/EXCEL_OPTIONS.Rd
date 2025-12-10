@@ -5,7 +5,7 @@
 \alias{EXCEL_OPTIONS}
 \title{EXCEL_OPTIONS}
 \format{
-An object of class \code{list} of length 3.
+An object of class \code{list} of length 4.
 }
 \usage{
 EXCEL_OPTIONS

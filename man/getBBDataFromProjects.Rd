@@ -4,12 +4,10 @@
 \alias{getBBDataFromProjects}
 \title{getBBDataFromProjects}
 \usage{
-getBBDataFromProjects(projectData, qualificationProjects = NULL)
+getBBDataFromProjects(projectData)
 }
 \arguments{
 \item{projectData}{A data.frame of project snapshots}
-
-\item{qualificationProjects}{Optional: a character vector of project IDs from a qualification plan}
 }
 \value{
 A data.frame with columns `Project`, `BB-Type`, `BB-Name`, `Parent-Project`

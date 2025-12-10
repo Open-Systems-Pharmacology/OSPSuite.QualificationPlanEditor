@@ -5,7 +5,7 @@
 \alias{EXCEL_MAPPING}
 \title{EXCEL_MAPPING}
 \format{
-An object of class \code{data.frame} with 98 rows and 4 columns.
+An object of class \code{data.frame} with 99 rows and 4 columns.
 }
 \usage{
 EXCEL_MAPPING

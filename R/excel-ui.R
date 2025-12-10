@@ -57,8 +57,8 @@ excelUI <- function(fileName = "qualification.xlsx",
   #---- Projects ----
   cli::cli_progress_step("Exporting {.field Projects} Data")
   projectData <- getProjectsFromList(snapshotPaths)
+  projectStatus <- mergeProjectData(projectData)
   # Qualification Plan provided
-  qualificationProjects <- NULL
   if (useQualification) {
     qualificationContent <- tryCatch(
       jsonlite::fromJSON(qualificationPlan, simplifyVector = FALSE),
@@ -70,82 +70,52 @@ excelUI <- function(fileName = "qualification.xlsx",
     qualificationObservedData <- getObsDataFromQualification(qualificationContent)
     qualificationBBData <- getBBDataFromQualification(qualificationContent)
 
-    qualificationProjects <- qualificationProjectData$Id
-    commonProjects <- intersect(projectData$Id, qualificationProjects)
-    # Merge to project data
-    projectData <- merge.data.frame(
-      projectData,
-      qualificationProjectData,
-      by = c("Id", "Path"),
-      all = TRUE,
-      sort = FALSE
-    )
-    projectStyles <- getQualificationStyles(
-      data = projectData,
-      commonProjects = commonProjects,
-      qualificationProjects = qualificationProjects,
-      projectVariable = "Id"
-    )
+    # Update Project Data and map to project status
+    projectStatus <- mergeProjectData(projectData, qualificationProjectData)
+    projectData <- projectStatus |> dplyr::select(-dplyr::all_of("Status"))
   }
-
   writeDataToSheet(data = projectData, sheetName = "Projects", excelObject = excelObject)
-  if (useQualification) {
-    styleQualificationCells(
-      qualificationStyles = projectStyles,
-      columnIndices = seq_len(ncol(projectData)),
-      sheetName = "Projects",
-      excelObject = excelObject
-    )
-  }
+  styleProjectStatus(
+    projectIds = projectData$Id,
+    columns = seq_len(ncol(projectData)),
+    statusMapping = projectStatus,
+    sheetName = "Projects",
+    excelObject = excelObject
+  )
+
   #---- Simulation Ouptuts ----
   cli::cli_progress_step("Exporting {.field Simulation Outputs} Data")
   simulationsOutputs <- getSimulationsOutputsFromProjects(projectData)
   writeDataToSheet(data = simulationsOutputs, sheetName = "Simulations_Outputs", excelObject = excelObject)
-  if (useQualification) {
-    simulationsOutputStyles <- getQualificationStyles(
-      data = simulationsOutputs,
-      commonProjects = commonProjects,
-      qualificationProjects = qualificationProjects
-    )
-    styleQualificationCells(
-      qualificationStyles = simulationsOutputStyles,
-      columnIndices = seq_len(ncol(simulationsOutputs)),
-      sheetName = "Simulations_Outputs",
-      excelObject = excelObject
-    )
-  }
+  styleProjectStatus(
+    projectIds = simulationsOutputs$Project,
+    columns = seq_len(ncol(simulationsOutputs)),
+    statusMapping = projectStatus,
+    sheetName = "Simulations_Outputs",
+    excelObject = excelObject
+  )
 
   #---- Simulations ObsData ----
   cli::cli_progress_step("Exporting {.field Simulation Observed Data}")
   simulationsObsData <- getSimulationsObsDataFromProjects(projectData)
   writeDataToSheet(data = simulationsObsData, sheetName = "Simulations_ObsData", excelObject = excelObject)
-  if (useQualification) {
-    simulationsObsDataStyles <- getQualificationStyles(
-      data = simulationsObsData,
-      commonProjects = commonProjects,
-      qualificationProjects = qualificationProjects
-    )
-    styleQualificationCells(
-      qualificationStyles = simulationsObsDataStyles,
-      columnIndices = seq_len(ncol(simulationsObsData)),
-      sheetName = "Simulations_ObsData",
-      excelObject = excelObject
-    )
-  }
+  styleProjectStatus(
+    projectIds = simulationsObsData$Project,
+    columns = seq_len(ncol(simulationsObsData)),
+    statusMapping = projectStatus,
+    sheetName = "Simulations_ObsData",
+    excelObject = excelObject
+  )
 
   #---- Obs Data ----
   cli::cli_progress_step("Exporting {.field Observed Data}")
   observedData <- getObsDataFromList(observedDataPaths)
+  observedStatus <- mergeObsData(observedData)
   # Qualification Plan provided
   if (useQualification) {
     # Merge to observed data data
-    observedData <- merge.data.frame(
-      observedData,
-      qualificationObservedData,
-      by = c("Id", "Path", "Type"),
-      all = TRUE,
-      sort = FALSE
-    )
+    observedStatus <- mergeObsData(observedData, qualificationObservedData)
+    observedData <- observedStatus |> dplyr::select(-dplyr::all_of("Status"))
   }
   writeDataToSheet(data = observedData, sheetName = "ObsData", excelObject = excelObject)
   # Drop down list for Obs Data Type column
@@ -156,18 +126,19 @@ excelUI <- function(fileName = "qualification.xlsx",
     columnNames = "Type",
     excelObject = excelObject
   )
+  styleProjectStatus(
+    projectIds = observedData$Id,
+    columns = seq_len(ncol(observedData)),
+    statusMapping = observedStatus,
+    sheetName = "ObsData",
+    excelObject = excelObject
+  )
 
   #---- Building Blocks ----
   cli::cli_progress_step("Exporting {.field Buidling Block} Data")
-  bbData <- getBBDataFromProjects(projectData, qualificationProjects)
+  bbData <- getBBDataFromProjects(projectData)
   if (useQualification) {
-    bbData <- merge.data.frame(
-      bbData,
-      qualificationBBData,
-      by = c("Project", "BB-Type", "BB-Name", "Parent-Project"),
-      all = TRUE,
-      sort = FALSE
-    )
+    bbData <- mergeBBData(bbData, qualificationBBData)
   }
   writeDataToSheet(data = bbData, sheetName = "BB", excelObject = excelObject)
   # Drop down list for Parent-Project column
@@ -178,23 +149,17 @@ excelUI <- function(fileName = "qualification.xlsx",
     columnNames = "Parent-Project",
     excelObject = excelObject
   )
-  if (useQualification) {
-    bbDataStyles <- getQualificationStyles(
-      data = bbData,
-      commonProjects = commonProjects,
-      qualificationProjects = qualificationProjects
-    )
-    styleQualificationCells(
-      qualificationStyles = bbDataStyles,
-      columnIndices = seq_len(ncol(bbData)),
-      sheetName = "BB",
-      excelObject = excelObject
-    )
-  }
+  styleProjectStatus(
+    projectIds = bbData$Project,
+    columns = seq_len(ncol(bbData)),
+    statusMapping = projectStatus,
+    sheetName = "BB",
+    excelObject = excelObject
+  )
 
   #---- Qualification Plan provided ----
   if (useQualification) {
-    cli::cli_h2("Qualification {.field Plots}")
+    cli::cli_h2("Qualification Plan")
     # MetaInfo
     cli::cli_progress_step("Exporting {.field Schema} Data")
     # Parse version from schema
@@ -207,6 +172,7 @@ excelUI <- function(fileName = "qualification.xlsx",
       sheetName = "MetaInfo",
       excelObject = excelObject
     )
+
     cli::cli_progress_step("Exporting {.field Sections}")
     # Sections
     sectionsData <- getQualificationSections(qualificationContent)
@@ -293,19 +259,15 @@ excelUI <- function(fileName = "qualification.xlsx",
       columnNames = "TargetSimulation",
       excelObject = excelObject
     )
-    
+
     cli::cli_progress_step("Exporting {.field All Plots} Settings")
     # AllPlots
     allPlotsData <- getQualificationAllPlots(qualificationContent, simulationsOutputs)
     writeDataToSheet(data = allPlotsData, sheetName = "All_Plots", excelObject = excelObject)
-    allPlotStyles <- getQualificationStyles(
-      data = allPlotsData,
-      commonProjects = commonProjects,
-      qualificationProjects = qualificationProjects
-    )
-    styleQualificationCells(
-      qualificationStyles = allPlotStyles,
-      columnIndices = seq_len(ncol(allPlotsData)),
+    styleProjectStatus(
+      projectIds = allPlotsData$Project,
+      columns = seq_len(ncol(allPlotsData)),
+      statusMapping = projectStatus,
       sheetName = "All_Plots",
       excelObject = excelObject
     )
@@ -355,6 +317,21 @@ excelUI <- function(fileName = "qualification.xlsx",
     # CT Mapping
     ctMapping <- getQualificationCTMapping(qualificationContent)
     writeDataToSheet(data = ctMapping, sheetName = "CT_Mapping", excelObject = excelObject)
+    styleProjectStatus(
+      projectIds = ctMapping$Project,
+      columns = which(names(ctMapping) %in% c("Project", "Simulation", "Output")),
+      statusMapping = projectStatus,
+      sheetName = "CT_Mapping",
+      excelObject = excelObject
+    )
+    styleProjectStatus(
+      projectIds = ctMapping$`Observed data`,
+      columns = which(names(ctMapping) %in% c("Observed data")),
+      statusMapping = observedStatus,
+      sheetName = "CT_Mapping",
+      excelObject = excelObject
+    )
+
     # Color CT Mapping
     styleColorMapping(mapping = ctMapping, sheetName = "CT_Mapping", excelObject = excelObject)
     # Drop down lists for Project, Simulation, Output, Plot Title, TimeUnit, Color and Symbol columns
@@ -408,7 +385,6 @@ excelUI <- function(fileName = "qualification.xlsx",
       excelObject = excelObject
     )
 
-
     cli::cli_progress_step("Exporting {.field GOF Merged} Plot Settings")
     # Goodness of fit (GOF) Plots
     gofPlotsData <- getQualificationGOFPlots(qualificationContent)
@@ -445,6 +421,20 @@ excelUI <- function(fileName = "qualification.xlsx",
     # GOF Mapping
     gofMapping <- getQualificationGOFMapping(qualificationContent)
     writeDataToSheet(data = gofMapping, sheetName = "GOF_Mapping", excelObject = excelObject)
+    styleProjectStatus(
+      projectIds = gofMapping$Project,
+      columns = which(names(gofMapping) %in% c("Project", "Simulation", "Output")),
+      statusMapping = projectStatus,
+      sheetName = "GOF_Mapping",
+      excelObject = excelObject
+    )
+    styleProjectStatus(
+      projectIds = gofMapping$`Observed data`,
+      columns = which(names(gofMapping) %in% c("Observed data")),
+      statusMapping = observedStatus,
+      sheetName = "GOF_Mapping",
+      excelObject = excelObject
+    )
     # Color GOF Mapping
     styleColorMapping(mapping = gofMapping, sheetName = "GOF_Mapping", excelObject = excelObject)
     # Drop down lists for Project, Simulation, Output, Plot Title, Group Title, and Color columns
@@ -551,6 +541,20 @@ excelUI <- function(fileName = "qualification.xlsx",
     # DDI Ratio Mapping
     ddiRatioMapping <- getQualificationDDIRatioMapping(qualificationContent)
     writeDataToSheet(data = ddiRatioMapping, sheetName = "DDIRatio_Mapping", excelObject = excelObject)
+    styleProjectStatus(
+      projectIds = ddiRatioMapping$Project,
+      columns = which(names(ddiRatioMapping) %in% c("Project", "Simulation_Control", "Simulation_Treatment", "Output")),
+      statusMapping = projectStatus,
+      sheetName = "DDIRatio_Mapping",
+      excelObject = excelObject
+    )
+    styleProjectStatus(
+      projectIds = ddiRatioMapping$`Observed data`,
+      columns = which(names(ddiRatioMapping) %in% c("Observed data", "ObsDataRecordID")),
+      statusMapping = observedStatus,
+      sheetName = "DDIRatio_Mapping",
+      excelObject = excelObject
+    )
     # Drop down lists for Output, Project, Simulation_Control, Simulation_Treatment,
     # Plot Title, Group Title, Observed data, Control TimeUnit, and Treatment TimeUnit columns
     applyDataValidation(
@@ -662,6 +666,20 @@ excelUI <- function(fileName = "qualification.xlsx",
     # PK Ratio Mapping
     pkRatioMapping <- getQualificationPKRatioMapping(qualificationContent)
     writeDataToSheet(data = pkRatioMapping, sheetName = "PKRatio_Mapping", excelObject = excelObject)
+    styleProjectStatus(
+      projectIds = pkRatioMapping$Project,
+      columns = which(names(pkRatioMapping) %in% c("Project", "Simulation", "Output")),
+      statusMapping = projectStatus,
+      sheetName = "PKRatio_Mapping",
+      excelObject = excelObject
+    )
+    styleProjectStatus(
+      projectIds = pkRatioMapping$`Observed data`,
+      columns = which(names(pkRatioMapping) %in% c("Observed data", "ObservedDataRecordId")),
+      statusMapping = observedStatus,
+      sheetName = "PKRatio_Mapping",
+      excelObject = excelObject
+    )
     # Drop down lists for Output, Project, Simulation,
     # Plot Title, Group Title, Observed data columns
     applyDataValidation(

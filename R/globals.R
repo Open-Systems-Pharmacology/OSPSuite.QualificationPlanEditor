@@ -25,12 +25,16 @@ EXCEL_OPTIONS <- list( # nolint
     border = "Bottom",
     fontColour = "black"
   ),
-  newProjectStyle = openxlsx::createStyle(
+  addedProjectStyle = openxlsx::createStyle(
     fgFill = "#A3FFA3",
     fontColour = "black"
   ),
-  deletedProjectStyle = openxlsx::createStyle(
-    fgFill = "#FF8884",
+  changedProjectStyle = openxlsx::createStyle(
+    fgFill = "#FFFFBF",
+    fontColour = "black"
+  ),
+  unchangedProjectStyle = openxlsx::createStyle(
+    fgFill = "#DDDDDD",
     fontColour = "black"
   )
 )

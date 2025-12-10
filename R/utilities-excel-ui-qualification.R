@@ -107,49 +107,6 @@ getBBDataFromQualification <- function(qualificationContent) {
   return(bbData)
 }
 
-#' @title styleQualificationCells
-#' @description
-#' Apply qualification styles to cells in an Excel sheet
-#' @param qualificationStyles A vector of qualification styles including the names `"New"` and `"Deleted"`
-#' @param columnIndices Indices of the columns to apply the styles to
-#' @param sheetName Name of the sheet to write to
-#' @param excelObject An openxlsx workbook object
-#' @import openxlsx
-#' @keywords internal
-styleQualificationCells <- function(qualificationStyles, columnIndices, sheetName, excelObject) {
-  openxlsx::addStyle(
-    excelObject,
-    sheet = sheetName,
-    style = EXCEL_OPTIONS$newProjectStyle,
-    rows = 1 + which(qualificationStyles %in% "New"),
-    cols = columnIndices,
-    gridExpand = TRUE
-  )
-  openxlsx::addStyle(
-    excelObject,
-    sheet = sheetName,
-    style = EXCEL_OPTIONS$deletedProjectStyle,
-    rows = 1 + which(qualificationStyles %in% "Deleted"),
-    cols = columnIndices,
-    gridExpand = TRUE
-  )
-}
-
-#' @title getQualificationStyles
-#' @description Get qualification styles for a data.frame based on project membership
-#' @param data A data.frame with a project variable
-#' @param commonProjects A vector of project IDs that are common between the data and the qualification plan
-#' @param qualificationProjects A vector of project IDs that are new in the qualification plan
-#' @param projectVariable Name of the project variable in the data.frame
-#' @keywords internal
-getQualificationStyles <- function(data, commonProjects, qualificationProjects, projectVariable = "Project") {
-  ifelse(
-    data[[projectVariable]] %in% commonProjects,
-    "Unchanged",
-    ifelse(data[[projectVariable]] %in% qualificationProjects, "Deleted", "New")
-  )
-}
-
 #' @title getQualificationSections
 #' @description
 #' Get a data.frame of qualification plan sections
