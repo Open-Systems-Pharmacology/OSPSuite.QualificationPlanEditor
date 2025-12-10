@@ -48,7 +48,6 @@
 <url><loc>/reference/getQualificationPKRatioMapping.html</loc></url>
 <url><loc>/reference/getQualificationSections.html</loc></url>
 <url><loc>/reference/getQualificationSimParam.html</loc></url>
-<url><loc>/reference/getQualificationStyles.html</loc></url>
 <url><loc>/reference/getSimulationsFromSnapshot.html</loc></url>
 <url><loc>/reference/getSimulationsObsDataFromProjects.html</loc></url>
 <url><loc>/reference/getSimulationsOutputsFromProjects.html</loc></url>
@@ -57,10 +56,13 @@
 <url><loc>/reference/lookupData.html</loc></url>
 <url><loc>/reference/mapDataToProject.html</loc></url>
 <url><loc>/reference/mapToQualification.html</loc></url>
+<url><loc>/reference/mergeBBData.html</loc></url>
+<url><loc>/reference/mergeObsData.html</loc></url>
+<url><loc>/reference/mergeProjectData.html</loc></url>
 <url><loc>/reference/parseSectionsToDataFrame.html</loc></url>
 <url><loc>/reference/parseSectionsToNestedList.html</loc></url>
 <url><loc>/reference/styleColorMapping.html</loc></url>
-<url><loc>/reference/styleQualificationCells.html</loc></url>
+<url><loc>/reference/styleProjectStatus.html</loc></url>
 <url><loc>/reference/writeDataToSheet.html</loc></url>
 </urlset>
 
