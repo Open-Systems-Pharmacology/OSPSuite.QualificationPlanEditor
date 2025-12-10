@@ -62,3 +62,33 @@ utils::browseURL(excelQualification)
 
 ```
 
+## Automatically Get Latest Released Paths
+
+The `getLatestReleasedPaths()` function helps you automatically fetch the latest released versions of projects and observed data from your qualification plan:
+
+``` r
+# Get latest released paths from a qualification plan
+latestPaths <- getLatestReleasedPaths(
+  qualificationPlan = "path/to/qualification_plan.json",
+  includePreReleases = FALSE,
+  returnUpdatedOnly = TRUE
+)
+
+# Access the updated project and observed data paths
+latestProjectPaths <- latestPaths$projects
+latestObservedDataPaths <- latestPaths$observedData
+
+# You can also ignore specific projects or observed data
+latestPaths <- getLatestReleasedPaths(
+  qualificationPlan = "path/to/qualification_plan.json",
+  projectsToIgnore = c("ProjectA", "ProjectB"),
+  observedDataToIgnore = c("ObsData1")
+)
+
+# Get all paths (not just updated ones)
+allPaths <- getLatestReleasedPaths(
+  qualificationPlan = "path/to/qualification_plan.json",
+  returnUpdatedOnly = FALSE
+)
+```
+

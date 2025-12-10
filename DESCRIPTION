@@ -27,6 +27,7 @@ RoxygenNote: 7.3.3
 Imports: 
     cli,
     dplyr,
+    httr,
     jsonlite,
     openxlsx,
     ospsuite.utils (>= 1.7.0),
