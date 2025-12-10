@@ -242,11 +242,11 @@ getExcelSections <- function(sectionData) {
 #' @return A nested list
 #' @keywords internal
 parseSectionsToNestedList <- function(sectionsIn, sectionData) {
-  names(sectionsIn) <- c("Reference", "Title", "Content", "Parent")
-  sectionsOut <- as.list(sectionsIn |> dplyr::select(-dplyr::matches("Parent")))
-  childSections <- sectionData[["Parent Section"]] %in% sectionsIn$Reference
+  sectionsOut <- mapToQualification(as.list(sectionsIn), sheetName = "Sections")
+  fieldsToKeep <- which(!sapply(sectionsOut, ospsuite.utils::isEmpty))
+  sectionsOut <- sectionsOut[fieldsToKeep]
+  childSections <- sectionData[["Parent Section"]] %in% sectionsOut$Reference
   if (!any(childSections)) {
-    sectionsOut$Sections <- NA
     return(sectionsOut)
   }
   sectionsOut$Sections <- lapply(
