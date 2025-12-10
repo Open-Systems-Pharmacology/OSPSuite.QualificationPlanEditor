@@ -315,7 +315,6 @@ getSimulationsObsDataFromProjects <- function(projectData) {
 #' @description
 #' Get a data.frame of projects, type, name and parent project
 #' @param projectData A data.frame of project snapshots
-#' @param qualificationProjects Optional: a character vector of project IDs from a qualification plan
 #' @return A data.frame with columns `Project`, `BB-Type`, `BB-Name`, `Parent-Project`
 #' @export
 #' @examples
@@ -342,15 +341,11 @@ getSimulationsObsDataFromProjects <- function(projectData) {
 #' # Get the simulations Observed Data from the projects
 #' getBBDataFromProjects(projectData)
 #'
-getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
+getBBDataFromProjects <- function(projectData) {
   # Accumulate all rows in a list for efficiency
   allRows <- list()
-
+  
   for (projectIndex in seq_len(nrow(projectData))) {
-    # If qualificationProjects is provided, check if the project is already in it
-    if (projectData$Id[projectIndex] %in% qualificationProjects) {
-      next
-    }
     # Parse the snapshot once per project
     snapshot <- tryCatch(
       {
@@ -360,12 +355,11 @@ getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
         cli::cli_abort("Failed to read snapshot for project {.val {projectData$Id[projectIndex]}} from {.file {projectData$Path[projectIndex]}}: {e$message}")
       }
     )
-
+    
     for (bbType in ALL_BUILDING_BLOCKS) {
       # Get building blocks using pluralized key
       bbKey <- paste0(bbType, "s")
       snapshotBBs <- snapshot[[bbKey]]
-
       # Guard against NULL or empty building block lists
       if (ospsuite.utils::isEmpty(snapshotBBs)) {
         next
@@ -373,6 +367,16 @@ getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
       bbData <- lapply(
         snapshotBBs,
         function(snapshotBB) {
+          if (ospsuite.utils::isEmpty(snapshotBB$Name)){
+            return(data.frame(
+              Project = character(0),
+              "BB-Type" = character(0),
+              "BB-Name" = character(0),
+              "Parent-Project" = character(0),
+              check.names = FALSE,
+              stringsAsFactors = FALSE
+            ))
+          }
           data.frame(
             Project = projectData$Id[projectIndex],
             "BB-Type" = bbType,
@@ -408,4 +412,101 @@ getBBDataFromProjects <- function(projectData, qualificationProjects = NULL) {
   }
 
   return(do.call(rbind, allRows))
+}
+
+
+#' @title mergeProjectData
+#' @description
+#' Merge data.frames of project IDs and Paths/URLs from snapshots and qualification
+#' @param snapshotData A data.frame with columns `Id` and `Path`
+#' @param qualificationData A data.frame with columns `Id` and `Path`
+#' @return A data.frame with columns `Id`, `Path` and `Status`
+#' @export
+#' @examples
+#'
+#' # Qualification data
+#' qualiData <- data.frame(Id = c("a", "b", "c"), Path = c("a", "b", "c"))
+#'
+#' # Snapshot data
+#' snapData <- data.frame(Id = c("c", "d"), Path = c("newC", "newD"))
+#'
+#' # Merged data along with status
+#' mergeProjectData(snapData, qualiData)
+#'
+mergeProjectData <- function(snapshotData, qualificationData = NULL) {
+  if (is.null(qualificationData)) {
+    return(snapshotData |> dplyr::mutate(Status = "Added"))
+  }
+  mergedData <- dplyr::full_join(
+    qualificationData,
+    snapshotData,
+    by = "Id",
+    suffix = c("Qualification", "Snapshot")
+  ) |>
+    dplyr::mutate(
+      Path = ifelse(is.na(.data[["PathSnapshot"]]), .data[["PathQualification"]], .data[["PathSnapshot"]]),
+
+      Status = dplyr::case_when(
+        is.na(.data[["PathQualification"]]) ~ "Added",
+        .data[["PathQualification"]] != .data[["Path"]] ~ "Changed",
+        .default = "Unchanged"
+      )
+    ) |>
+    dplyr::select(dplyr::all_of(c("Id", "Path", "Status")))
+  return(mergedData)
+}
+
+#' @title mergeObsData
+#' @description
+#' Merge data.frames of Observed data IDs and Paths/URLs from snapshots and qualification
+#' @param obsData A data.frame with columns `Id`, `Path` and `Type`
+#' @param qualificationObsData A data.frame with columns `Id`, `Path` and `Type`
+#' @return A data.frame with columns `Id`, `Path`, `Type` and `Status`
+#' @export
+mergeObsData <- function(obsData, qualificationObsData = NULL) {
+  if (is.null(qualificationObsData)) {
+    return(obsData |> dplyr::mutate(Status = "Added"))
+  }
+  mergedData <- dplyr::full_join(
+    qualificationObsData,
+    obsData,
+    by = "Id",
+    suffix = c("Qualification", "Snapshot")
+  ) |>
+    dplyr::mutate(
+      Path = ifelse(is.na(.data[["PathSnapshot"]]), .data[["PathQualification"]], .data[["PathSnapshot"]]),
+      Type = ifelse(is.na(.data[["TypeSnapshot"]]), .data[["TypeQualification"]], .data[["TypeSnapshot"]]),
+      Status = dplyr::case_when(
+        is.na(.data[["PathQualification"]]) ~ "Added",
+        .data[["PathQualification"]] != .data[["Path"]] ~ "Changed",
+        .default = "Unchanged"
+      )
+    ) |>
+    dplyr::select(dplyr::all_of(c("Id", "Path", "Type", "Status")))
+  return(mergedData)
+}
+
+#' @title mergeBBData
+#' @description
+#' Merge data.frames of Building Blocks data from snapshots and qualification
+#' @param bbData A data.frame with columns `Project`, `BB-Type`, `BB-Name`, `Parent-Project`
+#' @param qualificationBBData A data.frame with columns `Project`, `BB-Type`, `BB-Name`, `Parent-Project`
+#' @return A data.frame with columns `Project`, `BB-Type`, `BB-Name`, `Parent-Project`
+#' @export
+mergeBBData <- function(bbData, qualificationBBData) {
+  mergedData <- dplyr::full_join(
+    qualificationBBData,
+    bbData,
+    by = c("Project", "BB-Type", "BB-Name"),
+    suffix = c("Qualification", "Snapshot")
+  ) |>
+    dplyr::mutate(
+      `Parent-Project` = ifelse(
+        is.na(.data[["Parent-ProjectQualification"]]), 
+        .data[["Parent-ProjectSnapshot"]], 
+        .data[["Parent-ProjectQualification"]]
+        )
+      ) |>
+    dplyr::select(dplyr::all_of(c("Project", "BB-Type", "BB-Name", "Parent-Project")))
+  return(mergedData)
 }

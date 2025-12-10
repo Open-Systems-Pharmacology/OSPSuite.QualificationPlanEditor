@@ -11,7 +11,7 @@ getProjectsFromExcel(projectData, bbData, simParamData)
 
 \item{bbData}{A data.frame mapping Building Block to parent project}
 
-\item{simParam}{A data.frame mapping SimulationParameters to parent project}
+\item{simParamData}{A data.frame mapping SimulationParameters to parent project}
 }
 \value{
 A list of Project with their building blocks and simulation parameters

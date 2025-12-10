@@ -112,3 +112,39 @@ excelListingValue <- function(data, columnName, sheetName) {
   listingValue <- paste0("='", sheetName, "'!$", columnValue, "$2:$", columnValue, "$", 1 + nrow(data))
   return(listingValue)
 }
+
+#' @title styleProjectStatus
+#' @description
+#' Apply color styles to cells in an Excel sheet depending on identified status
+#' @param projectIds A vector of project Ids
+#' @param columns Indices of the columns to apply the styles to
+#' @param statusMapping A data.frame mapping project IDs to their status, with columns `Id` and `Status`
+#' @param sheetName Name of the sheet to write to
+#' @param excelObject An openxlsx workbook object
+#' @import openxlsx
+#' @keywords internal
+styleProjectStatus <- function(projectIds,
+                                columns,
+                                statusMapping,
+                                sheetName,
+                                excelObject) {
+  for (status in c("Unchanged", "Changed", "Added")) {
+    statusIds <- statusMapping |>
+      dplyr::filter(.data[["Status"]] %in% status) |>
+      dplyr::pull(var = "Id")
+    selectedRows <- which(projectIds %in% statusIds)
+    if (ospsuite.utils::isOfLength(selectedRows, 0)) {
+      next
+    }
+    styleName <- paste0(tolower(status), "ProjectStyle")
+    openxlsx::addStyle(
+      excelObject,
+      sheet = sheetName,
+      style = EXCEL_OPTIONS[[styleName]],
+      rows = 1 + selectedRows,
+      cols = columns,
+      gridExpand = TRUE
+    )
+  }
+  return(invisible())
+}

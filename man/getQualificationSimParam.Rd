@@ -10,10 +10,10 @@ getQualificationSimParam(qualificationContent)
 \item{qualificationContent}{Content of a qualification plan}
 }
 \value{
-data.frame with columns 'Project', 'BB-Type', 'BB-Name', and 'Section Reference'
+data.frame with columns 'Project', 'Parent Project', 'Parent Simulation', 'Path', and 'TargetSimulation'
 }
 \description{
 Get a data.frame of qualification simulation parameters
-with columns 'Project', 'BB-Type', 'BB-Name', and 'Section Reference'
+with columns 'Project', 'Parent Project', 'Parent Simulation', 'Path', and 'TargetSimulation'
 }
 \keyword{internal}
