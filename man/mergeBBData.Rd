@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilities-excel-ui.R
 \name{mergeBBData}
 \alias{mergeBBData}
-\title{mergeObsData}
+\title{mergeBBData}
 \usage{
 mergeBBData(bbData, qualificationBBData)
 }

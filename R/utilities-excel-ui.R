@@ -367,7 +367,7 @@ getBBDataFromProjects <- function(projectData) {
       bbData <- lapply(
         snapshotBBs,
         function(snapshotBB) {
-          if(ospsuite.utils::isEmpty(snapshotBB$Name)){
+          if (ospsuite.utils::isEmpty(snapshotBB$Name)){
             return(data.frame(
               Project = character(0),
               "BB-Type" = character(0),
@@ -445,7 +445,7 @@ mergeProjectData <- function(snapshotData, qualificationData = NULL) {
   ) |>
     dplyr::mutate(
       Path = ifelse(is.na(.data[["PathSnapshot"]]), .data[["PathQualification"]], .data[["PathSnapshot"]]),
-      Type = ifelse(is.na(.data[["PathSnapshot"]]), .data[["PathQualification"]], .data[["PathSnapshot"]]),
+
       Status = dplyr::case_when(
         is.na(.data[["PathQualification"]]) ~ "Added",
         .data[["PathQualification"]] != .data[["Path"]] ~ "Changed",
@@ -486,7 +486,7 @@ mergeObsData <- function(obsData, qualificationObsData = NULL) {
   return(mergedData)
 }
 
-#' @title mergeObsData
+#' @title mergeBBData
 #' @description
 #' Merge data.frames of Building Blocks data from snapshots and qualification
 #' @param bbData A data.frame with columns `Project`, `BB-Type`, `BB-Name`, `Parent-Project`
@@ -508,5 +508,5 @@ mergeBBData <- function(bbData, qualificationBBData) {
         )
       ) |>
     dplyr::select(dplyr::all_of(c("Project", "BB-Type", "BB-Name", "Parent-Project")))
-return(mergedData)
+  return(mergedData)
 }

@@ -118,16 +118,16 @@ excelListingValue <- function(data, columnName, sheetName) {
 #' Apply color styles to cells in an Excel sheet depending on identified status
 #' @param projectIds A vector of project Ids
 #' @param columns Indices of the columns to apply the styles to
-#' @param statusMapping A data.frame mapping colors and status
+#' @param statusMapping A data.frame mapping project IDs to their status, with columns `Id` and `Status`
 #' @param sheetName Name of the sheet to write to
 #' @param excelObject An openxlsx workbook object
 #' @import openxlsx
 #' @keywords internal
 styleProjectStatus <- function(projectIds,
-                                    columns,
-                                    statusMapping,
-                                    sheetName,
-                                    excelObject) {
+                                columns,
+                                statusMapping,
+                                sheetName,
+                                excelObject) {
   for (status in c("Unchanged", "Changed", "Added")) {
     statusIds <- statusMapping |>
       dplyr::filter(.data[["Status"]] %in% status) |>

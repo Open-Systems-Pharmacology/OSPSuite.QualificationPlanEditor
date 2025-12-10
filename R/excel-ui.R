@@ -83,7 +83,7 @@ excelUI <- function(fileName = "qualification.xlsx",
     excelObject = excelObject
   )
 
-  #---- Simulation Ouptuts ----
+  #---- Simulation Outputs ----
   cli::cli_progress_step("Exporting {.field Simulation Outputs} Data")
   simulationsOutputs <- getSimulationsOutputsFromProjects(projectData)
   writeDataToSheet(data = simulationsOutputs, sheetName = "Simulations_Outputs", excelObject = excelObject)
@@ -135,7 +135,7 @@ excelUI <- function(fileName = "qualification.xlsx",
   )
 
   #---- Building Blocks ----
-  cli::cli_progress_step("Exporting {.field Buidling Block} Data")
+  cli::cli_progress_step("Exporting {.field Building Block} Data")
   bbData <- getBBDataFromProjects(projectData)
   if (useQualification) {
     bbData <- mergeBBData(bbData, qualificationBBData)
