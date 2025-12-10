@@ -553,6 +553,9 @@ getPKPlotsFromExcel <- function(data, mapping) {
     }
     pkData <- mapToQualification(pkPlotData, sheetName = "PKRatio_Plots")
     plotTitle <- pkData[["Title"]]
+    pkData$PKParameters <- as.list(pkData$PKParameters)
+    indicesToKeep <- which(!sapply(pkData, ospsuite.utils::isEmpty))
+    pkData <- pkData[indicesToKeep]
     # Groups
     pkGroupData <- mapToQualification(
       pkPlotData,
