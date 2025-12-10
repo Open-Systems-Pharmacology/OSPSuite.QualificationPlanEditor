@@ -579,7 +579,7 @@ getQualificationPKRatio <- function(qualificationContent) {
       "Group Color" = sapply(pkPlot$Groups, function(group) group$Color),
       "Group Symbol" = sapply(pkPlot$Groups, function(group) group$Symbol)
     )
-    maxRows <- max(sapply(pkPlotSettings, length), 4)
+    maxRows <- max(sapply(pkPlotSettings, length))
     pkPlotSettings <- sapply(
       pkPlotSettings,
       function(pkField) {
