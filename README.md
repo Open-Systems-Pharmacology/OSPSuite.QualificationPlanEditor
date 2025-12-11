@@ -61,6 +61,16 @@ utils::browseURL(excelQualification)
 
 ```
 
+## Documentation
+
+For a comprehensive guide on the Excel file structure and how to update it, see the vignette:
+
+``` r
+vignette("excel-file-workflow", package = "ospsuite.qualificationplaneditor")
+```
+
+Or read it online at the [package documentation site](https://open-systems-pharmacology.github.io/OSPSuite.QualificationPlanEditor/).
+
 ## Code of conduct
 
 Everyone interacting in the Open Systems Pharmacology community (codebases, issue trackers, chat rooms, mailing lists etc.) is expected to follow the Open Systems Pharmacology [code of conduct](https://github.com/Open-Systems-Pharmacology/Suite/blob/master/CODE_OF_CONDUCT.md).
