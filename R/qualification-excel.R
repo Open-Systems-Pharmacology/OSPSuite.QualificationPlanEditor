@@ -26,35 +26,33 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   # Projects
   cli::cli_progress_step("Exporting {.field Projects} Data")
   qualificationProjects <- readxl::read_excel(excelFile, sheet = "Projects", col_types = "text")
-  ospsuite.utils::validateColumns(
-    qualificationProjects,
-    columnSpecs = list(
-      Id = list(type = "character", naAllowed = FALSE),
-      Path = list(type = "character", naAllowed = FALSE)
-    )
+  ospsuite.utils::validateIsOption(
+    as.list(qualificationProjects),
+    list(Id = excelOption(nullAllowed = FALSE), Path = excelOption(nullAllowed = FALSE))
   )
+
   # Building Blocks
   qualificationBB <- readxl::read_excel(excelFile, sheet = "BB", col_types = "text")
-  ospsuite.utils::validateColumns(
-    qualificationBB,
-    columnSpecs = list(
-      "Project" = list(type = "character", allowedValues = qualificationProjects$Id, naAllowed = FALSE, nullAllowed = TRUE),
-      "BB-Type" = list(type = "character", naAllowed = FALSE, nullAllowed = TRUE),
-      "BB-Name" = list(type = "character", naAllowed = FALSE, nullAllowed = TRUE),
-      "Parent-Project" = list(type = "character", allowedValues = qualificationProjects$Id, naAllowed = TRUE, nullAllowed = TRUE)
+  ospsuite.utils::validateIsOption(
+    as.list(qualificationBB),
+    list(
+      "Project" = excelOption(allowedValues = qualificationProjects$Id),
+      "BB-Type" = excelOption(),
+      "BB-Name" = excelOption(),
+      "Parent-Project" = excelOption(allowedValues = qualificationProjects$Id, naAllowed = TRUE)
     )
   )
 
   # SimulationParameters
   qualificationSimParam <- readxl::read_excel(excelFile, sheet = "SimParam", col_types = "text")
-  ospsuite.utils::validateColumns(
-    qualificationSimParam,
-    columnSpecs = list(
-      "Project" = list(type = "character", allowedValues = qualificationProjects$Id, naAllowed = FALSE, nullAllowed = TRUE),
-      "Parent Project" = list(type = "character", allowedValues = qualificationProjects$Id, naAllowed = FALSE, nullAllowed = TRUE),
-      "Parent Simulation" = list(type = "character", naAllowed = FALSE, nullAllowed = TRUE),
-      "Path" = list(type = "character", naAllowed = FALSE, nullAllowed = TRUE),
-      "TargetSimulation" = list(type = "character", naAllowed = FALSE, nullAllowed = TRUE)
+  ospsuite.utils::validateIsOption(
+    as.list(qualificationSimParam),
+    list(
+      "Project" = excelOption(allowedValues = qualificationProjects$Id),
+      "Parent Project" = excelOption(allowedValues = qualificationProjects$Id),
+      "Parent Simulation" = excelOption(),
+      "Path" = excelOption(),
+      "TargetSimulation" = excelOption(naAllowed = TRUE)
     )
   )
 
@@ -70,45 +68,42 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   allowedDataTypes <- lookupData$ObservedDataType |>
     stats::na.exclude() |>
     as.character()
-  ospsuite.utils::validateColumns(
-    qualificationObsDataSets,
-    columnSpecs = list(
-      Id = list(type = "character", naAllowed = FALSE, nullAllowed = TRUE),
-      Path = list(type = "character", naAllowed = FALSE, nullAllowed = TRUE),
-      Type = list(type = "character", allowedValues = allowedDataTypes, naAllowed = TRUE, nullAllowed = TRUE)
-    )
+  ospsuite.utils::validateIsOption(
+    as.list(qualificationObsDataSets),
+    list(Id = excelOption(), Path = excelOption(), Type = excelOption(allowedValues = allowedDataTypes, naAllowed = TRUE))
   )
+
   # Plots: list that includes
   # - AxesSettings
   cli::cli_progress_step("Exporting {.field Global Axes Settings}")
   qualificationAxesSettings <- readxl::read_excel(excelFile, sheet = "GlobalAxesSettings")
-  ospsuite.utils::validateColumns(
-    qualificationAxesSettings,
-    columnSpecs = list(
-      Plot = list(type = "character", allowedValues = ALL_EXCEL_AXES, naAllowed = FALSE, nullAllowed = TRUE),
-      Type = list(type = "character", allowedValues = c("X", "Y", "Y2"), naAllowed = FALSE, nullAllowed = TRUE),
+  ospsuite.utils::validateIsOption(
+    as.list(qualificationAxesSettings),
+    list(
+      Plot = excelOption(allowedValues = ALL_EXCEL_AXES),
+      Type = excelOption(allowedValues = c("X", "Y", "Y2")),
       # TODO: use a comprehensive list of dimensions and units (from ospsuite package ?)
-      Dimension = list(type = "character", allowedValues = ALL_EXCEL_DIMENSIONS, naAllowed = TRUE, nullAllowed = TRUE),
+      Dimension = excelOption(allowedValues = ALL_EXCEL_DIMENSIONS, naAllowed = TRUE),
       # Need to allow na to include unitless axes
-      Unit = list(type = "character", naAllowed = TRUE, nullAllowed = TRUE),
-      GridLines = list(type = "logical", naAllowed = TRUE, nullAllowed = TRUE),
-      Scaling = list(type = "character", allowedValues = c("Linear", "Log"), naAllowed = TRUE, nullAllowed = TRUE)
+      Unit = excelOption(naAllowed = TRUE),
+      GridLines = ospsuite.utils::logicalOption(naAllowed = TRUE, nullAllowed = TRUE, expectedLength = NULL),
+      Scaling = excelOption(allowedValues = c("Linear", "Log"), naAllowed = TRUE)
     )
   )
   qualificationAxesSettings <- groupAxesSettings(qualificationAxesSettings)
   # - PlotSettings
   cli::cli_progress_step("Exporting {.field Global Plot Settings}")
   qualificationPlotSettings <- readxl::read_excel(excelFile, sheet = "GlobalPlotSettings")
-  ospsuite.utils::validateColumns(
-    qualificationPlotSettings,
-    columnSpecs = list(
-      ChartWidth = list(type = "numeric", naAllowed = FALSE, nullAllowed = TRUE),
-      ChartHeight = list(type = "numeric", naAllowed = FALSE, nullAllowed = TRUE),
-      AxisSize = list(type = "numeric", naAllowed = FALSE, nullAllowed = TRUE),
-      LegendSize = list(type = "numeric", naAllowed = FALSE, nullAllowed = TRUE),
-      OriginSize = list(type = "numeric", naAllowed = FALSE, nullAllowed = TRUE),
-      FontFamilyName = list(type = "character", naAllowed = FALSE, nullAllowed = TRUE),
-      WatermarkSize = list(type = "numeric", naAllowed = FALSE, nullAllowed = TRUE)
+  ospsuite.utils::validateIsOption(
+    as.list(qualificationPlotSettings),
+    list(
+      ChartWidth = ospsuite.utils::numericOption(min = 1, nullAllowed = TRUE, naAllowed = FALSE, expectedLength = NULL),
+      ChartHeight = ospsuite.utils::numericOption(min = 1, nullAllowed = TRUE, naAllowed = FALSE, expectedLength = NULL),
+      AxisSize = ospsuite.utils::numericOption(min = 1, nullAllowed = TRUE, naAllowed = FALSE, expectedLength = NULL),
+      LegendSize = ospsuite.utils::numericOption(min = 1, nullAllowed = TRUE, naAllowed = FALSE, expectedLength = NULL),
+      OriginSize = ospsuite.utils::numericOption(min = 1, nullAllowed = TRUE, naAllowed = FALSE, expectedLength = NULL),
+      FontFamilyName = excelOption(),
+      WatermarkSize = ospsuite.utils::numericOption(min = 1, nullAllowed = TRUE, naAllowed = FALSE, expectedLength = NULL)
     )
   )
   qualificationPlotSettings <- getPlotSettingsFromExcel(qualificationPlotSettings)
@@ -154,34 +149,26 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   # Sections
   cli::cli_progress_step("Exporting {.field Sections}")
   qualificationSections <- readxl::read_excel(excelFile, sheet = "Sections")
-  ospsuite.utils::validateColumns(
-    qualificationSections,
-    columnSpecs = list(
-      "Section Reference" = list(type = "character", naAllowed = FALSE),
-      Title = list(type = "character", naAllowed = TRUE),
-      Content = list(type = "character", naAllowed = TRUE),
-      "Parent Section" = list(
-        type = "character",
-        allowedValues = qualificationSections[["Section Reference"]],
-        naAllowed = TRUE
-      )
+  ospsuite.utils::validateIsOption(
+    as.list(qualificationSections),
+    list(
+      "Section Reference" = excelOption(),
+      Title = excelOption(naAllowed = TRUE),
+      Content = excelOption(naAllowed = TRUE),
+      "Parent Section" = excelOption(allowedValues = qualificationSections[["Section Reference"]], naAllowed = TRUE)
     )
   )
+
   # Inputs
   cli::cli_progress_step("Exporting {.field Inputs}")
   qualificationInputs <- readxl::read_excel(excelFile, sheet = "Inputs")
-  ospsuite.utils::validateColumns(
-    qualificationInputs,
-    columnSpecs = list(
-      Project = list(type = "character", allowedValues = qualificationProjects$Id, naAllowed = FALSE, nullAllowed = TRUE),
-      "BB-Type" = list(type = "character", naAllowed = TRUE, nullAllowed = TRUE),
-      "BB-Name" = list(type = "character", naAllowed = TRUE, nullAllowed = TRUE),
-      "Section Reference" = list(
-        type = "character",
-        allowedValues = qualificationSections[["Section Reference"]],
-        naAllowed = TRUE,
-        nullAllowed = TRUE
-      )
+  ospsuite.utils::validateIsOption(
+    as.list(qualificationInputs),
+    list(
+      Project = excelOption(allowedValues = qualificationProjects$Id),
+      "BB-Type" = excelOption(naAllowed = TRUE),
+      "BB-Name" = excelOption(naAllowed = TRUE),
+      "Section Reference" = excelOption(allowedValues = qualificationSections[["Section Reference"]], naAllowed = TRUE)
     )
   )
   qualificationInputs <- getInputsFromExcel(qualificationInputs)
