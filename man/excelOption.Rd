@@ -22,6 +22,6 @@ excelOption(
 }
 \description{
 Because `ospsuite.utils::validateColumns()` has been deprecated in favor of `ospsuite.utils::validateIsOption()`, 
-`excelOption()` uses `ospsuite.utils::characterOption()` with default appropriate for validating data read from Excel
+`excelOption()` uses `ospsuite.utils::characterOption()` with defaults appropriate for validating data read from Excel
 }
 \keyword{internal}
