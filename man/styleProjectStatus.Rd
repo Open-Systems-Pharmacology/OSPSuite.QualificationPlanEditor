@@ -11,7 +11,7 @@ styleProjectStatus(projectIds, columns, statusMapping, sheetName, excelObject)
 
 \item{columns}{Indices of the columns to apply the styles to}
 
-\item{statusMapping}{A data.frame mapping colors and status}
+\item{statusMapping}{A data.frame mapping project IDs to their status, with columns `Id` and `Status`}
 
 \item{sheetName}{Name of the sheet to write to}
 

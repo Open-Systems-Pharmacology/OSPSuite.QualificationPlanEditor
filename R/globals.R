@@ -85,3 +85,22 @@ EXCEL_MAPPING <- read.csv( # nolint
   na.strings = "",
   stringsAsFactors = FALSE
 )
+
+#' @title excelOption
+#' @description
+#' Because `ospsuite.utils::validateColumns()` has been deprecated in favor of `ospsuite.utils::validateIsOption()`, 
+#' `excelOption()` uses `ospsuite.utils::characterOption()` with defaults appropriate for validating data read from Excel
+#' @param allowedValues array of character strings allowed
+#' @param nullAllowed logical for `NULL` values allowed
+#' @param naAllowed logical for `NA` values allowed
+#' @param expectedLength expected rows for data
+#' @keywords internal
+#' @importFrom ospsuite.utils characterOption
+excelOption <- function(allowedValues = NULL, nullAllowed = TRUE, naAllowed = FALSE, expectedLength = NULL){
+  ospsuite.utils::characterOption(
+    allowedValues = allowedValues,
+    nullAllowed = nullAllowed,
+    naAllowed = naAllowed,
+    expectedLength = expectedLength
+  )
+}

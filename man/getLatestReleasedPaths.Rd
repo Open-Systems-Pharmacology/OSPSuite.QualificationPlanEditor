@@ -25,8 +25,8 @@ getLatestReleasedPaths(
 }
 \value{
 A list with two elements:
-  - \code{projects}: Character vector of project URLs with latest releases
-  - \code{observedData}: Character vector of observed data URLs with latest releases
+  - `projects`: Character vector of project URLs with latest releases
+  - `observedData`: Character vector of observed data URLs with latest releases
 }
 \description{
 Get the latest released paths for projects and observed data sets in a qualification plan
