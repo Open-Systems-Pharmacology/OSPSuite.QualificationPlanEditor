@@ -513,8 +513,8 @@ getDDIPlotsFromExcel <- function(data, mapping) {
         function(ddiRatiosIndex) {
           c(
             ddiRatiosOutputs[ddiRatiosIndex, ],
-            list(SimulationControl = ddiRatiosControl[ddiRatiosIndex, ]),
-            list(SimulationDDI = ddiRatiosTreatment[ddiRatiosIndex, ])
+            list(SimulationControl = as.list(ddiRatiosControl[ddiRatiosIndex, ])),
+            list(SimulationDDI = as.list(ddiRatiosTreatment[ddiRatiosIndex, ]))
           )
         }
       )
