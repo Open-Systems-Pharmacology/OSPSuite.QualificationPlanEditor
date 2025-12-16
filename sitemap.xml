@@ -12,7 +12,9 @@
 <url><loc>/reference/EXCEL_MAPPING.html</loc></url>
 <url><loc>/reference/EXCEL_OPTIONS.html</loc></url>
 <url><loc>/reference/applyDataValidation.html</loc></url>
+<url><loc>/reference/buildGitHubRawURL.html</loc></url>
 <url><loc>/reference/excelListingValue.html</loc></url>
+<url><loc>/reference/excelOption.html</loc></url>
 <url><loc>/reference/excelToQualificationPlan.html</loc></url>
 <url><loc>/reference/excelUI.html</loc></url>
 <url><loc>/reference/formatAxesSettings.html</loc></url>
@@ -27,6 +29,7 @@
 <url><loc>/reference/getExcelSections.html</loc></url>
 <url><loc>/reference/getGOFPlotsFromExcel.html</loc></url>
 <url><loc>/reference/getInputsFromExcel.html</loc></url>
+<url><loc>/reference/getLatestReleaseTag.html</loc></url>
 <url><loc>/reference/getLatestReleasedPaths.html</loc></url>
 <url><loc>/reference/getObsDataFromList.html</loc></url>
 <url><loc>/reference/getObsDataFromQualification.html</loc></url>
@@ -59,10 +62,14 @@
 <url><loc>/reference/mergeBBData.html</loc></url>
 <url><loc>/reference/mergeObsData.html</loc></url>
 <url><loc>/reference/mergeProjectData.html</loc></url>
+<url><loc>/reference/parseGitHubURL.html</loc></url>
 <url><loc>/reference/parseSectionsToDataFrame.html</loc></url>
 <url><loc>/reference/parseSectionsToNestedList.html</loc></url>
+<url><loc>/reference/processObservedDataPaths.html</loc></url>
+<url><loc>/reference/processProjectPaths.html</loc></url>
 <url><loc>/reference/styleColorMapping.html</loc></url>
 <url><loc>/reference/styleProjectStatus.html</loc></url>
+<url><loc>/reference/updatePathWithLatestRelease.html</loc></url>
 <url><loc>/reference/writeDataToSheet.html</loc></url>
 </urlset>
 
