@@ -16,7 +16,6 @@
 <url><loc>/reference/excelListingValue.html</loc></url>
 <url><loc>/reference/excelOption.html</loc></url>
 <url><loc>/reference/excelToQualificationPlan.html</loc></url>
-<url><loc>/reference/excelUI.html</loc></url>
 <url><loc>/reference/formatAxesSettings.html</loc></url>
 <url><loc>/reference/formatGlobalAxesSettings.html</loc></url>
 <url><loc>/reference/formatPlotSettings.html</loc></url>
@@ -69,6 +68,7 @@
 <url><loc>/reference/processProjectPaths.html</loc></url>
 <url><loc>/reference/styleColorMapping.html</loc></url>
 <url><loc>/reference/styleProjectStatus.html</loc></url>
+<url><loc>/reference/toExcelEditor.html</loc></url>
 <url><loc>/reference/updatePathWithLatestRelease.html</loc></url>
 <url><loc>/reference/writeDataToSheet.html</loc></url>
 </urlset>
