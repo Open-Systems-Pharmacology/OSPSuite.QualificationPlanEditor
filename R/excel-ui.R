@@ -16,8 +16,8 @@
 #' @import jsonlite
 #' @export
 excelUI <- function(fileName = "qualification.xlsx",
-                    snapshotPaths,
-                    observedDataPaths,
+                    snapshotPaths = NULL,
+                    observedDataPaths = NULL,
                     excelTemplate = NULL,
                     qualificationPlan = NULL) {
   cli::cli_h1("Exporting to Excel UI")
