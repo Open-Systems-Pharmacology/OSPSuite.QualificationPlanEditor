@@ -50,7 +50,7 @@ observedDataPaths <- list("DDI Ratios" = list(
 qualificationPlan <- file.path(ospPath, "A-Model/vY.Y/Qualification/qualification_plan.json")
 
 # qualification plan converted to Excel
-excelUI(
+toExcelEditor(
   fileName = excelQualification,
   snapshotPaths = snapshotPaths, 
   observedDataPaths = observedDataPaths,

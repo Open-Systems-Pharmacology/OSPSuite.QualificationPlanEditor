@@ -2,7 +2,7 @@ testOutputFile <- "test-excel-ui.xlsx"
 testInputPlan <- system.file("test-qualification-plan.json", package = "ospsuite.qualificationplaneditor")
 
 test_that("Without qualification, empty snapshot and obs data paths result in Excel sheet headers only", {
-  excelUI(
+  toExcelEditor(
     fileName = testOutputFile,
     snapshotPaths = NULL,
     observedDataPaths = NULL,
@@ -32,7 +32,7 @@ test_that("Without qualification, empty snapshot and obs data paths result in Ex
 })
 
 test_that("With qualification, empty snapshot and obs data paths result in Excel sheet from qualification only", {
-  excelUI(
+  toExcelEditor(
     fileName = testOutputFile,
     snapshotPaths = NULL,
     observedDataPaths = NULL,

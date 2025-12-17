@@ -1,4 +1,4 @@
-#' @title excelUI
+#' @title toExcelEditor
 #' @param fileName Character string. Name of the Excel file to be created.
 #' @param snapshotPaths
 #' Named list of project snapshots given by their URL or relative path.
@@ -15,12 +15,12 @@
 #' @import openxlsx
 #' @import jsonlite
 #' @export
-excelUI <- function(fileName = "qualification.xlsx",
-                    snapshotPaths,
-                    observedDataPaths,
+toExcelEditor <- function(fileName = "qualification.xlsx",
+                    snapshotPaths = NULL,
+                    observedDataPaths = NULL,
                     excelTemplate = NULL,
                     qualificationPlan = NULL) {
-  cli::cli_h1("Exporting to Excel UI")
+  cli::cli_h1("Exporting to Excel Editor")
   ospsuite.utils::validateIsFileExtension(fileName, "xlsx")
   excelTemplate <- excelTemplate %||%
     system.file("Qualification-Template.xlsx", package = "ospsuite.qualificationplaneditor")
