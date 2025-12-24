@@ -69,7 +69,7 @@ allPaths <- getLatestReleasedPaths(
 
 ## Excel file content
 
-The article [Excel Template](.excel-template.html) describes the content of the Excel template file, its color and data validation conventions and how to edit before converting back to json format.
+The article [Excel Template](./excel-template.html) describes the content of the Excel template file, its color and data validation conventions and how to edit before converting back to json format.
 
 ## Examples
 
@@ -78,7 +78,7 @@ Below is a basic example with generic names showing how to include an updated pr
 For more detailed examples, you can read the following articles:
 
 - [Update my Qualification Plan Evaluations](./update-qualification.html)
-- [Add a Snapshot to my Qualification Plan](./update-qualification.html)
+- [Add a Snapshot to my Qualification Plan](./snapshot-qualification.html)
 - [Snapshot without a Qualification Plan](./no-qualification.html)
 
 

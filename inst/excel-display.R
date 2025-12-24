@@ -18,8 +18,8 @@ displayExcel <- function(excelFile, level = 2) {
     excelData <- openxlsx::readWorkbook(xlsxFile = excelFile, sheet = excelSheet, check.names = FALSE)
     # Select content for the specific Excel sheet
     dataCells <- excelCells |>
-      dplyr::filter(sheet %in% excelSheet) |>
-      dplyr::filter(col == 1)
+      dplyr::filter(.data[["sheet"]] %in% excelSheet) |>
+      dplyr::filter(.data[["col"]] == 1)
     # Create a list define font and background styles for each row
     dataStyles <- data.frame(
       row = dataCells$row - 1,
@@ -27,10 +27,10 @@ displayExcel <- function(excelFile, level = 2) {
       fill = excelFormats$local$fill$patternFill$fgColor$rgb[dataCells$local_format_id]
     ) |>
       dplyr::mutate(
-        color = paste0("#", substr(color, 3, nchar(color))),
-        fill = paste0("#", substr(fill, 3, nchar(fill))),
-        color = ifelse(color %in% "#NA", "#000000", color),
-        fill = ifelse(fill %in% "#NA", "#ffffff", fill)
+        color = paste0("#", substr(.data[["color"]], 3, nchar(.data[["color"]]))),
+        fill = paste0("#", substr(.data[["fill"]], 3, nchar(.data[["fill"]]))),
+        color = ifelse(.data[["color"]] %in% "#NA", "#000000", .data[["color"]]),
+        fill = ifelse(.data[["fill"]] %in% "#NA", "#ffffff", .data[["fill"]])
       )
     dataStyles <- split(tail(dataStyles, -1), 1:(nrow(dataStyles) - 1))
     excelTable <- styleExcelData(excelData, dataStyles)
