@@ -750,4 +750,5 @@ getSchemaVersion <- function(qualificationContent) {
   schemaVersion <- grep("^v\\d+\\.\\d+", qualificationSchema, value = TRUE)
   schemaVersion <- gsub(pattern = "v", replacement = "", schemaVersion)
   schemaData <- data.frame("Qualification plan schema version" = schemaVersion, check.names = FALSE)
+  return(schemaData)
 }
