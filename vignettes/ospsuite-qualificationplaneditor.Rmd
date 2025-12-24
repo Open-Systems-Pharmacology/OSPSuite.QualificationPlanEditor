@@ -1,6 +1,8 @@
 ---
 title: "Get Started"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    tabset: true
 vignette: >
   %\VignetteIndexEntry{Get Started}
   %\VignetteEngine{knitr::rmarkdown}
@@ -12,20 +14,73 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+source(system.file("excel-display.R", package = "ospsuite.qualificationplaneditor"))
 ```
 
 ```{r setup}
-# library(ospsuite.qualificationplaneditor)
+library(ospsuite.qualificationplaneditor)
 ```
-
 
 The OSPSuite.QualificationPlanEditor package is designed to help you convert qualification plans from/into Excel format for easier editing.
 
 The package provides functionality to parse project snapshots, extract simulation data, and generate Excel workbooks with structured data sheets that can be edited and converted back to qualification plans.
 
-## Example
+## Workflow
 
-Here is a basic example showing how to include an updated project snapshot in your qualification plan:
+To create or update a qualification plan, the workflow is:
+
+- 1 Define a list of project snapshots and/or observed datasets
+- 2 Define a Qualification Plan
+- 3 Convert them to Excel
+- 4 Edit the Qualification Plan in Excel
+- 5 Convert back Qualification Plan to json format
+- 6 Run the updated Qualification
+
+
+## Fetch latest release
+
+Steps 1 and 2 usually involve to use the latest release version of project snapshots, observed data and qualification plans. This can be done using the function `getLatestReleasedPaths()` as illustrated below:
+
+``` r
+# Get latest released paths from a qualification plan
+latestPaths <- getLatestReleasedPaths(
+  qualificationPlan = "path/to/qualification_plan.json",
+  includePreReleases = FALSE,
+  returnUpdatedOnly = TRUE
+)
+
+# Access the updated project and observed data paths
+latestProjectPaths <- latestPaths$projects
+latestObservedDataPaths <- latestPaths$observedData
+
+# You can also ignore specific projects or observed data
+latestPaths <- getLatestReleasedPaths(
+  qualificationPlan = "path/to/qualification_plan.json",
+  projectsToIgnore = c("ProjectA", "ProjectB"),
+  observedDataToIgnore = c("ObsData1")
+)
+
+# Get all paths (not just updated ones)
+allPaths <- getLatestReleasedPaths(
+  qualificationPlan = "path/to/qualification_plan.json",
+  returnUpdatedOnly = FALSE
+)
+```
+
+## Excel file content
+
+The article [Excel Template](.excel-template.html) describes the content of the Excel template file, its color and data validation conventions and how to edit before converting back to json format.
+
+## Examples
+
+Below is a basic example with generic names showing how to include an updated project snapshot in your qualification plan:
+
+For more detailed examples, you can read the following articles:
+
+- [Update my Qualification Plan Evaluations](./update-qualification.html)
+- [Add a Snapshot to my Qualification Plan](./update-qualification.html)
+- [Snapshot without a Qualification Plan](./no-qualification.html)
+
 
 ``` r
 ## Load the ospsuite.qualificationplaneditor package
@@ -62,33 +117,9 @@ utils::browseURL(excelQualification)
 
 ```
 
-## Automatically Get Latest Released Paths
+## Testing of the converted Qualification Plan
 
-The `getLatestReleasedPaths()` function helps you automatically fetch the latest released versions of projects and observed data from your qualification plan:
+To ensure that the converted qualification and evaluation plans provide appropriate evaluations, the following qualification plans are tested in the repo [RE-Test-Reports](https://github.com/Open-Systems-Pharmacology/RE-Test-Reports)
 
-``` r
-# Get latest released paths from a qualification plan
-latestPaths <- getLatestReleasedPaths(
-  qualificationPlan = "path/to/qualification_plan.json",
-  includePreReleases = FALSE,
-  returnUpdatedOnly = TRUE
-)
-
-# Access the updated project and observed data paths
-latestProjectPaths <- latestPaths$projects
-latestObservedDataPaths <- latestPaths$observedData
-
-# You can also ignore specific projects or observed data
-latestPaths <- getLatestReleasedPaths(
-  qualificationPlan = "path/to/qualification_plan.json",
-  projectsToIgnore = c("ProjectA", "ProjectB"),
-  observedDataToIgnore = c("ObsData1")
-)
-
-# Get all paths (not just updated ones)
-allPaths <- getLatestReleasedPaths(
-  qualificationPlan = "path/to/qualification_plan.json",
-  returnUpdatedOnly = FALSE
-)
-```
-
+- [Qualification-DDI-UGT](https://github.com/Open-Systems-Pharmacology/Qualification-DDI-UGT)
+- TBD
