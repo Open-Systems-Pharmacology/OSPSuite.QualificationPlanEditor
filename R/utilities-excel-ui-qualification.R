@@ -222,13 +222,13 @@ getQualificationSimParam <- function(qualificationContent) {
     TargetSimulation = character(),
     check.names = FALSE
   )
-  for (projectContent in qualificationContent$Projects){
+  for (projectContent in qualificationContent$Projects) {
     if (ospsuite.utils::isEmpty(projectContent$SimulationParameters)) {
       next
     }
     simParamProjectData <- lapply(
       projectContent$SimulationParameters,
-      function(simParamContent){
+      function(simParamContent) {
         data.frame(
           Project = projectContent$Id,
           "Parent Project" = simParamContent$Project,
@@ -727,4 +727,27 @@ formatGlobalAxesSettings <- function(axesSettings, plotName) {
       .before = dplyr::everything()
     )
   return(axesSettingsData)
+}
+
+#' @title getSchemaVersion
+#' @description
+#' Extract Qualification plan schema version from a Qualification Plan
+#' @param qualificationContent Content of a qualification plan
+#' @return A data.frame with `Qualification plan schema version` column
+#' @keywords internal
+getSchemaVersion <- function(qualificationContent) {
+  # If no qualification plan provided, use latest release
+  if (ospsuite.utils::isEmpty(qualificationContent)) {
+    schemaVersion <- getLatestReleaseTag(
+      "Open-Systems-Pharmacology",
+      "QualificationPlan",
+      includePreReleases = TRUE
+    )
+    return(data.frame("Qualification plan schema version" = schemaVersion, check.names = FALSE))
+  }
+  # Otherwise, parse qualification plan schema
+  qualificationSchema <- unlist(strsplit(qualificationContent[["$schema"]], "/"))
+  schemaVersion <- grep("^v\\d+\\.\\d+", qualificationSchema, value = TRUE)
+  schemaVersion <- gsub(pattern = "v", replacement = "", schemaVersion)
+  schemaData <- data.frame("Qualification plan schema version" = schemaVersion, check.names = FALSE)
 }
