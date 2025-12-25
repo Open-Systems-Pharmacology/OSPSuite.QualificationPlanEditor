@@ -1,10 +1,10 @@
 ---
-title: "Add Snapshot to my Qualification Plan"
+title: "Add a Snapshot to my Qualification Plan"
 output: 
   rmarkdown::html_vignette:
     tabset: true
 vignette: >
-  %\VignetteIndexEntry{Add Snapshot to my Qualification Plan}
+  %\VignetteIndexEntry{Add a Snapshot to my Qualification Plan}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

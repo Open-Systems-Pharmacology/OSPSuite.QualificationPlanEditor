@@ -20,7 +20,7 @@ displayExcel <- function(excelFile, level = 2) {
     dataCells <- excelCells |>
       dplyr::filter(.data[["sheet"]] %in% excelSheet) |>
       dplyr::filter(.data[["col"]] == 1)
-    # Create a list define font and background styles for each row
+    # Create a list to define font and background styles for each row
     dataStyles <- data.frame(
       row = dataCells$row - 1,
       color = excelFormats$local$font$color$rgb[dataCells$local_format_id],
@@ -49,7 +49,7 @@ displayExcel <- function(excelFile, level = 2) {
   return(htmlContent)
 }
 
-#' @title dataWithStyle
+#' @title styleExcelData
 #' @description
 #' A function to apply Excel styles in each row of a data.frame
 #' @param data A data.frame
@@ -57,7 +57,7 @@ displayExcel <- function(excelFile, level = 2) {
 #' @return A `gt` table
 styleExcelData <- function(data, styles) {
   gtTable <- gt::gt(data)
-  if(nrow(data)==0){
+  if (nrow(data) == 0) {
     return(gtTable)
   }
   for (style in styles) {

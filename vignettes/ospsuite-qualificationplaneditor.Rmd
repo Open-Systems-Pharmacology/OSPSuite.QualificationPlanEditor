@@ -29,12 +29,12 @@ The package provides functionality to parse project snapshots, extract simulatio
 
 To create or update a qualification plan, the workflow is:
 
-- 1 Define a list of project snapshots and/or observed datasets
-- 2 Define a Qualification Plan
-- 3 Convert them to Excel
-- 4 Edit the Qualification Plan in Excel
-- 5 Convert back Qualification Plan to json format
-- 6 Run the updated Qualification
+1. Define a list of project snapshots and/or observed datasets
+2. Define a Qualification Plan
+3. Convert them to Excel
+4. Edit the Qualification Plan in Excel
+5. Convert back Qualification Plan to json format
+6. Run the updated Qualification
 
 
 ## Fetch latest release
