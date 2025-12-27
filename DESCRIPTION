@@ -32,15 +32,18 @@ Imports:
     openxlsx,
     ospsuite.utils (>= 1.7.0),
     readxl
-Remotes:  
+Remotes: 
     ospsuite=Open-Systems-Pharmacology/OSPSuite-R@*release,
     ospsuite.utils=Open-Systems-Pharmacology/OSPSuite.RUtils@*release
 Suggests: 
     devtools,
+    gt,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tidyxl
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Depends: 
     R (>= 4.1.0)
+Config/Needs/website: rmarkdown

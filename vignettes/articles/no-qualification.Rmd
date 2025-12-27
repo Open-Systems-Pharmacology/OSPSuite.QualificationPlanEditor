@@ -1,0 +1,68 @@
+---
+title: "Snapshot without a Qualification Plan"
+output: 
+  rmarkdown::html_vignette:
+    tabset: true
+vignette: >
+  %\VignetteIndexEntry{Snapshot without a Qualification Plan}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+source(system.file("excel-display.R", package = "ospsuite.qualificationplaneditor"))
+```
+
+```{r setup}
+library(ospsuite.qualificationplaneditor)
+```
+
+## Context
+
+This article shows how to create a Qualification Plan from scratch using a project snapshot.
+The example used here is the [Verapamil-Model](https://github.com/Open-Systems-Pharmacology/Verapamil-Model) available on GitHub.
+
+
+```{r}
+snapshotPaths <- "Verapamil-Model.json"
+qualificationPlan <- "qualification-verapamil.json"
+excelFile <- "qualification-verapamil.xlsx"
+```
+
+## Conversion to Excel
+
+In order to assess and edit the qualification plan, the function `toExcelEditor()` will convert it into Excel format as illustrated below.
+
+```{r}
+toExcelEditor(
+  fileName = excelFile, 
+  snapshotPaths = snapshotPaths
+  )
+```
+
+Users can then open and edit the Excel file converted from the Qualification Plan.
+The code below will open the file using the default software reading `xlsx` files (such as Excel or Libre Office Calc).
+
+```r
+utils::browseURL(excelFile)
+```
+
+The Excel file should include the content displayed below:
+
+```{r, results='asis',echo=FALSE}
+cat(displayExcel(excelFile), sep = "\n")
+```
+
+## Convert back to json
+
+```r
+excelToQualificationPlan(
+  excelFile = excelFile,
+  qualificationPlan = qualificationPlan
+)
+```
+

@@ -1,0 +1,68 @@
+---
+title: "Add a Snapshot to my Qualification Plan"
+output: 
+  rmarkdown::html_vignette:
+    tabset: true
+vignette: >
+  %\VignetteIndexEntry{Add a Snapshot to my Qualification Plan}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+source(system.file("excel-display.R", package = "ospsuite.qualificationplaneditor"))
+```
+
+```{r setup}
+library(ospsuite.qualificationplaneditor)
+```
+
+## Context
+
+This article shows how to add and integrate a project Snapshot (json) into a Qualification Plan.
+The example used here is the qualification plan for UGT1A1- and UGT1A9-mediated inhibition drug-drug interactions (DDI) available in the [Qualification-DDI-UGT](https://github.com/Open-Systems-Pharmacology/Qualification-DDI-UGT) GitHub repository and the project snapshot [Verapamil-Model](https://github.com/Open-Systems-Pharmacology/Verapamil-Model) also available on GitHub.
+
+
+```{r}
+snapshotPaths <- "Verapamil-Model.json"
+qualificationPlan <- "qualification_ugt.json"
+excelFile <- "qualification_ugt.xlsx"
+```
+
+## Conversion to Excel
+
+In order to assess and edit the qualification plan, the function `toExcelEditor()` will convert it into Excel format as illustrated below.
+
+```{r}
+toExcelEditor(
+  fileName = excelFile, 
+  snapshotPaths = snapshotPaths,
+  qualificationPlan = qualificationPlan
+  )
+```
+
+Users can then open and edit the Excel file converted from the Qualification Plan.
+The code below will open the file using the default software reading `xlsx` files (such as Excel or Libre Office Calc).
+
+```r
+utils::browseURL(excelFile)
+```
+
+The Excel file should include the content displayed below:
+
+```{r, results='asis',echo=FALSE}
+cat(displayExcel(excelFile), sep = "\n")
+```
+
+## Convert back to json
+
+```r
+excelToQualificationPlan(
+  excelFile = excelFile,
+  qualificationPlan = paste0("updated-", qualificationPlan)
+)
+```
