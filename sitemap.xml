@@ -50,6 +50,7 @@
 <url><loc>/reference/getQualificationPKRatioMapping.html</loc></url>
 <url><loc>/reference/getQualificationSections.html</loc></url>
 <url><loc>/reference/getQualificationSimParam.html</loc></url>
+<url><loc>/reference/getSchemaVersion.html</loc></url>
 <url><loc>/reference/getSimulationsFromSnapshot.html</loc></url>
 <url><loc>/reference/getSimulationsObsDataFromProjects.html</loc></url>
 <url><loc>/reference/getSimulationsOutputsFromProjects.html</loc></url>
