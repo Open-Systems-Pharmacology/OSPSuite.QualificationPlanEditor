@@ -109,7 +109,7 @@ excelListingValue <- function(data, columnName, sheetName) {
   ospsuite.utils::validateIsOfType(data, "data.frame")
   ospsuite.utils::validateIsIncluded(columnName, names(data))
   columnValue <- openxlsx::int2col(which(names(data) %in% columnName))
-  listingValue <- paste0("='", sheetName, "'!$", columnValue, "$2:$", columnValue, "$", 1 + nrow(data))
+  listingValue <- paste0("='", sheetName, "'!$", columnValue, "$2:$", columnValue, "$", 1 + max(1, nrow(data)))
   return(listingValue)
 }
 
