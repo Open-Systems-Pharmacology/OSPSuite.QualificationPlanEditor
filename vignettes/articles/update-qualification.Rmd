@@ -1,0 +1,66 @@
+---
+title: "Update my Qualification Plan Evaluations"
+output: 
+  rmarkdown::html_vignette:
+    tabset: true
+vignette: >
+  %\VignetteIndexEntry{Update my Qualification Plan Evaluations}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+source(system.file("excel-display.R", package = "ospsuite.qualificationplaneditor"))
+```
+
+```{r setup}
+library(ospsuite.qualificationplaneditor)
+```
+
+## Context
+
+This article shows how to check and update the evaluations of a qualification plan.
+The example used here is the qualification plan for UGT1A1- and UGT1A9-mediated inhibition drug-drug interactions (DDI) available in the [Qualification-DDI-UGT](https://github.com/Open-Systems-Pharmacology/Qualification-DDI-UGT) GitHub repository.
+
+
+```{r}
+qualificationPlan <- "qualification_ugt.json"
+excelFile <- "qualification_ugt.xlsx"
+```
+
+## Conversion to Excel
+
+In order to assess and edit the qualification plan, the function `toExcelEditor()` will convert it into Excel format as illustrated below.
+
+```{r}
+toExcelEditor(
+  fileName = excelFile, 
+  qualificationPlan = qualificationPlan
+  )
+```
+
+Users can then open and edit the Excel file converted from the Qualification Plan.
+The code below will open the file using the default software reading `xlsx` files (such as Excel or Libre Office Calc).
+
+```r
+utils::browseURL(excelFile)
+```
+
+The Excel file should include the content displayed below:
+
+```{r, results='asis',echo=FALSE}
+cat(displayExcel(excelFile), sep = "\n")
+```
+
+## Convert back to json
+
+```r
+excelToQualificationPlan(
+  excelFile = excelFile,
+  qualificationPlan = paste0("updated-", qualificationPlan)
+)
+```
