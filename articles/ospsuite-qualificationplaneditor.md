@@ -1,0 +1,123 @@
+# Get Started
+
+``` r
+library(ospsuite.qualificationplaneditor)
+```
+
+The OSPSuite.QualificationPlanEditor package is designed to help you
+convert qualification plans from/into Excel format for easier editing.
+
+The package provides functionality to parse project snapshots, extract
+simulation data, and generate Excel workbooks with structured data
+sheets that can be edited and converted back to qualification plans.
+
+## Workflow
+
+To create or update a qualification plan, the workflow is:
+
+1.  Define a list of project snapshots and/or observed datasets
+2.  Define a Qualification Plan
+3.  Convert them to Excel
+4.  Edit the Qualification Plan in Excel
+5.  Convert back Qualification Plan to json format
+6.  Run the updated Qualification
+
+## Fetch latest release
+
+Steps 1 and 2 usually involve to use the latest release version of
+project snapshots, observed data and qualification plans. This can be
+done using the function
+[`getLatestReleasedPaths()`](https://www.open-systems-pharmacology.org/OSPSuite.QualificationPlanEditor/reference/getLatestReleasedPaths.md)
+as illustrated below:
+
+``` r
+# Get latest released paths from a qualification plan
+latestPaths <- getLatestReleasedPaths(
+  qualificationPlan = "path/to/qualification_plan.json",
+  includePreReleases = FALSE,
+  returnUpdatedOnly = TRUE
+)
+
+# Access the updated project and observed data paths
+latestProjectPaths <- latestPaths$projects
+latestObservedDataPaths <- latestPaths$observedData
+
+# You can also ignore specific projects or observed data
+latestPaths <- getLatestReleasedPaths(
+  qualificationPlan = "path/to/qualification_plan.json",
+  projectsToIgnore = c("ProjectA", "ProjectB"),
+  observedDataToIgnore = c("ObsData1")
+)
+
+# Get all paths (not just updated ones)
+allPaths <- getLatestReleasedPaths(
+  qualificationPlan = "path/to/qualification_plan.json",
+  returnUpdatedOnly = FALSE
+)
+```
+
+## Excel file content
+
+The article [Excel
+Template](https://www.open-systems-pharmacology.org/OSPSuite.QualificationPlanEditor/articles/excel-template.md)
+describes the content of the Excel template file, its color and data
+validation conventions and how to edit before converting back to json
+format.
+
+## Examples
+
+Below is a basic example with generic names showing how to include an
+updated project snapshot in your qualification plan:
+
+For more detailed examples, you can read the following articles:
+
+- [Update my Qualification Plan
+  Evaluations](https://www.open-systems-pharmacology.org/OSPSuite.QualificationPlanEditor/articles/update-qualification.md)
+- [Add a Snapshot to my Qualification
+  Plan](https://www.open-systems-pharmacology.org/OSPSuite.QualificationPlanEditor/articles/snapshot-qualification.md)
+- [Snapshot without a Qualification
+  Plan](https://www.open-systems-pharmacology.org/OSPSuite.QualificationPlanEditor/articles/no-qualification.md)
+
+``` r
+## Load the ospsuite.qualificationplaneditor package
+library(ospsuite.qualificationplaneditor)
+ospPath <- "https://raw.githubusercontent.com/Open-Systems-Pharmacology"
+excelQualification <- "Updated-Qualification.xlsx"
+
+# List your updated snapshot projects
+snapshotPaths <- list(
+  "Compound A" = file.path(ospPath, "A-Model/vX.X/A-Model.json"),
+  "Compound B" = file.path(ospPath, "B-Model/vX.X/B-Model.json"),
+  "A-B-DDI" = file.path(ospPath, "A-B-DDI/vX.X/A-B-DDI.json")
+)
+
+# List your updated observed datasets
+observedDataPaths <- list("DDI Ratios" = list(
+    Path = file.path(ospPath, "Database-for-observed-data/vX.X/DDI.csv"),
+    Type = "DDIRatio"
+    ))
+
+# Initial qualification plan
+qualificationPlan <- file.path(ospPath, "A-Model/vY.Y/Qualification/qualification_plan.json")
+
+# qualification plan converted to Excel
+toExcelEditor(
+  fileName = excelQualification,
+  snapshotPaths = snapshotPaths, 
+  observedDataPaths = observedDataPaths,
+  qualificationPlan = qualificationPlan
+)
+
+# Tip: this will open Excel (or Libre office) with the created Excel workbook
+utils::browseURL(excelQualification)
+```
+
+## Testing of the converted Qualification Plan
+
+To ensure that the converted qualification and evaluation plans provide
+appropriate evaluations, the following qualification plans are tested in
+the repo
+[RE-Test-Reports](https://github.com/Open-Systems-Pharmacology/RE-Test-Reports)
+
+- [Qualification-DDI-UGT](https://github.com/Open-Systems-Pharmacology/Qualification-DDI-UGT)
+- TBD
