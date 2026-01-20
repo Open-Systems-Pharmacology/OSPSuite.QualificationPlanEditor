@@ -26,7 +26,7 @@ test_that("Without qualification, empty snapshot and obs data paths result in Ex
 
   expect_equal(names(projectData), c("Id", "Path"))
   expect_equal(names(simOutputData), c("Project", "Simulation", "Output"))
-  expect_equal(names(obsData), c("ID", "Path", "Type"))
+  expect_equal(names(obsData), c("Id", "Path", "Type"))
 
   unlink(testOutputFile)
 })
