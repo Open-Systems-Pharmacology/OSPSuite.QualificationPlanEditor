@@ -32,47 +32,47 @@ toExcelEditor(
 #> 
 #> ── Exporting to Excel Editor ───────────────────────────────────────────────────
 #> ℹ Copying Excel Template to qualification_ugt.xlsx
-#> ✔ Copying Excel Template to qualification_ugt.xlsx [183ms]
+#> ✔ Copying Excel Template to qualification_ugt.xlsx [187ms]
 #> 
 #> ℹ Checking for Qualification Plan
 #> ℹ Qualification Plan: qualification_ugt.json
-#> ℹ Checking for Qualification Plan✔ Checking for Qualification Plan [31ms]
+#> ℹ Checking for Qualification Plan✔ Checking for Qualification Plan [30ms]
 #> 
 #> ℹ Exporting Projects Data
-#> ✔ Exporting Projects Data [62ms]
+#> ✔ Exporting Projects Data [61ms]
 #> 
 #> ℹ Exporting Simulation Outputs Data
-#> ✔ Exporting Simulation Outputs Data [978ms]
+#> ✔ Exporting Simulation Outputs Data [550ms]
 #> 
 #> ℹ Exporting Simulation Observed Data
-#> ✔ Exporting Simulation Observed Data [695ms]
+#> ✔ Exporting Simulation Observed Data [263ms]
 #> 
 #> ℹ Exporting Observed Data
-#> ✔ Exporting Observed Data [34ms]
+#> ✔ Exporting Observed Data [37ms]
 #> 
 #> ℹ Exporting Building Block Data
 #> 
 #> ℹ Exporting Building Block Data── Qualification Plan ──
 #> ℹ Exporting Building Block Data
-#> ℹ Exporting Building Block Data✔ Exporting Building Block Data [724ms]
+#> ℹ Exporting Building Block Data✔ Exporting Building Block Data [296ms]
 #> 
 #> ℹ Exporting Schema Data
-#> ✔ Exporting Schema Data [19ms]
+#> ✔ Exporting Schema Data [20ms]
 #> 
 #> ℹ Exporting Sections
-#> ✔ Exporting Sections [23ms]
+#> ✔ Exporting Sections [25ms]
 #> 
 #> ℹ Exporting Intro and Inputs
-#> ✔ Exporting Intro and Inputs [21ms]
+#> ✔ Exporting Intro and Inputs [22ms]
 #> 
 #> ℹ Exporting Simulation Parameters Settings
-#> ✔ Exporting Simulation Parameters Settings [25ms]
+#> ✔ Exporting Simulation Parameters Settings [26ms]
 #> 
 #> ℹ Exporting All Plots Settings
-#> ✔ Exporting All Plots Settings [26ms]
+#> ✔ Exporting All Plots Settings [27ms]
 #> 
 #> ℹ Exporting Comparison Time Profile Plot Settings
-#> ✔ Exporting Comparison Time Profile Plot Settings [55ms]
+#> ✔ Exporting Comparison Time Profile Plot Settings [56ms]
 #> 
 #> ℹ Exporting GOF Merged Plot Settings
 #> ✔ Exporting GOF Merged Plot Settings [29ms]
@@ -87,7 +87,7 @@ toExcelEditor(
 #> ✔ Exporting Global Axes Settings [32ms]
 #> 
 #> ℹ Saving extracted data into qualification_ugt.xlsx
-#> ✔ Saving extracted data into qualification_ugt.xlsx [377ms]
+#> ✔ Saving extracted data into qualification_ugt.xlsx [415ms]
 ```
 
 Users can then open and edit the Excel file converted from the

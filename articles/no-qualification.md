@@ -31,32 +31,32 @@ toExcelEditor(
 #> 
 #> ── Exporting to Excel Editor ───────────────────────────────────────────────────
 #> ℹ Copying Excel Template to qualification-verapamil.xlsx
-#> ✔ Copying Excel Template to qualification-verapamil.xlsx [183ms]
+#> ✔ Copying Excel Template to qualification-verapamil.xlsx [187ms]
 #> 
 #> ℹ Checking for Qualification Plan
 #> ℹ No Qualification Plan input
-#> ℹ Checking for Qualification Plan✔ Checking for Qualification Plan [30ms]
+#> ℹ Checking for Qualification Plan✔ Checking for Qualification Plan [29ms]
 #> 
 #> ℹ Exporting Projects Data
-#> ✔ Exporting Projects Data [60ms]
+#> ✔ Exporting Projects Data [58ms]
 #> 
 #> ℹ Exporting Simulation Outputs Data
-#> ✔ Exporting Simulation Outputs Data [263ms]
+#> ✔ Exporting Simulation Outputs Data [262ms]
 #> 
 #> ℹ Exporting Simulation Observed Data
-#> ✔ Exporting Simulation Observed Data [122ms]
+#> ✔ Exporting Simulation Observed Data [120ms]
 #> 
 #> ℹ Exporting Observed Data
-#> ✔ Exporting Observed Data [28ms]
+#> ✔ Exporting Observed Data [29ms]
 #> 
 #> ℹ Exporting Building Block Data
 #> 
 #> ℹ Exporting Building Block Data── Qualification Plan ──
 #> ℹ Exporting Building Block Data
-#> ℹ Exporting Building Block Data✔ Exporting Building Block Data [95ms]
+#> ℹ Exporting Building Block Data✔ Exporting Building Block Data [105ms]
 #> 
 #> ℹ Exporting Schema Data
-#> ✔ Exporting Schema Data [351ms]
+#> ✔ Exporting Schema Data [286ms]
 #> 
 #> ℹ Exporting Sections
 #> ✔ Exporting Sections [18ms]
@@ -68,7 +68,7 @@ toExcelEditor(
 #> ✔ Exporting Simulation Parameters Settings [19ms]
 #> 
 #> ℹ Exporting All Plots Settings
-#> ✔ Exporting All Plots Settings [28ms]
+#> ✔ Exporting All Plots Settings [29ms]
 #> 
 #> ℹ Exporting Comparison Time Profile Plot Settings
 #> ✔ Exporting Comparison Time Profile Plot Settings [33ms]
@@ -86,7 +86,7 @@ toExcelEditor(
 #> ✔ Exporting Global Axes Settings [23ms]
 #> 
 #> ℹ Saving extracted data into qualification-verapamil.xlsx
-#> ✔ Saving extracted data into qualification-verapamil.xlsx [337ms]
+#> ✔ Saving extracted data into qualification-verapamil.xlsx [386ms]
 ```
 
 Users can then open and edit the Excel file converted from the
