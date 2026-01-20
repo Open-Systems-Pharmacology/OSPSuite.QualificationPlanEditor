@@ -76,7 +76,10 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   # Plots: list that includes
   # - AxesSettings
   cli::cli_progress_step("Exporting {.field Global Axes Settings}")
-  qualificationAxesSettings <- readxl::read_excel(excelFile, sheet = "GlobalAxesSettings")
+  qualificationAxesSettings <- readxl::read_excel(
+    excelFile, sheet = "GlobalAxesSettings",
+    col_types = c("text", "text", "text", "text", "logical", "text")
+    )
   ospsuite.utils::validateIsOption(
     as.list(qualificationAxesSettings),
     list(
@@ -93,7 +96,11 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   qualificationAxesSettings <- groupAxesSettings(qualificationAxesSettings)
   # - PlotSettings
   cli::cli_progress_step("Exporting {.field Global Plot Settings}")
-  qualificationPlotSettings <- readxl::read_excel(excelFile, sheet = "GlobalPlotSettings")
+  qualificationPlotSettings <- readxl::read_excel(
+    excelFile, 
+    sheet = "GlobalPlotSettings",
+    col_types = c("numeric", "numeric", "numeric", "numeric", "numeric", "text", "numeric")
+    )
   ospsuite.utils::validateIsOption(
     as.list(qualificationPlotSettings),
     list(
@@ -109,7 +116,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   qualificationPlotSettings <- getPlotSettingsFromExcel(qualificationPlotSettings)
   # AllPlots
   cli::cli_progress_step("Exporting {.field All Plots} Settings")
-  allPlotsData <- readxl::read_excel(excelFile, sheet = "All_Plots")
+  allPlotsData <- readxl::read_excel(excelFile, sheet = "All_Plots", col_types = "text")
   allPlotsData <- getAllPlotsFromExcel(allPlotsData)
 
   # ComparisonTimeProfile Plots
@@ -148,7 +155,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
 
   # Sections
   cli::cli_progress_step("Exporting {.field Sections}")
-  qualificationSections <- readxl::read_excel(excelFile, sheet = "Sections")
+  qualificationSections <- readxl::read_excel(excelFile, sheet = "Sections", col_types = "text")
   ospsuite.utils::validateIsOption(
     as.list(qualificationSections),
     list(
@@ -161,7 +168,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
 
   # Inputs
   cli::cli_progress_step("Exporting {.field Inputs}")
-  qualificationInputs <- readxl::read_excel(excelFile, sheet = "Inputs")
+  qualificationInputs <- readxl::read_excel(excelFile, sheet = "Inputs", col_types = "text")
   ospsuite.utils::validateIsOption(
     as.list(qualificationInputs),
     list(
@@ -176,7 +183,7 @@ excelToQualificationPlan <- function(excelFile, qualificationPlan = "qualificati
   # Format section as a nested list
   qualificationSections <- getExcelSections(qualificationSections)
   # Intro
-  qualificationIntro <- readxl::read_excel(excelFile, sheet = "Intro")
+  qualificationIntro <- readxl::read_excel(excelFile, sheet = "Intro", col_types = "text")
   if (nrow(qualificationIntro) == 0) {
     qualificationIntro <- NULL
   }
