@@ -232,11 +232,11 @@ snapshotPaths <- list(
 
 **Issue: "Data validation dropdowns are empty"**
 - This usually means required data is missing from prerequisite sheets
-- Ensure all referenced projects and simulations exist in the Projects, Simulations_Outputs, and Simulations_ObsData sheets
+- Ensure all referenced projects and simulations exist in the `Projects`, `Simulations_Outputs`, and `Simulations_ObsData` sheets
 - Check that the Excel file was generated successfully without errors
 
 **Issue: "Conversion from Excel to JSON fails"**
-- Verify that you haven't modified the key sheets used for validation (Projects, Simulations_Outputs, Simulations_ObsData), as changes can break validation
+- Verify that you haven't modified the key sheets used for validation (`Projects`, `Simulations_Outputs`, `Simulations_ObsData`), as changes can break validation
 - Check that required columns haven't been deleted or renamed
 - Ensure data validation rules are respected (don't type free text where dropdowns are required)
 - Look for error messages in the R console for specific validation failures
