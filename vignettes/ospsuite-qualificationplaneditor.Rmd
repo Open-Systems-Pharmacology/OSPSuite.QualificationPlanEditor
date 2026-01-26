@@ -115,7 +115,7 @@ The article [Excel Template Documentation](./excel-template.html) provides compr
 - The structure and purpose of each worksheet
 - Color conventions for headers and data rows
 - Data validation rules and dropdown lists
-- Which sheets are editable vs. informational only
+- Which sheets are editable vs. information only
 - Best practices for editing the Excel file
 
 **Note:** Before editing the Excel file, we strongly recommend reading the Excel Template documentation to understand the worksheet structure and editing guidelines.
