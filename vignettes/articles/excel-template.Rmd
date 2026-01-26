@@ -295,7 +295,7 @@ This section describes each worksheet in the Excel template, its purpose, and wh
 
 **How to edit**: Fill rows to include building block details in your report. This is useful for documenting compound properties, individual parameters, formulations, etc.
 
-**Data validation**: Dropdowns are provided for selecting from available building blocks and sections.
+**Data validation**: Data validation dropdowns are provided for selecting from available building blocks and sections.
 
 **Use case**: Include detailed documentation of model building blocks (compounds, individuals, etc.) in your qualification report.
 
