@@ -38,8 +38,8 @@ Two background colors are used for headers:
 ### Table rows
 
 - <span style="background-color:#A3FFA3;">Green</span>: project or observed dataset is not present in current qualification plan and assumed as to be **Added** to the qualification
-- <span style="background-color:#DDDDDD;">Grey</span>: project or observed dataset is present in current qualification plan and<br>either not present in the list of added snapshots/observed dataset<br>or present but version/path is the same as in the qualification plan
-- <span style="background-color:#FFFFBF;">Yellow</span>: project or observed dataset is present in current qualification plan and present in the list of added snapshots/observed dataset<br>while version/path is **Changed** between them
+- <span style="background-color:#DDDDDD;">Grey</span>: project or observed dataset is present in current qualification plan and<br>either not present in the list of added snapshots/observed datasets<br>or present but version/path is the same as in the qualification plan
+- <span style="background-color:#FFFFBF;">Yellow</span>: project or observed dataset is present in current qualification plan and present in the list of added snapshots/observed datasets<br>while version/path is **Changed** between them
 
 ## How to edit Excel sheets
 
@@ -52,28 +52,28 @@ You can check version tags on GitHub in  [QualificationPlan](https://github.com/
 ### Projects
 
 List project identifiers (`Id`) and their paths.
-The background use the color convention defined above.
+The background uses the color convention defined above.
 
 This Excel sheet should not be edited.
 
 ### Simulations_Outputs
 
 List simulations and outputs for each project.
-The background use the color convention defined above.
+The background uses the color convention defined above.
 
 This Excel sheet should not be edited.
 
 ### Simulations_ObsData
 
 List simulations and observed data for each project.
-The background use the color convention defined above.
+The background uses the color convention defined above.
 
 This Excel sheet should not be edited.
 
 ### ObsData
 
 List Observed dataset identifiers (`Id`),  their paths and Type.
-The background use the color convention defined above.
+The background uses the color convention defined above.
 
 You can edit the Type of Observed data.
 
@@ -86,7 +86,7 @@ An Excel data validation is set up to select from available projects.
 
 ### SimParam
 
-List Simulated Parameters potential inheritance.
+List simulated parameters potential inheritance.
 Fill the **Parent Project**, **Parent Simulation**, **Path** and **Target Simulation** columns for a project to inherit the corresponding simulated parameters from a parent project.
 
 Excel data validations are set up to select from available projects and simulations.

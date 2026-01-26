@@ -21,7 +21,7 @@ source(system.file("excel-display.R", package = "ospsuite.qualificationplanedito
 library(ospsuite.qualificationplaneditor)
 ```
 
-The OSPSuite.QualificationPlanEditor package is designed to help you convert qualification plans from/into Excel format for easier editing.
+The **ospsuite.qualificationplaneditor** package is designed to help you convert qualification plans from/into Excel format for easier editing.
 
 The package provides functionality to parse project snapshots, extract simulation data, and generate Excel workbooks with structured data sheets that can be edited and converted back to qualification plans.
 
@@ -33,13 +33,13 @@ To create or update a qualification plan, the workflow is:
 2. Define a Qualification Plan
 3. Convert them to Excel
 4. Edit the Qualification Plan in Excel
-5. Convert back Qualification Plan to json format
-6. Run the updated Qualification
+5. Convert the Qualification Plan back to json format
+6. Run the updated Qualification Plan
 
 
 ## Fetch latest release
 
-Steps 1 and 2 usually involve to use the latest release version of project snapshots, observed data and qualification plans. This can be done using the function `getLatestReleasedPaths()` as illustrated below:
+Steps 1 and 2 usually involve using the latest release version of project snapshots, observed data and qualification plans. This can be done using the function `getLatestReleasedPaths()` as illustrated below:
 
 ``` r
 # Get latest released paths from a qualification plan
@@ -117,9 +117,3 @@ utils::browseURL(excelQualification)
 
 ```
 
-## Testing of the converted Qualification Plan
-
-To ensure that the converted qualification and evaluation plans provide appropriate evaluations, the following qualification plans are tested in the repo [RE-Test-Reports](https://github.com/Open-Systems-Pharmacology/RE-Test-Reports)
-
-- [Qualification-DDI-UGT](https://github.com/Open-Systems-Pharmacology/Qualification-DDI-UGT)
-- TBD
