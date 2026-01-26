@@ -21,42 +21,269 @@ source(system.file("excel-display.R", package = "ospsuite.qualificationplanedito
 library(ospsuite.qualificationplaneditor)
 ```
 
-## Context
+## Overview
 
-This article shows how to check and update the evaluations of a qualification plan.
-The example used here is the qualification plan for UGT1A1- and UGT1A9-mediated inhibition drug-drug interactions (DDI) available in the [Qualification-DDI-UGT](https://github.com/Open-Systems-Pharmacology/Qualification-DDI-UGT) GitHub repository.
+This tutorial demonstrates how to review and update evaluations in an existing qualification plan without adding or changing project snapshots. This is useful when:
 
+- You want to modify plot configurations
+- You need to reorganize report sections
+- You're updating plot assignments or building block references
+- You want to add or modify comparison plots (CT, GOF, DDI, PK ratio plots)
+- You need to adjust building block or parameter inheritance
+
+This is the most common workflow when maintaining an established qualification plan where the underlying models haven't changed, but the qualification report structure or evaluations need updates.
+
+We'll use the qualification plan for UGT1A1- and UGT1A9-mediated drug-drug interactions (DDI) from the [Qualification-DDI-UGT](https://github.com/Open-Systems-Pharmacology/Qualification-DDI-UGT) repository as our example.
+
+## Prerequisites
+
+- The `ospsuite.qualificationplaneditor` package installed
+- An existing qualification plan JSON file
+- Understanding of what evaluations you want to modify
+
+## Workflow Overview
+
+Updating a qualification plan involves:
+
+1. **Load the qualification plan**: Convert the existing plan to Excel
+2. **Edit evaluations**: Modify plot configurations, sections, and assignments
+3. **Convert back to JSON**: Generate the updated qualification plan
+4. **Test and validate**: Run the updated plan to verify changes
+
+
+## Step 1: Define File Paths
+
+Start by specifying your qualification plan and output files:
 
 ```{r}
+# Existing qualification plan (included with package for this example)
 qualificationPlan <- "qualification_ugt.json"
+
+# Output Excel file name
 excelFile <- "qualification_ugt.xlsx"
 ```
 
-## Conversion to Excel
+**Note**: For your own projects, replace `"qualification_ugt.json"` with the path to your qualification plan. This can be:
+- A local file path: `"C:/Projects/MyQualification/plan.json"`
+- A GitHub URL: `"https://raw.githubusercontent.com/Org/Repo/main/qualification_plan.json"`
 
-In order to assess and edit the qualification plan, the function `toExcelEditor()` will convert it into Excel format as illustrated below.
+## Step 2: Convert Qualification Plan to Excel
+
+Convert your qualification plan to Excel format. Notice that we **only** provide the `qualificationPlan` parameter - we do **not** provide `snapshotPaths` since we're not adding or changing projects:
 
 ```{r}
 toExcelEditor(
   fileName = excelFile, 
   qualificationPlan = qualificationPlan
-  )
+)
 ```
 
-Users can then open and edit the Excel file converted from the Qualification Plan.
-The code below will open the file using the default software reading `xlsx` files (such as Excel or Libre Office Calc).
+### What This Does
+
+When you convert without snapshots, the function:
+
+1. **Reads the qualification plan**: Parses the JSON file
+2. **Extracts all content**:
+   - Projects and their metadata
+   - All evaluations (plots, sections, inputs)
+   - Building block and parameter inheritance
+   - Plot configurations and mappings
+   - Report structure (sections, introduction)
+   - Global settings
+
+3. **Populates Excel worksheets**: Creates editable sheets for:
+   - **MetaInfo**: Schema version
+   - **Projects**: All project definitions (read-only, shown in grey)
+   - **Simulations_Outputs**: Available outputs (read-only)
+   - **Simulations_ObsData**: Observed data links (read-only)
+   - **ObsData**: Observed dataset definitions (Type is editable)
+   - **BB**: Building block inheritance (fully editable)
+   - **SimParam**: Parameter inheritance (fully editable)
+   - **All_Plots**: Individual plot evaluations (fully editable)
+   - **CT_Plots/CT_Mapping**: Comparison time profile plots (fully editable)
+   - **GOF_Plots/GOF_Mapping**: Goodness of fit plots (fully editable)
+   - **DDIRatio_Plots/DDIRatio_Mapping**: DDI ratio plots (fully editable)
+   - **PKRatio_Plots/PKRatio_Mapping**: PK ratio plots (fully editable)
+   - **Sections**: Report section structure (fully editable)
+   - **Intro**: Introduction file reference (fully editable)
+   - **Inputs**: Building block documentation (fully editable)
+   - **GlobalPlotSettings**: Plot appearance settings (fully editable)
+   - **GlobalAxesSettings**: Axis configuration (fully editable)
+   - **Lookup**: Reference tables (read-only)
+
+4. **Applies formatting**:
+   - All projects will be **grey** (unchanged) since no new snapshots were provided
+   - Data validation dropdowns are enabled
+   - Read-only sheets should not be edited; modifying them can cause validation or conversion errors when the Excel file is imported back into the tool
+
+### Expected Result
+
+The Excel file is now ready for editing. All existing content is preserved and can be modified as needed.
+
+## Step 3: Edit the Excel File
+
+Open the Excel file to review and modify evaluations:
 
 ```r
 utils::browseURL(excelFile)
 ```
 
-The Excel file should include the content displayed below:
+### Common Evaluation Updates
+
+Here are the most common types of updates when maintaining a qualification plan:
+
+#### A. Reorganize Report Sections (Sections sheet)
+
+**Add new sections:**
+```
+Section Reference | Section Title           | Parent Section
+------------------|-------------------------|---------------
+3.1-new          | New Results Section     | 3-results
+3.1.1-subsection | Detailed Analysis       | 3.1-new
+```
+
+**Rename or restructure:**
+- Modify section titles for clarity
+- Change parent-child relationships
+- Reorder by changing section references
+
+#### B. Reassign Plots to Different Sections (All_Plots sheet)
+
+**Before:**
+```
+Project  | Simulation | Output       | Section Reference
+---------|------------|--------------|------------------
+Project1 | Sim1       | Concentration| 2-methods
+```
+
+**After (moved to results):**
+```
+Project  | Simulation | Output       | Section Reference
+---------|------------|--------------|------------------
+Project1 | Sim1       | Concentration| 3-results
+```
+
+**Or remove from report (leave section empty):**
+```
+Project  | Simulation | Output       | Section Reference
+---------|------------|--------------|------------------
+Project1 | Sim1       | Concentration| [empty - excluded]
+```
+
+#### C. Modify Comparison Time Profile Plots (CT_Plots and CT_Mapping)
+
+**Update plot properties (CT_Plots):**
+- Change axes labels, titles, or descriptions
+- Modify scaling (linear vs. logarithmic)
+- Update section assignments
+- Change plot dimensions
+
+**Update plot mappings (CT_Mapping):**
+- Add or remove simulation outputs from plots
+- Change which observed data is compared
+- Modify plot groupings
+
+**Example - Adding a simulation to an existing plot:**
+In CT_Mapping, add a row:
+```
+PlotId | Project  | Simulation | Output       | ObservedData
+-------|----------|------------|--------------|-------------
+CT-01  | Project2 | NewSim     | Concentration| ObsData-X
+```
+
+#### D. Create or Modify GOF Plots (GOF_Plots and GOF_Mapping)
+
+Goodness of fit plots typically require:
+
+**In GOF_Plots**: Define the plot with settings
+```
+PlotId   | Title                    | Section Reference
+---------|--------------------------|------------------
+GOF-01   | Model Validation Summary | 3.2-validation
+```
+
+**In GOF_Mapping**: Map simulation-observation pairs
+```
+PlotId | Project  | Simulation | Output       | ObservedData
+-------|----------|------------|--------------|-------------
+GOF-01 | Project1 | Sim1       | AUC          | Clinical-AUC
+GOF-01 | Project1 | Sim2       | Cmax         | Clinical-Cmax
+GOF-01 | Project2 | Sim3       | AUC          | Clinical-AUC
+```
+
+#### E. Configure Building Block Inheritance (BB sheet)
+
+**Add inheritance:**
+```
+Project  | BB-Type    | BB-Name    | Parent-Project
+---------|------------|------------|---------------
+Project2 | Compound   | Drug-A     | Project1
+```
+
+**Remove inheritance (leave Parent-Project empty):**
+```
+Project  | BB-Type    | BB-Name    | Parent-Project
+---------|------------|------------|---------------
+Project2 | Compound   | Drug-A     | [empty]
+```
+
+#### F. Update Parameter Inheritance (SimParam sheet)
+
+Specify parameter inheritance between simulations:
+```
+Project  | Parent Project | Parent Simulation | TargetSimulation | Path
+---------|----------------|-------------------|------------------|-----
+Project2 | Project1       | Sim-Control       | Sim-DDI          | Organism|*|Parameter
+```
+
+#### G. Add Building Block Documentation (Inputs sheet)
+
+Include building block details in report:
+```
+Project  | BB-Type    | BB-Name      | Section Reference
+---------|------------|--------------|------------------
+Project1 | Compound   | Verapamil    | 2.1-compounds
+Project1 | Individual | European-Pop | 2.2-populations
+```
+
+#### H. Adjust Plot Settings (GlobalPlotSettings and GlobalAxesSettings)
+
+**GlobalPlotSettings**: Modify figure dimensions, fonts, resolution
+
+**GlobalAxesSettings**: Change default units, scales, or dimension mappings
+
+#### I. Update Schema Version (MetaInfo sheet)
+
+If updating to work with a newer OSP Suite version:
+```
+Change from: 2.2
+Change to:   2.3
+```
+
+**Important**: Only change this if you know the new version is compatible with your qualification framework.
+
+### Excel File Content
+
+The Excel file contains all existing evaluations:
 
 ```{r, results='asis',echo=FALSE}
 cat(displayExcel(excelFile), sep = "\n")
 ```
 
-## Convert back to json
+### Editing Best Practices
+
+- **Use data validation dropdowns**: Don't type free text where dropdowns exist (section references, projects, simulations)
+- **Check dependencies**: If you rename or delete sections, update references to them in plot sheets
+- **Test incrementally**: After major changes, convert to JSON and test before making more edits
+- **Keep backups**: Save a copy before making extensive changes
+- **Document rationale**: Use Excel comments to note why changes were made
+- **Validate section references**: Ensure all section references in evaluation sheets match defined sections
+
+For detailed worksheet descriptions, see the [Excel Template Documentation](./excel-template.html).
+
+## Step 4: Convert Back to JSON
+
+After editing, convert the Excel file back to a JSON qualification plan:
 
 ```r
 excelToQualificationPlan(
@@ -64,3 +291,135 @@ excelToQualificationPlan(
   qualificationPlan = paste0("updated-", qualificationPlan)
 )
 ```
+
+**Note**: Using `paste0("updated-", qualificationPlan)` creates a new file with an "updated-" prefix, preserving your original. This is recommended for safety.
+
+### Validation Process
+
+The function validates your edits:
+
+- **Section references**: All references must match sections in the Sections sheet
+- **Project/simulation names**: Must match definitions in the `Projects`, `Simulations_Outputs`, and `Simulations_ObsData` sheets
+- **Building block references**: Parent projects must exist
+- **Required columns**: All mandatory columns must be present
+- **Lookup values**: Values must match allowed options in Lookup sheet
+
+### Handling Validation Errors
+
+If validation fails, you'll see error messages like:
+
+```
+Error: Invalid section reference 'old-section' in All_Plots sheet
+Error: Project 'NonExistent' not found in Projects sheet
+Error: Missing required column 'Section Reference' in CT_Plots sheet
+```
+
+**To fix**:
+1. Open the Excel file
+2. Navigate to the problematic sheet
+3. Correct the error (use data validation dropdowns when available)
+4. Save and convert again
+
+### Successful Conversion
+
+Upon success, you'll see a confirmation message. The updated qualification plan JSON is ready for use with the OSP Suite Qualification Runner.
+
+## Next Steps
+
+After updating your qualification plan:
+
+1. **Run the qualification**: Execute with the OSP Suite Qualification Runner
+2. **Review the generated report**: Verify changes appear as expected
+3. **Check plots and sections**: Ensure evaluations are in the right sections with correct configurations
+4. **Iterate if needed**: If further adjustments are required, convert back to Excel and edit again
+
+## Common Update Scenarios
+
+### Scenario 1: Reorganizing Report Structure
+
+**Goal**: Move validation results from "Methods" to a new "Validation" section
+
+**Steps**:
+1. In Sections sheet, create new "Validation" section
+2. In All_Plots, CT_Plots, GOF_Plots, update Section Reference for validation plots
+3. Convert and verify
+
+### Scenario 2: Excluding Certain Plots
+
+**Goal**: Remove specific simulation outputs from the report
+
+**Steps**:
+1. In All_Plots sheet, find the outputs to exclude
+2. Clear the Section Reference column for those rows
+3. Convert - plots without section references are excluded
+
+### Scenario 3: Adding New Comparison Plots
+
+**Goal**: Create a new CT plot comparing multiple simulations
+
+**Steps**:
+1. In CT_Plots, add a row with unique PlotId and configuration
+2. In CT_Mapping, add rows mapping simulations and observed data to this PlotId
+3. Assign the plot to a section using Section Reference
+4. Convert and test
+
+### Scenario 4: Updating Building Block Inheritance
+
+**Goal**: Change a project to inherit a compound from a different parent
+
+**Steps**:
+1. In BB sheet, find the building block row
+2. Change the Parent-Project column value
+3. Verify the parent project exists and has the building block
+4. Convert and test
+
+### Scenario 5: Changing Plot Appearance
+
+**Goal**: Make all plots larger and higher resolution
+
+**Steps**:
+1. In GlobalPlotSettings, update Width, Height, and Resolution
+2. Optionally update font sizes
+3. Convert - all plots will use new settings
+
+## Troubleshooting
+
+### Issue: "Section reference not found"
+
+**Cause**: You referenced a section that doesn't exist
+
+**Fix**: Check the Sections sheet for valid section references and update your references
+
+### Issue: "Invalid project name in mapping"
+
+**Cause**: You typed a project name that doesn't match the Projects sheet
+
+**Fix**: Use the data validation dropdown to select from valid projects
+
+### Issue: "Building block inheritance creates circular dependency"
+
+**Cause**: Project A inherits from Project B, which inherits from Project A
+
+**Fix**: Review the BB sheet and remove circular inheritance
+
+### Issue: "Plot appears in wrong section in report"
+
+**Cause**: Section reference is incorrect or section hierarchy is wrong
+
+**Fix**: Verify section references and parent-child relationships in Sections sheet
+
+## Advanced Tips
+
+- **Bulk updates**: Use Excel's find-and-replace to update multiple section references at once
+- **Copy plot configurations**: Duplicate rows in plot sheets to create similar plots quickly
+- **Filter and sort**: Use Excel's filter feature to focus on specific projects or sections
+- **Conditional formatting**: Add your own conditional formatting to highlight specific items
+- **Freeze panes**: Freeze header rows to keep column names visible while scrolling
+
+## Related Articles
+
+- [Excel Template Documentation](./excel-template.html): Comprehensive worksheet guide
+- [Add a Snapshot to Qualification Plan](./snapshot-qualification.html): Adding new projects
+- [Create Qualification from Snapshot](./no-qualification.html): Starting from scratch
+
+
