@@ -4,100 +4,234 @@
 library(ospsuite.qualificationplaneditor)
 ```
 
-## Context
+## Overview
 
-This article shows how to create a Qualification Plan from scratch using
-a project snapshot. The example used here is the
+This tutorial demonstrates how to create a new qualification plan from
+scratch using only project snapshots, without an existing qualification
+plan as a starting point. This is ideal when:
+
+- Starting a completely new qualification project
+- Creating a qualification plan for a newly developed model
+- Building a qualification framework for a model that previously didn’t
+  have one
+
+We’ll use the
 [Verapamil-Model](https://github.com/Open-Systems-Pharmacology/Verapamil-Model)
-available on GitHub.
+from the Open Systems Pharmacology GitHub repository as our example.
+
+## Prerequisites
+
+Before starting, ensure you have: - The
+`ospsuite.qualificationplaneditor` package installed - A project
+snapshot JSON file (locally or accessible via URL) - Basic understanding
+of the OSP Suite workflow
+
+## Workflow Overview
+
+Creating a qualification plan from scratch involves three main steps:
+
+1.  **Prepare your project snapshot**: Identify the snapshot JSON
+    file(s) you want to include
+2.  **Convert to Excel**: Generate an Excel workbook from the snapshot
+3.  **Edit and convert back**: Edit the Excel file to add evaluations,
+    then convert to JSON
+
+Let’s walk through each step.
+
+## Step 1: Define Your Project Files
+
+First, we define the paths to our input and output files. The snapshot
+can be a local file or a URL to a GitHub-hosted file.
 
 ``` r
+# Path to the project snapshot (included with the package for this example)
 snapshotPaths <- "Verapamil-Model.json"
+
+# Output file name for the qualification plan JSON
 qualificationPlan <- "qualification-verapamil.json"
+
+# Output file name for the Excel workbook
 excelFile <- "qualification-verapamil.xlsx"
 ```
 
-## Conversion to Excel
+**Note**: For your own projects, replace `"Verapamil-Model.json"` with
+the path to your project snapshot file. This can be: - A local file
+path: `"C:/MyProjects/MyModel.json"` - A GitHub URL:
+`"https://raw.githubusercontent.com/Org/Repo/main/Model.json"`
 
-In order to assess and edit the qualification plan, the function
-[`toExcelEditor()`](https://www.open-systems-pharmacology.org/OSPSuite.QualificationPlanEditor/reference/toExcelEditor.md)
-will convert it into Excel format as illustrated below.
+For multiple projects, use a named list:
+
+``` r
+snapshotPaths <- list(
+  "Project1" = "path/to/project1.json",
+  "Project2" = "path/to/project2.json"
+)
+```
+
+## Step 2: Convert Snapshot to Excel
+
+Now we convert the project snapshot to Excel format. The key here is
+that we **only** provide `snapshotPaths` - we do **not** provide a
+`qualificationPlan` parameter, which tells the function to create a new
+qualification plan from scratch.
 
 ``` r
 toExcelEditor(
   fileName = excelFile, 
   snapshotPaths = snapshotPaths
-  )
+)
 #> 
 #> ── Exporting to Excel Editor ───────────────────────────────────────────────────
 #> ℹ Copying Excel Template to qualification-verapamil.xlsx
-#> ✔ Copying Excel Template to qualification-verapamil.xlsx [187ms]
+#> ✔ Copying Excel Template to qualification-verapamil.xlsx [194ms]
 #> 
 #> ℹ Checking for Qualification Plan
 #> ℹ No Qualification Plan input
-#> ℹ Checking for Qualification Plan✔ Checking for Qualification Plan [29ms]
+#> ℹ Checking for Qualification Plan✔ Checking for Qualification Plan [31ms]
 #> 
 #> ℹ Exporting Projects Data
-#> ✔ Exporting Projects Data [58ms]
+#> ✔ Exporting Projects Data [63ms]
 #> 
 #> ℹ Exporting Simulation Outputs Data
-#> ✔ Exporting Simulation Outputs Data [262ms]
+#> ✔ Exporting Simulation Outputs Data [366ms]
 #> 
 #> ℹ Exporting Simulation Observed Data
-#> ✔ Exporting Simulation Observed Data [120ms]
+#> ✔ Exporting Simulation Observed Data [50ms]
 #> 
 #> ℹ Exporting Observed Data
-#> ✔ Exporting Observed Data [29ms]
+#> ✔ Exporting Observed Data [28ms]
 #> 
 #> ℹ Exporting Building Block Data
 #> 
 #> ℹ Exporting Building Block Data── Qualification Plan ──
 #> ℹ Exporting Building Block Data
-#> ℹ Exporting Building Block Data✔ Exporting Building Block Data [105ms]
+#> ℹ Exporting Building Block Data✔ Exporting Building Block Data [90ms]
 #> 
 #> ℹ Exporting Schema Data
-#> ✔ Exporting Schema Data [286ms]
+#> ✔ Exporting Schema Data [318ms]
 #> 
 #> ℹ Exporting Sections
-#> ✔ Exporting Sections [18ms]
+#> ✔ Exporting Sections [19ms]
 #> 
 #> ℹ Exporting Intro and Inputs
-#> ✔ Exporting Intro and Inputs [19ms]
+#> ✔ Exporting Intro and Inputs [20ms]
 #> 
 #> ℹ Exporting Simulation Parameters Settings
-#> ✔ Exporting Simulation Parameters Settings [19ms]
+#> ✔ Exporting Simulation Parameters Settings [20ms]
 #> 
 #> ℹ Exporting All Plots Settings
-#> ✔ Exporting All Plots Settings [29ms]
+#> ✔ Exporting All Plots Settings [34ms]
 #> 
 #> ℹ Exporting Comparison Time Profile Plot Settings
-#> ✔ Exporting Comparison Time Profile Plot Settings [33ms]
+#> ✔ Exporting Comparison Time Profile Plot Settings [31ms]
 #> 
 #> ℹ Exporting GOF Merged Plot Settings
-#> ✔ Exporting GOF Merged Plot Settings [28ms]
+#> ✔ Exporting GOF Merged Plot Settings [31ms]
 #> 
 #> ℹ Exporting DDI Ratio Plot Settings
-#> ✔ Exporting DDI Ratio Plot Settings [45ms]
+#> ✔ Exporting DDI Ratio Plot Settings [49ms]
 #> 
 #> ℹ Exporting Global Plot Settings
-#> ✔ Exporting Global Plot Settings [21ms]
+#> ✔ Exporting Global Plot Settings [29ms]
 #> 
 #> ℹ Exporting Global Axes Settings
-#> ✔ Exporting Global Axes Settings [23ms]
+#> ✔ Exporting Global Axes Settings [25ms]
 #> 
 #> ℹ Saving extracted data into qualification-verapamil.xlsx
-#> ✔ Saving extracted data into qualification-verapamil.xlsx [386ms]
+#> ✔ Saving extracted data into qualification-verapamil.xlsx [371ms]
 ```
 
-Users can then open and edit the Excel file converted from the
-Qualification Plan. The code below will open the file using the default
-software reading `xlsx` files (such as Excel or Libre Office Calc).
+### What Happens During Conversion
+
+The
+[`toExcelEditor()`](https://www.open-systems-pharmacology.org/OSPSuite.QualificationPlanEditor/reference/toExcelEditor.md)
+function performs several operations:
+
+1.  **Reads the snapshot file**: Parses the project JSON to extract all
+    relevant information
+2.  **Extracts project data**:
+    - Project metadata (ID, path)
+    - Simulations and their outputs
+    - Building blocks (compounds, individuals, formulations, etc.)
+    - Observed data linked to simulations (if any)
+3.  **Generates Excel worksheets**:
+    - **Projects**: Lists all projects and their paths
+    - **Simulations_Outputs**: All simulation outputs available for
+      plotting
+    - **Simulations_ObsData**: Observed data linked to simulations
+    - **BB**: Building block structure for potential inheritance
+    - **Sections**: Template sections for organizing your report
+    - **All_Plots**: Individual plots from simulation outputs
+    - **CT_Plots/GOF_Plots/DDIRatio_Plots/PKRatio_Plots**: Empty
+      templates for creating custom plots
+    - **Inputs**: Template for including building block documentation
+    - **GlobalPlotSettings/GlobalAxesSettings**: Default plot
+      configuration
+    - **Lookup**: Reference tables for valid values
+4.  **Applies formatting**:
+    - Color-coding (all new projects will be green since nothing existed
+      before)
+    - Data validation dropdowns
+    - Cell protection for read-only sheets
+
+### Expected Output
+
+After running this command, you should see a message confirming the
+Excel file was created. The file will be ready for editing.
+
+## Step 3: Review and Edit the Excel File
+
+Once the Excel file is generated, you should open it to review and edit
+the content. The code below opens the file using your system’s default
+spreadsheet application (Excel, LibreOffice Calc, etc.):
 
 ``` r
 utils::browseURL(excelFile)
 ```
 
-The Excel file should include the content displayed below:
+### What to Edit
+
+When creating a qualification plan from scratch, you’ll typically want
+to:
+
+1.  **Define Report Sections** (Sections sheet):
+    - Create a logical structure for your qualification report
+    - Add sections like “Introduction”, “Methods”, “Results”,
+      “Discussion”
+    - Create subsections as needed (e.g., “Model Development” under
+      “Methods”)
+2.  **Configure Plot Evaluations** (All_Plots sheet):
+    - Review the automatically generated list of all possible plots
+    - Assign each plot to a report section using the Section Reference
+      column
+    - Delete or leave blank rows for plots you don’t want to include
+3.  **Create Comparison Time Profile Plots** (CT_Plots and CT_Mapping
+    sheets):
+    - Define plots that compare simulation outputs with observed data
+    - Configure axes, titles, and other plot properties
+    - Map specific outputs and observed datasets to each plot
+4.  **Configure Other Plot Types** (GOF_Plots, DDIRatio_Plots,
+    PKRatio_Plots):
+    - Set up goodness-of-fit plots, DDI ratio plots, or PK ratio plots
+      as needed
+    - Configure their mappings to show the comparisons you need
+5.  **Add Building Block Documentation** (Inputs sheet):
+    - Specify which building blocks should be documented in the report
+    - This includes compound properties, individual parameters,
+      formulations, etc.
+6.  **Set Introduction** (Intro sheet):
+    - Provide a path to a Markdown file that will serve as your report
+      introduction
+    - This should explain the purpose, methods, and context of your
+      qualification
+7.  **Adjust Plot Settings** (GlobalPlotSettings and
+    GlobalAxesSettings):
+    - Customize figure dimensions, resolution, fonts
+    - Set default unit preferences and axis scales
+
+### Excel File Preview
+
+The Excel file structure will look like this:
 
 ## Excel Content
 
@@ -123,6 +257,7 @@ The Excel file should include the content displayed below:
 - GlobalPlotSettings
 - GlobalAxesSettings
 - Lookup
+- Tips for Editing
 
 | Qualification.plan.schema.version |
 |:----------------------------------|
@@ -1361,7 +1496,23 @@ The Excel file should include the content displayed below:
 | NA                | NA                        | NA       | NA                   | NA       | NA                    | NA      | NA                 | NA                  | NA                | NA                    | Vss                            | NA               | NA                  | NA                  | NA        |   NA    | NA                                |
 | NA                | NA                        | NA       | NA                   | NA       | NA                    | NA      | NA                 | NA                  | NA                | NA                    | Vd                             | NA               | NA                  | NA                  | NA        |   NA    | NA                                |
 
-## Convert back to json
+- **Start with sections**: Define your report structure first, then
+  assign evaluations to sections
+- **Use color coding**: All rows should be green (new) since this is a
+  fresh qualification plan
+- **Leverage data validation**: Use the dropdown menus - don’t type free
+  text where dropdowns exist
+- **Review read-only sheets**: Check Projects, Simulations_Outputs, and
+  Simulations_ObsData to understand what’s available
+
+For detailed information about each worksheet, see the [Excel Template
+Documentation](https://www.open-systems-pharmacology.org/OSPSuite.QualificationPlanEditor/articles/excel-template.md).
+
+## Step 4: Convert Back to JSON
+
+After editing the Excel file, convert it back to a JSON qualification
+plan using
+[`excelToQualificationPlan()`](https://www.open-systems-pharmacology.org/OSPSuite.QualificationPlanEditor/reference/excelToQualificationPlan.md):
 
 ``` r
 excelToQualificationPlan(
@@ -1369,3 +1520,91 @@ excelToQualificationPlan(
   qualificationPlan = qualificationPlan
 )
 ```
+
+### What Happens During Conversion
+
+The function performs several validation and conversion steps:
+
+1.  **Reads the Excel file**: Loads all worksheets
+2.  **Validates the data**:
+    - Checks that required columns exist
+    - Verifies section references are valid
+    - Ensures project and simulation names match the definition sheets
+    - Validates against lookup tables
+3.  **Constructs the JSON structure**: Builds the hierarchical
+    qualification plan structure
+4.  **Writes the output**: Saves the qualification plan as a JSON file
+
+### Validation Errors
+
+If there are errors in your Excel file, the function will report them in
+the console. Common errors include:
+
+- **Invalid section reference**: You referenced a section that doesn’t
+  exist in the Sections sheet
+- **Invalid project/simulation name**: Names don’t match what’s in the
+  Projects, Simulations_Outputs, or Simulations_ObsData sheets
+- **Missing required columns**: You accidentally deleted a required
+  column
+- **Invalid lookup values**: You entered a value that’s not in the
+  allowed list
+
+Fix any reported errors in the Excel file and run the conversion again.
+
+### Success
+
+If the conversion succeeds, you’ll see a message confirming the
+qualification plan was created. The JSON file is now ready to be used
+with the OSP Suite Qualification Runner to generate your qualification
+report.
+
+## Next Steps
+
+After creating your qualification plan:
+
+1.  **Test the qualification plan**: Run it with the OSP Suite
+    Qualification Runner to ensure it works correctly
+2.  **Review the generated report**: Check that plots, sections, and
+    content appear as expected
+3.  **Iterate**: If adjustments are needed, reconvert to Excel, edit,
+    and convert back to JSON
+
+## Working with Observed Data
+
+This example used only the project snapshot, which may include observed
+data linked to simulations. To add additional observed data files:
+
+``` r
+# Define observed data
+observedDataPaths <- list(
+  "Clinical PK Data" = list(
+    Path = "path/to/observed_data.csv",
+    Type = "TimeProfile"
+  ),
+  "DDI Ratios" = list(
+    Path = "path/to/ddi_ratios.csv",
+    Type = "DDIRatio"
+  )
+)
+
+# Include in conversion
+toExcelEditor(
+  fileName = excelFile,
+  snapshotPaths = snapshotPaths,
+  observedDataPaths = observedDataPaths
+)
+```
+
+The observed data will then be available for use in plot evaluations.
+
+## Related Articles
+
+- [Excel Template
+  Documentation](https://www.open-systems-pharmacology.org/OSPSuite.QualificationPlanEditor/articles/excel-template.md):
+  Comprehensive guide to all Excel worksheets
+- [Add a Snapshot to Qualification
+  Plan](https://www.open-systems-pharmacology.org/OSPSuite.QualificationPlanEditor/articles/snapshot-qualification.md):
+  How to add projects to an existing plan
+- [Update Qualification Plan
+  Evaluations](https://www.open-systems-pharmacology.org/OSPSuite.QualificationPlanEditor/articles/update-qualification.md):
+  How to modify evaluations in an existing plan

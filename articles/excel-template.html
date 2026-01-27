@@ -71,188 +71,432 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/open-systems-pharmacology/ospsuite.qualificationplaneditor" class="external-link">ospsuite.qualificationplaneditor</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
-<h2 id="context">Context<a class="anchor" aria-label="anchor" href="#context"></a>
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>This article describes the Excel template to be edited to create or
-update a qualification plan.</p>
+<p>This article provides comprehensive documentation for the Excel
+template structure used by the
+<code>ospsuite.qualificationplaneditor</code> package. Understanding
+this structure is essential for effectively editing qualification plans
+in Excel format.</p>
+<p>The Excel template consists of multiple worksheets, each serving a
+specific purpose in defining your qualification plan. Some sheets are
+automatically populated and should not be edited (informational sheets),
+while others are designed for user input (editable sheets).</p>
 </div>
 <div class="section level2">
-<h2 id="color-convention">Color convention<a class="anchor" aria-label="anchor" href="#color-convention"></a>
+<h2 id="color-conventions">Color Conventions<a class="anchor" aria-label="anchor" href="#color-conventions"></a>
 </h2>
-<p>In the Excel template, many cells are filled with colors that follows
-the convention defined below:</p>
+<p>The Excel template uses background colors to convey important
+information about the status and purpose of data. Understanding these
+conventions will help you quickly identify what needs attention.</p>
 <div class="section level3">
-<h3 id="header">Header<a class="anchor" aria-label="anchor" href="#header"></a>
+<h3 id="header-colors">Header Colors<a class="anchor" aria-label="anchor" href="#header-colors"></a>
 </h3>
-<p>Two background colors are used for headers:</p>
+<p>Sheet tab and header colors indicate the data availability
+status:</p>
 <ul>
-<li>
-<span style="background-color:#ADD8E6;">Blue</span>: data was found
-and corresponding Excel sheet was filled with project snapshots,
-observed datasets and/or qualification plan information</li>
-<li>
-<span style="background-color:#ffff00;">Yellow</span>: no data was
-found to fill corresponding sheet</li>
+<li><p><span style="background-color:#ADD8E6;"><strong>Light
+Blue</strong></span>: Data was successfully found and the corresponding
+Excel sheet has been populated with project snapshots, observed
+datasets, and/or qualification plan information. These sheets contain
+actionable data.</p></li>
+<li><p><span style="background-color:#ffff00;"><strong>Yellow</strong></span>: No
+data was found to populate the corresponding sheet. This typically means
+the qualification plan doesn’t contain this type of information yet, or
+no matching data was provided in the conversion process.</p></li>
 </ul>
 </div>
 <div class="section level3">
-<h3 id="table-rows">Table rows<a class="anchor" aria-label="anchor" href="#table-rows"></a>
+<h3 id="row-status-colors">Row Status Colors<a class="anchor" aria-label="anchor" href="#row-status-colors"></a>
 </h3>
+<p>Background colors in data rows indicate the status of projects,
+observed datasets, and other items relative to the existing
+qualification plan:</p>
 <ul>
+<li><p><span style="background-color:#A3FFA3;"><strong>Green</strong></span>: This
+project or observed dataset is <strong>new</strong> - it does not exist
+in the current qualification plan and is assumed to be
+<strong>added</strong> to the qualification. Review these items
+carefully as they represent new content.</p></li>
 <li>
-<span style="background-color:#A3FFA3;">Green</span>: project or
-observed dataset is not present in current qualification plan and
-assumed as to be <strong>Added</strong> to the qualification</li>
-<li>
-<span style="background-color:#DDDDDD;">Grey</span>: project or
-observed dataset is present in current qualification plan and<br>either
-not present in the list of added snapshots/observed dataset<br>or
-present but version/path is the same as in the qualification plan</li>
-<li>
-<span style="background-color:#FFFFBF;">Yellow</span>: project or
-observed dataset is present in current qualification plan and present in
-the list of added snapshots/observed dataset<br>while version/path is
-<strong>Changed</strong> between them</li>
+<p><span style="background-color:#DDDDDD;"><strong>Grey</strong></span>: This
+project or observed dataset already exists in the current qualification
+plan, and either:</p>
+<ul>
+<li>It is not present in the list of newly provided snapshots/observed
+datasets, OR</li>
+<li>It is present but the version/path is identical to what’s in the
+qualification plan</li>
 </ul>
+<p>These items are <strong>unchanged</strong> and typically don’t
+require action.</p>
+</li>
+<li><p><span style="background-color:#FFFFBF;"><strong>Light
+Yellow</strong></span>: This project or observed dataset exists in both
+the current qualification plan and the newly provided snapshots/observed
+datasets, but the version or path has <strong>changed</strong>. These
+items represent updates and should be reviewed to ensure the changes are
+intentional.</p></li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="interpreting-colors">Interpreting Colors<a class="anchor" aria-label="anchor" href="#interpreting-colors"></a>
+</h3>
+<p>Use these color codes to prioritize your review: 1. <strong>Green
+items</strong>: Verify these new additions are correct and intended 2.
+<strong>Yellow items</strong>: Check that these updates reflect the
+desired changes 3. <strong>Grey items</strong>: Generally no action
+needed unless you want to modify their usage in the plan</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="how-to-edit-excel-sheets">How to edit Excel sheets<a class="anchor" aria-label="anchor" href="#how-to-edit-excel-sheets"></a>
+<h2 id="worksheet-reference-guide">Worksheet Reference Guide<a class="anchor" aria-label="anchor" href="#worksheet-reference-guide"></a>
 </h2>
+<p>This section describes each worksheet in the Excel template, its
+purpose, and whether it should be edited.</p>
 <div class="section level3">
-<h3 id="metainfo">MetaInfo<a class="anchor" aria-label="anchor" href="#metainfo"></a>
+<h3 id="metainfo-editable">MetaInfo <em>(Editable)</em><a class="anchor" aria-label="anchor" href="#metainfo-editable"></a>
 </h3>
-<p>Defines the version of the Qualification Plan Schema. The value
-should be formatted as <code>vX.Y</code>.</p>
-<p>You can check version tags on GitHub in <a href="https://github.com/Open-Systems-Pharmacology/QualificationPlan/tags" class="external-link">QualificationPlan</a>
-repository.</p>
+<p><strong>Purpose</strong>: Defines the version of the Qualification
+Plan Schema used by your qualification plan.</p>
+<p><strong>Format</strong>: The value should be formatted as
+<code>X.Y</code> (e.g., <code>2.3</code>, <code>3.0</code>).</p>
+<p><strong>How to edit</strong>: You can check available version tags on
+the <a href="https://github.com/Open-Systems-Pharmacology/QualificationPlan/tags" class="external-link">QualificationPlan
+GitHub repository</a>.</p>
+<hr>
 </div>
 <div class="section level3">
-<h3 id="projects">Projects<a class="anchor" aria-label="anchor" href="#projects"></a>
+<h3 id="projects-read-only">Projects <em>(Read-Only)</em><a class="anchor" aria-label="anchor" href="#projects-read-only"></a>
 </h3>
-<p>List project identifiers (<code>Id</code>) and their paths. The
-background use the color convention defined above.</p>
-<p>This Excel sheet should not be edited.</p>
+<p><strong>Purpose</strong>: Lists all project identifiers
+(<code>Id</code>) and their file paths or URLs.</p>
+<p><strong>Content</strong>: - <code>Id</code>: Unique identifier for
+each project (typically the project name) - <code>Path</code>: File path
+or GitHub URL to the project snapshot JSON file</p>
+<p><strong>Background</strong>: Uses the row status color convention
+(green/yellow/grey) described above.</p>
+<p><strong>Editing</strong>: <strong>DO NOT EDIT</strong> this sheet. It
+is automatically populated from your project snapshots and qualification
+plan. Modifications may cause data inconsistencies.</p>
+<hr>
 </div>
 <div class="section level3">
-<h3 id="simulations_outputs">Simulations_Outputs<a class="anchor" aria-label="anchor" href="#simulations_outputs"></a>
+<h3 id="simulations_outputs-read-only">Simulations_Outputs <em>(Read-Only)</em><a class="anchor" aria-label="anchor" href="#simulations_outputs-read-only"></a>
 </h3>
-<p>List simulations and outputs for each project. The background use the
-color convention defined above.</p>
-<p>This Excel sheet should not be edited.</p>
+<p><strong>Purpose</strong>: Lists all simulations and their outputs for
+each project. This information is extracted from the project snapshot
+files.</p>
+<p><strong>Content</strong>: - <code>Project</code>: Project identifier
+- <code>Simulation</code>: Simulation name within the project -
+<code>Output</code>: Output variable/observable from the simulation</p>
+<p><strong>Background</strong>: Uses the row status color
+convention.</p>
+<p><strong>Editing</strong>: <strong>DO NOT EDIT</strong> this sheet.
+The simulation and output information must match what exists in the
+actual project files.</p>
+<hr>
 </div>
 <div class="section level3">
-<h3 id="simulations_obsdata">Simulations_ObsData<a class="anchor" aria-label="anchor" href="#simulations_obsdata"></a>
+<h3 id="simulations_obsdata-read-only">Simulations_ObsData <em>(Read-Only)</em><a class="anchor" aria-label="anchor" href="#simulations_obsdata-read-only"></a>
 </h3>
-<p>List simulations and observed data for each project. The background
-use the color convention defined above.</p>
-<p>This Excel sheet should not be edited.</p>
+<p><strong>Purpose</strong>: Lists simulations and their associated
+observed data for each project.</p>
+<p><strong>Content</strong>: - <code>Project</code>: Project identifier
+- <code>Simulation</code>: Simulation name - <code>ObservedData</code>:
+Observed dataset identifier linked to this simulation</p>
+<p><strong>Background</strong>: Uses the row status color
+convention.</p>
+<p><strong>Editing</strong>: <strong>DO NOT EDIT</strong> this sheet.
+This information is extracted from project files and defines which
+observed data should be compared against each simulation.</p>
+<hr>
 </div>
 <div class="section level3">
-<h3 id="obsdata">ObsData<a class="anchor" aria-label="anchor" href="#obsdata"></a>
+<h3 id="obsdata-partially-editable">ObsData <em>(Partially Editable)</em><a class="anchor" aria-label="anchor" href="#obsdata-partially-editable"></a>
 </h3>
-<p>List Observed dataset identifiers (<code>Id</code>), their paths and
-Type. The background use the color convention defined above.</p>
-<p>You can edit the Type of Observed data.</p>
+<p><strong>Purpose</strong>: Lists all observed datasets with their
+identifiers, file paths, and data types.</p>
+<p><strong>Content</strong>: - <code>Id</code>: Unique identifier for
+the observed dataset - <code>Path</code>: File path or URL to the
+observed data CSV file - <code>Type</code>: Type of observed data (e.g.,
+<code>TimeProfile</code>, <code>DDIRatio</code>,
+<code>PKRatio</code>)</p>
+<p><strong>Background</strong>: Uses the row status color
+convention.</p>
+<p><strong>Editing</strong>: You <strong>CAN</strong> edit the
+<code>Type</code> column to change how the observed data is interpreted.
+Common types include: - <code>TimeProfile</code>: Time-course
+concentration data - <code>DDIRatio</code>: Drug-drug interaction ratio
+data - <code>PKRatio</code>: Pharmacokinetic parameter ratio data</p>
+<p><strong>DO NOT</strong> edit the <code>Id</code> or <code>Path</code>
+columns as these must match the actual data files.</p>
+<hr>
 </div>
 <div class="section level3">
-<h3 id="bb">BB<a class="anchor" aria-label="anchor" href="#bb"></a>
+<h3 id="bb-editable">BB <em>(Editable)</em><a class="anchor" aria-label="anchor" href="#bb-editable"></a>
 </h3>
-<p>List Building Blocks potential inheritance. Fill the
-<strong>Parent-Project</strong> column for a project to inherit the
-corresponding building block from a parent project.</p>
-<p>An Excel data validation is set up to select from available
+<p><strong>Purpose</strong>: Defines Building Block inheritance
+relationships between projects.</p>
+<p><strong>Content</strong>: - <code>Project</code>: Project identifier
+- <code>BB-Type</code>: Type of building block (e.g.,
+<code>Compound</code>, <code>Individual</code>,
+<code>Formulation</code>) - <code>BB-Name</code>: Name of the building
+block - <code>Parent-Project</code>: Source project from which to
+inherit this building block</p>
+<p><strong>How to edit</strong>: Fill the
+<strong>Parent-Project</strong> column to specify that a project should
+inherit a building block from another project instead of defining it
+locally.</p>
+<p><strong>Data validation</strong>: An Excel dropdown list is provided
+to select from available projects, ensuring you reference valid parent
 projects.</p>
+<p><strong>Use case</strong>: This is useful when multiple projects
+share common building blocks (e.g., the same compound definition),
+allowing you to avoid duplication and maintain consistency.</p>
+<hr>
 </div>
 <div class="section level3">
-<h3 id="simparam">SimParam<a class="anchor" aria-label="anchor" href="#simparam"></a>
+<h3 id="simparam-editable">SimParam <em>(Editable)</em><a class="anchor" aria-label="anchor" href="#simparam-editable"></a>
 </h3>
-<p>List Simulated Parameters potential inheritance. Fill the
-<strong>Parent Project</strong>, <strong>Parent Simulation</strong>,
-<strong>Path</strong> and <strong>Target Simulation</strong> columns for
-a project to inherit the corresponding simulated parameters from a
-parent project.</p>
-<p>Excel data validations are set up to select from available projects
-and simulations.</p>
+<p><strong>Purpose</strong>: Defines inheritance of simulated parameters
+between projects and simulations.</p>
+<p><strong>Content</strong>: - <code>Project</code>: Target project for
+which parameter inheritance is defined - <code>Parent Project</code>:
+Source project from which parameters are inherited -
+<code>Parent Simulation</code>: Source simulation within the parent
+project - <code>Path</code>: Parameter path to inherit -
+<code>TargetSimulation</code>: (Optional) alternative target simulation
+name within the target project</p>
+<p><strong>How to edit</strong>: Fill in the columns to specify
+parameter inheritance. For example, if Simulation B should use parameter
+values from Simulation A in a different project, specify the source
+project and simulation in <code>Parent Project</code> and
+<code>Parent Simulation</code>, and the target project (and optionally
+<code>TargetSimulation</code>) accordingly.</p>
+<p><strong>Data validation</strong>: Excel dropdowns are provided for
+selecting available projects and simulations.</p>
+<p><strong>Use case</strong>: Parameter inheritance is useful for
+ensuring consistency when similar simulations across projects should use
+the same parameter values.</p>
+<hr>
 </div>
 <div class="section level3">
-<h3 id="all_plots">All_Plots<a class="anchor" aria-label="anchor" href="#all_plots"></a>
+<h3 id="all_plots-editable">All_Plots <em>(Editable)</em><a class="anchor" aria-label="anchor" href="#all_plots-editable"></a>
 </h3>
-<p>List all plots evaluations for each project and simulation.</p>
-<p>Fill the <strong>Section Reference</strong> column to include the
-evaluation in the corresponding section. Excel data validations are set
-up to select from available sections.</p>
-</div>
-<div class="section level3">
-<h3 id="ct_plots-and-ct_mapping">CT_Plots and CT_Mapping<a class="anchor" aria-label="anchor" href="#ct_plots-and-ct_mapping"></a>
-</h3>
-<p>Define and list Comparison Time Profile (CT) plots.</p>
-<p>Excel data validations are set up to select from available sections,
-projects, simulations, observed data, etc.</p>
-</div>
-<div class="section level3">
-<h3 id="gof_plots-and-gof_mapping">GOF_Plots and GOF_Mapping<a class="anchor" aria-label="anchor" href="#gof_plots-and-gof_mapping"></a>
-</h3>
-<p>Define and list Goodness of Fit (GOF) plots.</p>
-<p>Excel data validations are set up to select from available sections,
-projects, simulations, observed data, etc.</p>
-</div>
-<div class="section level3">
-<h3 id="ddiratio_plots-and-ddiratio_mapping">DDIRatio_Plots and DDIRatio_Mapping<a class="anchor" aria-label="anchor" href="#ddiratio_plots-and-ddiratio_mapping"></a>
-</h3>
-<p>Define and list DDI Ratio plots.</p>
-<p>Excel data validations are set up to select from available sections,
-projects, simulations, observed data, etc.</p>
-</div>
-<div class="section level3">
-<h3 id="pkratio_plots-and-pkratio_mapping">PKRatio_Plots and PKRatio_Mapping<a class="anchor" aria-label="anchor" href="#pkratio_plots-and-pkratio_mapping"></a>
-</h3>
-<p>Define and list PK Ratio plots.</p>
-<p>Excel data validations are set up to select from available sections,
-projects, simulations, observed data, etc.</p>
-</div>
-<div class="section level3">
-<h3 id="sections">Sections<a class="anchor" aria-label="anchor" href="#sections"></a>
-</h3>
-<p>Define and list Qualification Report sections.</p>
-<p>Fill <strong>Section Reference</strong> tag to identify a section. If
-section is a sub-section, fill the <strong>Parent Section</strong>
-column, Excel data validations are set up to select from available
+<p><strong>Purpose</strong>: Lists all individual plot evaluations for
+each project and simulation. These are plots generated directly from
+simulation outputs.</p>
+<p><strong>Content</strong>: - Project and simulation information - Plot
+configuration details - <code>Section Reference</code>: The
+qualification report section where this plot should appear</p>
+<p><strong>How to edit</strong>: Fill the <strong>Section
+Reference</strong> column to include the evaluation in the corresponding
+section of your qualification report. Leave empty to exclude a plot.</p>
+<p><strong>Data validation</strong>: Dropdowns are provided to select
+from available sections (defined in the Sections sheet).</p>
+<p><strong>Use case</strong>: Control which simulation outputs appear in
+your qualification report and organize them into appropriate
 sections.</p>
+<hr>
 </div>
 <div class="section level3">
-<h3 id="intro">Intro<a class="anchor" aria-label="anchor" href="#intro"></a>
+<h3 id="ct_plots-and-ct_mapping-editable">CT_Plots and CT_Mapping <em>(Editable)</em><a class="anchor" aria-label="anchor" href="#ct_plots-and-ct_mapping-editable"></a>
 </h3>
-<p>Define the path of the markdown file used as introduction of your
-qualification report.</p>
+<p><strong>Purpose</strong>: Define and configure Comparison Time
+Profile (CT) plots.</p>
+<p><strong>CT_Plots</strong>: Defines the properties of each CT plot
+(title, axes, scaling, etc.)</p>
+<p><strong>CT_Mapping</strong>: Maps specific simulation outputs and
+observed data to each CT plot</p>
+<p><strong>How to edit</strong>: 1. Define your CT plots in the CT_Plots
+sheet with unique identifiers 2. Use CT_Mapping to specify which outputs
+and observed data should appear on each plot 3. Assign plots to report
+sections using the Section Reference column</p>
+<p><strong>Data validation</strong>: Dropdowns help select from
+available sections, projects, simulations, observed data, etc.</p>
+<p><strong>Use case</strong>: CT plots allow you to compare simulation
+outputs with observed data over time, useful for model validation.</p>
+<hr>
 </div>
 <div class="section level3">
-<h3 id="inputs">Inputs<a class="anchor" aria-label="anchor" href="#inputs"></a>
+<h3 id="gof_plots-and-gof_mapping-editable">GOF_Plots and GOF_Mapping <em>(Editable)</em><a class="anchor" aria-label="anchor" href="#gof_plots-and-gof_mapping-editable"></a>
 </h3>
-<p>Fill the <strong>Project</strong>, <strong>BB-Type</strong>,
-<strong>BB-Name</strong> and <strong>Section Reference</strong> to
-include the Building Block definitions into the corresponding section of
-your qualification report. Excel data validations are set up to select
-from available building blocks and sections.</p>
+<p><strong>Purpose</strong>: Define and configure Goodness of Fit (GOF)
+plots.</p>
+<p><strong>GOF_Plots</strong>: Defines GOF plot properties</p>
+<p><strong>GOF_Mapping</strong>: Maps data to GOF plots</p>
+<p><strong>How to edit</strong>: Similar to CT plots - define plots in
+GOF_Plots and map data in GOF_Mapping.</p>
+<p><strong>Use case</strong>: GOF plots provide statistical
+visualizations of how well simulations match observed data across
+multiple scenarios.</p>
+<hr>
 </div>
 <div class="section level3">
-<h3 id="globalplotsettings">GlobalPlotSettings<a class="anchor" aria-label="anchor" href="#globalplotsettings"></a>
+<h3 id="ddiratio_plots-and-ddiratio_mapping-editable">DDIRatio_Plots and DDIRatio_Mapping <em>(Editable)</em><a class="anchor" aria-label="anchor" href="#ddiratio_plots-and-ddiratio_mapping-editable"></a>
 </h3>
-<p>Define the global settings of the exported figures including the size
-of the figure in pixels.</p>
+<p><strong>Purpose</strong>: Define and configure DDI Ratio plots for
+drug-drug interaction studies.</p>
+<p><strong>DDIRatio_Plots</strong>: Defines DDI ratio plot
+properties</p>
+<p><strong>DDIRatio_Mapping</strong>: Maps DDI ratio data to plots</p>
+<p><strong>How to edit</strong>: Define plots and map your DDI ratio
+observed data to them.</p>
+<p><strong>Use case</strong>: Specialized plots for visualizing
+perpetrator-victim drug-drug interactions as ratios.</p>
+<hr>
 </div>
 <div class="section level3">
-<h3 id="globalaxessettings">GlobalAxesSettings<a class="anchor" aria-label="anchor" href="#globalaxessettings"></a>
+<h3 id="pkratio_plots-and-pkratio_mapping-editable">PKRatio_Plots and PKRatio_Mapping <em>(Editable)</em><a class="anchor" aria-label="anchor" href="#pkratio_plots-and-pkratio_mapping-editable"></a>
 </h3>
-<p>Define the global axes settings of the exported figures corresponding
-to dimensions, units and scales of the plots.</p>
+<p><strong>Purpose</strong>: Define and configure PK Ratio plots for
+pharmacokinetic parameter ratios.</p>
+<p><strong>PKRatio_Plots</strong>: Defines PK ratio plot properties</p>
+<p><strong>PKRatio_Mapping</strong>: Maps PK ratio data to plots</p>
+<p><strong>Use case</strong>: Compare predicted vs. observed
+pharmacokinetic parameters using ratio analysis.</p>
+<hr>
 </div>
 <div class="section level3">
-<h3 id="lookup">Lookup<a class="anchor" aria-label="anchor" href="#lookup"></a>
+<h3 id="sections-editable">Sections <em>(Editable)</em><a class="anchor" aria-label="anchor" href="#sections-editable"></a>
 </h3>
-<p>Look up table defining allowed values for qualification plan
-properties.</p>
+<p><strong>Purpose</strong>: Define the structure and organization of
+your qualification report.</p>
+<p><strong>Content</strong>: - <code>Section Reference</code>: Unique
+tag/identifier for the section - <code>Section Title</code>: Display
+title for the section - <code>Parent Section</code>: (Optional) Parent
+section for creating subsections - <code>Section Description</code>:
+(Optional) Description or introduction for the section</p>
+<p><strong>How to edit</strong>: 1. Create top-level sections by filling
+Section Reference and Title, leaving Parent Section empty 2. Create
+subsections by filling Parent Section with an existing section reference
+3. Use section references in plot and evaluation sheets to assign
+content to sections</p>
+<p><strong>Data validation</strong>: Parent Section dropdown shows
+available sections for creating hierarchies.</p>
+<p><strong>Use case</strong>: Organize your qualification report with a
+logical structure (e.g., Introduction, Methods, Results,
+Discussion).</p>
+<hr>
 </div>
+<div class="section level3">
+<h3 id="intro-editable">Intro <em>(Editable)</em><a class="anchor" aria-label="anchor" href="#intro-editable"></a>
+</h3>
+<p><strong>Purpose</strong>: Specifies the path to a Markdown file used
+as the introduction to your qualification report.</p>
+<p><strong>Content</strong>: File path or URL to a <code>.md</code>
+file</p>
+<p><strong>How to edit</strong>: Enter the path to your introduction
+markdown file. This content will appear at the beginning of the
+generated qualification report.</p>
+<p><strong>Use case</strong>: Provide context, objectives, and
+methodology overview for your qualification study.</p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="inputs-editable">Inputs <em>(Editable)</em><a class="anchor" aria-label="anchor" href="#inputs-editable"></a>
+</h3>
+<p><strong>Purpose</strong>: Specify which building block definitions
+should be included in the qualification report documentation.</p>
+<p><strong>Content</strong>: - <code>Project</code>: Project containing
+the building block - <code>BB-Type</code>: Type of building block to
+document - <code>BB-Name</code>: Name of the building block -
+<code>Section Reference</code>: Report section where the building block
+documentation should appear</p>
+<p><strong>How to edit</strong>: Fill rows to include building block
+details in your report. This is useful for documenting compound
+properties, individual parameters, formulations, etc.</p>
+<p><strong>Data validation</strong>: Data validation dropdowns are
+provided for selecting from available building blocks and sections.</p>
+<p><strong>Use case</strong>: Include detailed documentation of model
+building blocks (compounds, individuals, etc.) in your qualification
+report.</p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="globalplotsettings-editable">GlobalPlotSettings <em>(Editable)</em><a class="anchor" aria-label="anchor" href="#globalplotsettings-editable"></a>
+</h3>
+<p><strong>Purpose</strong>: Define global settings for all exported
+figures.</p>
+<p><strong>Content</strong>: - Figure dimensions (width, height in
+pixels) - Resolution (DPI) - Font sizes - Other visual properties</p>
+<p><strong>How to edit</strong>: Modify values to control the appearance
+of all plots in your qualification report.</p>
+<p><strong>Use case</strong>: Ensure consistent, publication-quality
+figures throughout your report.</p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="globalaxessettings-editable">GlobalAxesSettings <em>(Editable)</em><a class="anchor" aria-label="anchor" href="#globalaxessettings-editable"></a>
+</h3>
+<p><strong>Purpose</strong>: Define global axis settings for plots.</p>
+<p><strong>Content</strong>: - Dimension mappings (e.g., Time,
+Concentration) - Unit preferences - Scale types (linear,
+logarithmic)</p>
+<p><strong>How to edit</strong>: Configure default axis properties that
+apply to all plots unless overridden.</p>
+<p><strong>Use case</strong>: Standardize axis formatting (units,
+scales) across all plots for consistency.</p>
+<hr>
+</div>
+<div class="section level3">
+<h3 id="lookup-read-only">Lookup <em>(Read-Only)</em><a class="anchor" aria-label="anchor" href="#lookup-read-only"></a>
+</h3>
+<p><strong>Purpose</strong>: Provides lookup tables defining allowed
+values for various qualification plan properties.</p>
+<p><strong>Content</strong>: Reference tables for valid values used in
+data validation</p>
+<p><strong>Editing</strong>: <strong>DO NOT EDIT</strong> this sheet. It
+defines the valid options used throughout the Excel file and ensures
+data consistency.</p>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="best-practices-for-editing">Best Practices for Editing<a class="anchor" aria-label="anchor" href="#best-practices-for-editing"></a>
+</h2>
+<ol style="list-style-type: decimal">
+<li><p><strong>Always start by reviewing the color-coded rows</strong>
+to identify new (green), changed (yellow), and unchanged (grey)
+items</p></li>
+<li><p><strong>Do not edit read-only sheets</strong> (Projects,
+Simulations_Outputs, Simulations_ObsData, Lookup) as this can cause data
+inconsistencies</p></li>
+<li><p><strong>Use the data validation dropdowns</strong> wherever they
+appear - do not type free text as this may cause validation
+errors</p></li>
+<li><p><strong>Keep section references consistent</strong> - ensure
+section references in plot sheets match those defined in the Sections
+sheet</p></li>
+<li><p><strong>Test incrementally</strong> - after making significant
+edits, convert back to JSON and validate before making additional
+changes</p></li>
+<li><p><strong>Keep a backup</strong> - save a copy of your Excel file
+before making major changes</p></li>
+<li><p><strong>Document your changes</strong> - use Excel comments or a
+separate notes sheet to track why you made specific edits</p></li>
+</ol>
+</div>
+<div class="section level2">
+<h2 id="converting-back-to-json">Converting Back to JSON<a class="anchor" aria-label="anchor" href="#converting-back-to-json"></a>
+</h2>
+<p>After editing the Excel file, use the
+<code><a href="../reference/excelToQualificationPlan.html">excelToQualificationPlan()</a></code> function to convert it back to a
+JSON qualification plan:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/excelToQualificationPlan.html">excelToQualificationPlan</a></span><span class="op">(</span></span>
+<span>  excelFile <span class="op">=</span> <span class="st">"path/to/your/edited_file.xlsx"</span>,</span>
+<span>  qualificationPlan <span class="op">=</span> <span class="st">"path/to/output/qualification_plan.json"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The function will validate your edits and report any errors. Common
+validation errors include: - Invalid section references (referencing
+sections that don’t exist) - Invalid project or simulation names (not
+matching the Projects or simulation sheets such as
+<code>Simulations_Outputs</code> and <code>Simulations_ObsData</code>) -
+Missing required columns - Invalid values not matching lookup tables</p>
+<p>Always check the console output for error messages and fix any issues
+before running your qualification plan.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

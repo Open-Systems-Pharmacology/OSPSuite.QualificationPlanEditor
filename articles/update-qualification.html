@@ -71,60 +71,116 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/open-systems-pharmacology/ospsuite.qualificationplaneditor" class="external-link">ospsuite.qualificationplaneditor</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
-<h2 id="context">Context<a class="anchor" aria-label="anchor" href="#context"></a>
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>This article shows how to check and update the evaluations of a
-qualification plan. The example used here is the qualification plan for
-UGT1A1- and UGT1A9-mediated inhibition drug-drug interactions (DDI)
-available in the <a href="https://github.com/Open-Systems-Pharmacology/Qualification-DDI-UGT" class="external-link">Qualification-DDI-UGT</a>
-GitHub repository.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">qualificationPlan</span> <span class="op">&lt;-</span> <span class="st">"qualification_ugt.json"</span></span>
-<span><span class="va">excelFile</span> <span class="op">&lt;-</span> <span class="st">"qualification_ugt.xlsx"</span></span></code></pre></div>
+<p>This tutorial demonstrates how to review and update evaluations in an
+existing qualification plan without adding or changing project
+snapshots. This is useful when:</p>
+<ul>
+<li>You want to modify plot configurations</li>
+<li>You need to reorganize report sections</li>
+<li>You’re updating plot assignments or building block references</li>
+<li>You want to add or modify comparison plots (CT, GOF, DDI, PK ratio
+plots)</li>
+<li>You need to adjust building block or parameter inheritance</li>
+</ul>
+<p>This is the most common workflow when maintaining an established
+qualification plan where the underlying models haven’t changed, but the
+qualification report structure or evaluations need updates.</p>
+<p>We’ll use the qualification plan for UGT1A1- and UGT1A9-mediated
+drug-drug interactions (DDI) from the <a href="https://github.com/Open-Systems-Pharmacology/Qualification-DDI-UGT" class="external-link">Qualification-DDI-UGT</a>
+repository as our example.</p>
 </div>
 <div class="section level2">
-<h2 id="conversion-to-excel">Conversion to Excel<a class="anchor" aria-label="anchor" href="#conversion-to-excel"></a>
+<h2 id="prerequisites">Prerequisites<a class="anchor" aria-label="anchor" href="#prerequisites"></a>
 </h2>
-<p>In order to assess and edit the qualification plan, the function
-<code><a href="../reference/toExcelEditor.html">toExcelEditor()</a></code> will convert it into Excel format as
-illustrated below.</p>
+<ul>
+<li>The <code>ospsuite.qualificationplaneditor</code> package
+installed</li>
+<li>An existing qualification plan JSON file</li>
+<li>Understanding of what evaluations you want to modify</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="workflow-overview">Workflow Overview<a class="anchor" aria-label="anchor" href="#workflow-overview"></a>
+</h2>
+<p>Updating a qualification plan involves:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Load the qualification plan</strong>: Convert the existing
+plan to Excel</li>
+<li>
+<strong>Edit evaluations</strong>: Modify plot configurations,
+sections, and assignments</li>
+<li>
+<strong>Convert back to JSON</strong>: Generate the updated
+qualification plan</li>
+<li>
+<strong>Test and validate</strong>: Run the updated plan to verify
+changes</li>
+</ol>
+</div>
+<div class="section level2">
+<h2 id="step-1-define-file-paths">Step 1: Define File Paths<a class="anchor" aria-label="anchor" href="#step-1-define-file-paths"></a>
+</h2>
+<p>Start by specifying your qualification plan and output files:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Existing qualification plan (included with package for this example)</span></span>
+<span><span class="va">qualificationPlan</span> <span class="op">&lt;-</span> <span class="st">"qualification_ugt.json"</span></span>
+<span></span>
+<span><span class="co"># Output Excel file name</span></span>
+<span><span class="va">excelFile</span> <span class="op">&lt;-</span> <span class="st">"qualification_ugt.xlsx"</span></span></code></pre></div>
+<p><strong>Note</strong>: For your own projects, replace
+<code>"qualification_ugt.json"</code> with the path to your
+qualification plan. This can be: - A local file path:
+<code>"C:/Projects/MyQualification/plan.json"</code> - A GitHub URL:
+<code>"https://raw.githubusercontent.com/Org/Repo/main/qualification_plan.json"</code></p>
+</div>
+<div class="section level2">
+<h2 id="step-2-convert-qualification-plan-to-excel">Step 2: Convert Qualification Plan to Excel<a class="anchor" aria-label="anchor" href="#step-2-convert-qualification-plan-to-excel"></a>
+</h2>
+<p>Convert your qualification plan to Excel format. Notice that we
+<strong>only</strong> provide the <code>qualificationPlan</code>
+parameter - we do <strong>not</strong> provide
+<code>snapshotPaths</code> since we’re not adding or changing
+projects:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/toExcelEditor.html">toExcelEditor</a></span><span class="op">(</span></span>
 <span>  fileName <span class="op">=</span> <span class="va">excelFile</span>, </span>
 <span>  qualificationPlan <span class="op">=</span> <span class="va">qualificationPlan</span></span>
-<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Exporting to Excel Editor</span> <span style="color: #00BBBB;">───────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Copying Excel Template to <span style="color: #0000BB;">qualification_ugt.xlsx</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Copying Excel Template to <span style="color: #0000BB;">qualification_ugt.xlsx</span> <span style="color: #B2B2B2;">[187ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Copying Excel Template to <span style="color: #0000BB;">qualification_ugt.xlsx</span> <span style="color: #B2B2B2;">[195ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Checking for Qualification Plan</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Qualification Plan: <span style="color: #0000BB;">qualification_ugt.json</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Checking for Qualification Plan<span style="color: #00BB00;">✔</span> Checking for Qualification Plan <span style="color: #B2B2B2;">[30ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Checking for Qualification Plan<span style="color: #00BB00;">✔</span> Checking for Qualification Plan <span style="color: #B2B2B2;">[33ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Projects</span> Data</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Projects</span> Data <span style="color: #B2B2B2;">[61ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Projects</span> Data <span style="color: #B2B2B2;">[64ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Simulation Outputs</span> Data</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Simulation Outputs</span> Data <span style="color: #B2B2B2;">[550ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Simulation Outputs</span> Data <span style="color: #B2B2B2;">[563ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Simulation Observed Data</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Simulation Observed Data</span> <span style="color: #B2B2B2;">[263ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Simulation Observed Data</span> <span style="color: #B2B2B2;">[336ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Observed Data</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Observed Data</span> <span style="color: #B2B2B2;">[37ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Observed Data</span> <span style="color: #B2B2B2;">[35ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Building Block</span> Data</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Building Block</span> Data── <span style="font-weight: bold;">Qualification Plan</span> ──</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Building Block</span> Data</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Building Block</span> Data<span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Building Block</span> Data <span style="color: #B2B2B2;">[296ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Building Block</span> Data<span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Building Block</span> Data <span style="color: #B2B2B2;">[282ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Schema</span> Data</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Schema</span> Data <span style="color: #B2B2B2;">[20ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Sections</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Sections</span> <span style="color: #B2B2B2;">[25ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Sections</span> <span style="color: #B2B2B2;">[24ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Intro and Inputs</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Intro and Inputs</span> <span style="color: #B2B2B2;">[22ms]</span></span></span>
@@ -133,36 +189,251 @@ illustrated below.</p>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Simulation Parameters</span> Settings <span style="color: #B2B2B2;">[26ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">All Plots</span> Settings</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">All Plots</span> Settings <span style="color: #B2B2B2;">[27ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">All Plots</span> Settings <span style="color: #B2B2B2;">[29ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Comparison Time Profile</span> Plot Settings</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Comparison Time Profile</span> Plot Settings <span style="color: #B2B2B2;">[56ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Comparison Time Profile</span> Plot Settings <span style="color: #B2B2B2;">[58ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">GOF Merged</span> Plot Settings</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">GOF Merged</span> Plot Settings <span style="color: #B2B2B2;">[29ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">GOF Merged</span> Plot Settings <span style="color: #B2B2B2;">[31ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">DDI Ratio</span> Plot Settings</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">DDI Ratio</span> Plot Settings <span style="color: #B2B2B2;">[62ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">DDI Ratio</span> Plot Settings <span style="color: #B2B2B2;">[69ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Global Plot Settings</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Global Plot Settings</span> <span style="color: #B2B2B2;">[21ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Global Plot Settings</span> <span style="color: #B2B2B2;">[22ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Global Axes Settings</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Global Axes Settings</span> <span style="color: #B2B2B2;">[32ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Global Axes Settings</span> <span style="color: #B2B2B2;">[34ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Saving extracted data into <span style="color: #0000BB;">qualification_ugt.xlsx</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Saving extracted data into <span style="color: #0000BB;">qualification_ugt.xlsx</span> <span style="color: #B2B2B2;">[415ms]</span></span></span></code></pre></div>
-<p>Users can then open and edit the Excel file converted from the
-Qualification Plan. The code below will open the file using the default
-software reading <code>xlsx</code> files (such as Excel or Libre Office
-Calc).</p>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Saving extracted data into <span style="color: #0000BB;">qualification_ugt.xlsx</span> <span style="color: #B2B2B2;">[422ms]</span></span></span></code></pre></div>
+<div class="section level3">
+<h3 id="what-this-does">What This Does<a class="anchor" aria-label="anchor" href="#what-this-does"></a>
+</h3>
+<p>When you convert without snapshots, the function:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Reads the qualification plan</strong>: Parses the JSON
+file</li>
+<li>
+<strong>Extracts all content</strong>:
+<ul>
+<li>Projects and their metadata</li>
+<li>All evaluations (plots, sections, inputs)</li>
+<li>Building block and parameter inheritance</li>
+<li>Plot configurations and mappings</li>
+<li>Report structure (sections, introduction)</li>
+<li>Global settings</li>
+</ul>
+</li>
+<li>
+<strong>Populates Excel worksheets</strong>: Creates editable sheets
+for:
+<ul>
+<li>
+<strong>MetaInfo</strong>: Schema version</li>
+<li>
+<strong>Projects</strong>: All project definitions (read-only, shown
+in grey)</li>
+<li>
+<strong>Simulations_Outputs</strong>: Available outputs
+(read-only)</li>
+<li>
+<strong>Simulations_ObsData</strong>: Observed data links
+(read-only)</li>
+<li>
+<strong>ObsData</strong>: Observed dataset definitions (Type is
+editable)</li>
+<li>
+<strong>BB</strong>: Building block inheritance (fully
+editable)</li>
+<li>
+<strong>SimParam</strong>: Parameter inheritance (fully
+editable)</li>
+<li>
+<strong>All_Plots</strong>: Individual plot evaluations (fully
+editable)</li>
+<li>
+<strong>CT_Plots/CT_Mapping</strong>: Comparison time profile plots
+(fully editable)</li>
+<li>
+<strong>GOF_Plots/GOF_Mapping</strong>: Goodness of fit plots (fully
+editable)</li>
+<li>
+<strong>DDIRatio_Plots/DDIRatio_Mapping</strong>: DDI ratio plots
+(fully editable)</li>
+<li>
+<strong>PKRatio_Plots/PKRatio_Mapping</strong>: PK ratio plots
+(fully editable)</li>
+<li>
+<strong>Sections</strong>: Report section structure (fully
+editable)</li>
+<li>
+<strong>Intro</strong>: Introduction file reference (fully
+editable)</li>
+<li>
+<strong>Inputs</strong>: Building block documentation (fully
+editable)</li>
+<li>
+<strong>GlobalPlotSettings</strong>: Plot appearance settings (fully
+editable)</li>
+<li>
+<strong>GlobalAxesSettings</strong>: Axis configuration (fully
+editable)</li>
+<li>
+<strong>Lookup</strong>: Reference tables (read-only)</li>
+</ul>
+</li>
+<li>
+<strong>Applies formatting</strong>:
+<ul>
+<li>All projects will be <strong>grey</strong> (unchanged) since no new
+snapshots were provided</li>
+<li>Data validation dropdowns are enabled</li>
+<li>Read-only sheets should not be edited; modifying them can cause
+validation or conversion errors when the Excel file is imported back
+into the tool</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section level3">
+<h3 id="expected-result">Expected Result<a class="anchor" aria-label="anchor" href="#expected-result"></a>
+</h3>
+<p>The Excel file is now ready for editing. All existing content is
+preserved and can be modified as needed.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="step-3-edit-the-excel-file">Step 3: Edit the Excel File<a class="anchor" aria-label="anchor" href="#step-3-edit-the-excel-file"></a>
+</h2>
+<p>Open the Excel file to review and modify evaluations:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/browseURL.html" class="external-link">browseURL</a></span><span class="op">(</span><span class="va">excelFile</span><span class="op">)</span></span></code></pre></div>
-<p>The Excel file should include the content displayed below:</p>
+<div class="section level3">
+<h3 id="common-evaluation-updates">Common Evaluation Updates<a class="anchor" aria-label="anchor" href="#common-evaluation-updates"></a>
+</h3>
+<p>Here are the most common types of updates when maintaining a
+qualification plan:</p>
+<div class="section level4">
+<h4 id="a--reorganize-report-sections-sections-sheet">A. Reorganize Report Sections (Sections sheet)<a class="anchor" aria-label="anchor" href="#a--reorganize-report-sections-sections-sheet"></a>
+</h4>
+<p><strong>Add new sections:</strong></p>
+<pre><code>Section Reference | Section Title           | Parent Section
+------------------|-------------------------|---------------
+3.1-new          | New Results Section     | 3-results
+3.1.1-subsection | Detailed Analysis       | 3.1-new</code></pre>
+<p><strong>Rename or restructure:</strong> - Modify section titles for
+clarity - Change parent-child relationships - Reorder by changing
+section references</p>
+</div>
+<div class="section level4">
+<h4 id="b--reassign-plots-to-different-sections-all_plots-sheet">B. Reassign Plots to Different Sections (All_Plots sheet)<a class="anchor" aria-label="anchor" href="#b--reassign-plots-to-different-sections-all_plots-sheet"></a>
+</h4>
+<p><strong>Before:</strong></p>
+<pre><code>Project  | Simulation | Output       | Section Reference
+---------|------------|--------------|------------------
+Project1 | Sim1       | Concentration| 2-methods</code></pre>
+<p><strong>After (moved to results):</strong></p>
+<pre><code>Project  | Simulation | Output       | Section Reference
+---------|------------|--------------|------------------
+Project1 | Sim1       | Concentration| 3-results</code></pre>
+<p><strong>Or remove from report (leave section empty):</strong></p>
+<pre><code>Project  | Simulation | Output       | Section Reference
+---------|------------|--------------|------------------
+Project1 | Sim1       | Concentration| [empty - excluded]</code></pre>
+</div>
+<div class="section level4">
+<h4 id="c--modify-comparison-time-profile-plots-ct_plots-and-ct_mapping">C. Modify Comparison Time Profile Plots (CT_Plots and
+CT_Mapping)<a class="anchor" aria-label="anchor" href="#c--modify-comparison-time-profile-plots-ct_plots-and-ct_mapping"></a>
+</h4>
+<p><strong>Update plot properties (CT_Plots):</strong> - Change axes
+labels, titles, or descriptions - Modify scaling (linear
+vs. logarithmic) - Update section assignments - Change plot
+dimensions</p>
+<p><strong>Update plot mappings (CT_Mapping):</strong> - Add or remove
+simulation outputs from plots - Change which observed data is compared -
+Modify plot groupings</p>
+<p><strong>Example - Adding a simulation to an existing plot:</strong>
+In CT_Mapping, add a row:</p>
+<pre><code>PlotId | Project  | Simulation | Output       | ObservedData
+-------|----------|------------|--------------|-------------
+CT-01  | Project2 | NewSim     | Concentration| ObsData-X</code></pre>
+</div>
+<div class="section level4">
+<h4 id="d--create-or-modify-gof-plots-gof_plots-and-gof_mapping">D. Create or Modify GOF Plots (GOF_Plots and GOF_Mapping)<a class="anchor" aria-label="anchor" href="#d--create-or-modify-gof-plots-gof_plots-and-gof_mapping"></a>
+</h4>
+<p>Goodness of fit plots typically require:</p>
+<p><strong>In GOF_Plots</strong>: Define the plot with settings</p>
+<pre><code>PlotId   | Title                    | Section Reference
+---------|--------------------------|------------------
+GOF-01   | Model Validation Summary | 3.2-validation</code></pre>
+<p><strong>In GOF_Mapping</strong>: Map simulation-observation pairs</p>
+<pre><code>PlotId | Project  | Simulation | Output       | ObservedData
+-------|----------|------------|--------------|-------------
+GOF-01 | Project1 | Sim1       | AUC          | Clinical-AUC
+GOF-01 | Project1 | Sim2       | Cmax         | Clinical-Cmax
+GOF-01 | Project2 | Sim3       | AUC          | Clinical-AUC</code></pre>
+</div>
+<div class="section level4">
+<h4 id="e--configure-building-block-inheritance-bb-sheet">E. Configure Building Block Inheritance (BB sheet)<a class="anchor" aria-label="anchor" href="#e--configure-building-block-inheritance-bb-sheet"></a>
+</h4>
+<p><strong>Add inheritance:</strong></p>
+<pre><code>Project  | BB-Type    | BB-Name    | Parent-Project
+---------|------------|------------|---------------
+Project2 | Compound   | Drug-A     | Project1</code></pre>
+<p><strong>Remove inheritance (leave Parent-Project empty):</strong></p>
+<pre><code>Project  | BB-Type    | BB-Name    | Parent-Project
+---------|------------|------------|---------------
+Project2 | Compound   | Drug-A     | [empty]</code></pre>
+</div>
+<div class="section level4">
+<h4 id="f--update-parameter-inheritance-simparam-sheet">F. Update Parameter Inheritance (SimParam sheet)<a class="anchor" aria-label="anchor" href="#f--update-parameter-inheritance-simparam-sheet"></a>
+</h4>
+<p>Specify parameter inheritance between simulations:</p>
+<pre><code>Project  | Parent Project | Parent Simulation | TargetSimulation | Path
+---------|----------------|-------------------|------------------|-----
+Project2 | Project1       | Sim-Control       | Sim-DDI          | Organism|*|Parameter</code></pre>
+</div>
+<div class="section level4">
+<h4 id="g--add-building-block-documentation-inputs-sheet">G. Add Building Block Documentation (Inputs sheet)<a class="anchor" aria-label="anchor" href="#g--add-building-block-documentation-inputs-sheet"></a>
+</h4>
+<p>Include building block details in report:</p>
+<pre><code>Project  | BB-Type    | BB-Name      | Section Reference
+---------|------------|--------------|------------------
+Project1 | Compound   | Verapamil    | 2.1-compounds
+Project1 | Individual | European-Pop | 2.2-populations</code></pre>
+</div>
+<div class="section level4">
+<h4 id="h--adjust-plot-settings-globalplotsettings-and-globalaxessettings">H. Adjust Plot Settings (GlobalPlotSettings and
+GlobalAxesSettings)<a class="anchor" aria-label="anchor" href="#h--adjust-plot-settings-globalplotsettings-and-globalaxessettings"></a>
+</h4>
+<p><strong>GlobalPlotSettings</strong>: Modify figure dimensions, fonts,
+resolution</p>
+<p><strong>GlobalAxesSettings</strong>: Change default units, scales, or
+dimension mappings</p>
+</div>
+<div class="section level4">
+<h4 id="i--update-schema-version-metainfo-sheet">I. Update Schema Version (MetaInfo sheet)<a class="anchor" aria-label="anchor" href="#i--update-schema-version-metainfo-sheet"></a>
+</h4>
+<p>If updating to work with a newer OSP Suite version:</p>
+<pre><code>Change from: 2.2
+Change to:   2.3</code></pre>
+<p><strong>Important</strong>: Only change this if you know the new
+version is compatible with your qualification framework.</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="excel-file-content">Excel File Content<a class="anchor" aria-label="anchor" href="#excel-file-content"></a>
+</h3>
+<p>The Excel file contains all existing evaluations:</p>
+</div>
 </div>
 <div class="section level2 tabset tabset-pills">
 <h2 class="tabset tabset-pills" id="excel-content">Excel Content<a class="anchor" aria-label="anchor" href="#excel-content"></a>
 </h2>
+
 
 
 
@@ -208,6 +479,7 @@ Calc).</p>
 <li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#globalplotsettings" id="globalplotsettings-tab" type="button" role="tab" aria-controls="globalplotsettings" aria-selected="false" class="nav-link">GlobalPlotSettings</button></li>
 <li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#globalaxessettings" id="globalaxessettings-tab" type="button" role="tab" aria-controls="globalaxessettings" aria-selected="false" class="nav-link">GlobalAxesSettings</button></li>
 <li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#lookup" id="lookup-tab" type="button" role="tab" aria-controls="lookup" aria-selected="false" class="nav-link">Lookup</button></li>
+<li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#editing-best-practices" id="editing-best-practices-tab" type="button" role="tab" aria-controls="editing-best-practices" aria-selected="false" class="nav-link">Editing Best Practices</button></li>
 </ul>
 <div class="tab-content">
 <div class="active  tab-pane" id="metainfo" role="tabpanel" aria-labelledby="metainfo-tab">
@@ -9194,16 +9466,228 @@ NA
 </table>
 </div>
 </div>
+<div class="tab-pane" id="editing-best-practices" role="tabpanel" aria-labelledby="editing-best-practices-tab">
+
+<ul>
+<li>
+<strong>Use data validation dropdowns</strong>: Don’t type free text
+where dropdowns exist (section references, projects, simulations)</li>
+<li>
+<strong>Check dependencies</strong>: If you rename or delete
+sections, update references to them in plot sheets</li>
+<li>
+<strong>Test incrementally</strong>: After major changes, convert to
+JSON and test before making more edits</li>
+<li>
+<strong>Keep backups</strong>: Save a copy before making extensive
+changes</li>
+<li>
+<strong>Document rationale</strong>: Use Excel comments to note why
+changes were made</li>
+<li>
+<strong>Validate section references</strong>: Ensure all section
+references in evaluation sheets match defined sections</li>
+</ul>
+<p>For detailed worksheet descriptions, see the <a href="./excel-template.html">Excel Template Documentation</a>.</p>
+</div>
 </div>
 </div>
 <div class="section level2">
-<h2 id="convert-back-to-json">Convert back to json<a class="anchor" aria-label="anchor" href="#convert-back-to-json"></a>
+<h2 id="step-4-convert-back-to-json">Step 4: Convert Back to JSON<a class="anchor" aria-label="anchor" href="#step-4-convert-back-to-json"></a>
 </h2>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<p>After editing, convert the Excel file back to a JSON qualification
+plan:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/excelToQualificationPlan.html">excelToQualificationPlan</a></span><span class="op">(</span></span>
 <span>  excelFile <span class="op">=</span> <span class="va">excelFile</span>,</span>
 <span>  qualificationPlan <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"updated-"</span>, <span class="va">qualificationPlan</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p><strong>Note</strong>: Using
+<code>paste0("updated-", qualificationPlan)</code> creates a new file
+with an “updated-” prefix, preserving your original. This is recommended
+for safety.</p>
+<div class="section level3">
+<h3 id="validation-process">Validation Process<a class="anchor" aria-label="anchor" href="#validation-process"></a>
+</h3>
+<p>The function validates your edits:</p>
+<ul>
+<li>
+<strong>Section references</strong>: All references must match
+sections in the Sections sheet</li>
+<li>
+<strong>Project/simulation names</strong>: Must match definitions in
+the <code>Projects</code>, <code>Simulations_Outputs</code>, and
+<code>Simulations_ObsData</code> sheets</li>
+<li>
+<strong>Building block references</strong>: Parent projects must
+exist</li>
+<li>
+<strong>Required columns</strong>: All mandatory columns must be
+present</li>
+<li>
+<strong>Lookup values</strong>: Values must match allowed options in
+Lookup sheet</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="handling-validation-errors">Handling Validation Errors<a class="anchor" aria-label="anchor" href="#handling-validation-errors"></a>
+</h3>
+<p>If validation fails, you’ll see error messages like:</p>
+<pre><code>Error: Invalid section reference 'old-section' in All_Plots sheet
+Error: Project 'NonExistent' not found in Projects sheet
+Error: Missing required column 'Section Reference' in CT_Plots sheet</code></pre>
+<p><strong>To fix</strong>: 1. Open the Excel file 2. Navigate to the
+problematic sheet 3. Correct the error (use data validation dropdowns
+when available) 4. Save and convert again</p>
+</div>
+<div class="section level3">
+<h3 id="successful-conversion">Successful Conversion<a class="anchor" aria-label="anchor" href="#successful-conversion"></a>
+</h3>
+<p>Upon success, you’ll see a confirmation message. The updated
+qualification plan JSON is ready for use with the OSP Suite
+Qualification Runner.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="next-steps">Next Steps<a class="anchor" aria-label="anchor" href="#next-steps"></a>
+</h2>
+<p>After updating your qualification plan:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Run the qualification</strong>: Execute with the OSP Suite
+Qualification Runner</li>
+<li>
+<strong>Review the generated report</strong>: Verify changes appear
+as expected</li>
+<li>
+<strong>Check plots and sections</strong>: Ensure evaluations are in
+the right sections with correct configurations</li>
+<li>
+<strong>Iterate if needed</strong>: If further adjustments are
+required, convert back to Excel and edit again</li>
+</ol>
+</div>
+<div class="section level2">
+<h2 id="common-update-scenarios">Common Update Scenarios<a class="anchor" aria-label="anchor" href="#common-update-scenarios"></a>
+</h2>
+<div class="section level3">
+<h3 id="scenario-1-reorganizing-report-structure">Scenario 1: Reorganizing Report Structure<a class="anchor" aria-label="anchor" href="#scenario-1-reorganizing-report-structure"></a>
+</h3>
+<p><strong>Goal</strong>: Move validation results from “Methods” to a
+new “Validation” section</p>
+<p><strong>Steps</strong>: 1. In Sections sheet, create new “Validation”
+section 2. In All_Plots, CT_Plots, GOF_Plots, update Section Reference
+for validation plots 3. Convert and verify</p>
+</div>
+<div class="section level3">
+<h3 id="scenario-2-excluding-certain-plots">Scenario 2: Excluding Certain Plots<a class="anchor" aria-label="anchor" href="#scenario-2-excluding-certain-plots"></a>
+</h3>
+<p><strong>Goal</strong>: Remove specific simulation outputs from the
+report</p>
+<p><strong>Steps</strong>: 1. In All_Plots sheet, find the outputs to
+exclude 2. Clear the Section Reference column for those rows 3. Convert
+- plots without section references are excluded</p>
+</div>
+<div class="section level3">
+<h3 id="scenario-3-adding-new-comparison-plots">Scenario 3: Adding New Comparison Plots<a class="anchor" aria-label="anchor" href="#scenario-3-adding-new-comparison-plots"></a>
+</h3>
+<p><strong>Goal</strong>: Create a new CT plot comparing multiple
+simulations</p>
+<p><strong>Steps</strong>: 1. In CT_Plots, add a row with unique PlotId
+and configuration 2. In CT_Mapping, add rows mapping simulations and
+observed data to this PlotId 3. Assign the plot to a section using
+Section Reference 4. Convert and test</p>
+</div>
+<div class="section level3">
+<h3 id="scenario-4-updating-building-block-inheritance">Scenario 4: Updating Building Block Inheritance<a class="anchor" aria-label="anchor" href="#scenario-4-updating-building-block-inheritance"></a>
+</h3>
+<p><strong>Goal</strong>: Change a project to inherit a compound from a
+different parent</p>
+<p><strong>Steps</strong>: 1. In BB sheet, find the building block row
+2. Change the Parent-Project column value 3. Verify the parent project
+exists and has the building block 4. Convert and test</p>
+</div>
+<div class="section level3">
+<h3 id="scenario-5-changing-plot-appearance">Scenario 5: Changing Plot Appearance<a class="anchor" aria-label="anchor" href="#scenario-5-changing-plot-appearance"></a>
+</h3>
+<p><strong>Goal</strong>: Make all plots larger and higher
+resolution</p>
+<p><strong>Steps</strong>: 1. In GlobalPlotSettings, update Width,
+Height, and Resolution 2. Optionally update font sizes 3. Convert - all
+plots will use new settings</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="troubleshooting">Troubleshooting<a class="anchor" aria-label="anchor" href="#troubleshooting"></a>
+</h2>
+<div class="section level3">
+<h3 id="issue-section-reference-not-found">Issue: “Section reference not found”<a class="anchor" aria-label="anchor" href="#issue-section-reference-not-found"></a>
+</h3>
+<p><strong>Cause</strong>: You referenced a section that doesn’t
+exist</p>
+<p><strong>Fix</strong>: Check the Sections sheet for valid section
+references and update your references</p>
+</div>
+<div class="section level3">
+<h3 id="issue-invalid-project-name-in-mapping">Issue: “Invalid project name in mapping”<a class="anchor" aria-label="anchor" href="#issue-invalid-project-name-in-mapping"></a>
+</h3>
+<p><strong>Cause</strong>: You typed a project name that doesn’t match
+the Projects sheet</p>
+<p><strong>Fix</strong>: Use the data validation dropdown to select from
+valid projects</p>
+</div>
+<div class="section level3">
+<h3 id="issue-building-block-inheritance-creates-circular-dependency">Issue: “Building block inheritance creates circular dependency”<a class="anchor" aria-label="anchor" href="#issue-building-block-inheritance-creates-circular-dependency"></a>
+</h3>
+<p><strong>Cause</strong>: Project A inherits from Project B, which
+inherits from Project A</p>
+<p><strong>Fix</strong>: Review the BB sheet and remove circular
+inheritance</p>
+</div>
+<div class="section level3">
+<h3 id="issue-plot-appears-in-wrong-section-in-report">Issue: “Plot appears in wrong section in report”<a class="anchor" aria-label="anchor" href="#issue-plot-appears-in-wrong-section-in-report"></a>
+</h3>
+<p><strong>Cause</strong>: Section reference is incorrect or section
+hierarchy is wrong</p>
+<p><strong>Fix</strong>: Verify section references and parent-child
+relationships in Sections sheet</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="advanced-tips">Advanced Tips<a class="anchor" aria-label="anchor" href="#advanced-tips"></a>
+</h2>
+<ul>
+<li>
+<strong>Bulk updates</strong>: Use Excel’s find-and-replace to
+update multiple section references at once</li>
+<li>
+<strong>Copy plot configurations</strong>: Duplicate rows in plot
+sheets to create similar plots quickly</li>
+<li>
+<strong>Filter and sort</strong>: Use Excel’s filter feature to
+focus on specific projects or sections</li>
+<li>
+<strong>Conditional formatting</strong>: Add your own conditional
+formatting to highlight specific items</li>
+<li>
+<strong>Freeze panes</strong>: Freeze header rows to keep column
+names visible while scrolling</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="related-articles">Related Articles<a class="anchor" aria-label="anchor" href="#related-articles"></a>
+</h2>
+<ul>
+<li>
+<a href="./excel-template.html">Excel Template Documentation</a>:
+Comprehensive worksheet guide</li>
+<li>
+<a href="./snapshot-qualification.html">Add a Snapshot to
+Qualification Plan</a>: Adding new projects</li>
+<li>
+<a href="./no-qualification.html">Create Qualification from
+Snapshot</a>: Starting from scratch</li>
+</ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

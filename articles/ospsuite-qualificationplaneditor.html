@@ -70,33 +70,68 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/open-systems-pharmacology/ospsuite.qualificationplaneditor" class="external-link">ospsuite.qualificationplaneditor</a></span><span class="op">)</span></span></code></pre></div>
-<p>The OSPSuite.QualificationPlanEditor package is designed to help you
-convert qualification plans from/into Excel format for easier
-editing.</p>
-<p>The package provides functionality to parse project snapshots,
-extract simulation data, and generate Excel workbooks with structured
-data sheets that can be edited and converted back to qualification
-plans.</p>
+<p>The <strong>ospsuite.qualificationplaneditor</strong> package is
+designed to help you convert qualification plans from/into Excel format
+for easier editing. This package bridges the gap between the JSON-based
+qualification plans used by the OSP Suite and user-friendly Excel
+spreadsheets.</p>
+<p>The package provides comprehensive functionality to:</p>
+<ul>
+<li>Parse project snapshots and extract simulation data</li>
+<li>Generate Excel workbooks with structured, validated data sheets</li>
+<li>Edit qualification plans in Excel with color-coded status
+indicators</li>
+<li>Convert edited Excel files back to JSON qualification plans</li>
+<li>Fetch the latest released versions of projects and observed data
+from GitHub repositories</li>
+</ul>
+<p>This workflow enables easier collaboration, review, and updates to
+qualification plans without requiring direct JSON editing.</p>
 <div class="section level2">
-<h2 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
+<h2 id="typical-workflow">Typical Workflow<a class="anchor" aria-label="anchor" href="#typical-workflow"></a>
 </h2>
-<p>To create or update a qualification plan, the workflow is:</p>
+<p>The typical workflow for creating or updating a qualification plan
+involves the following steps:</p>
 <ol style="list-style-type: decimal">
-<li>Define a list of project snapshots and/or observed datasets</li>
-<li>Define a Qualification Plan</li>
-<li>Convert them to Excel</li>
-<li>Edit the Qualification Plan in Excel</li>
-<li>Convert back Qualification Plan to json format</li>
-<li>Run the updated Qualification</li>
+<li>
+<strong>Prepare Your Data</strong>: Define a list of project
+snapshots (JSON files) and/or observed datasets (CSV files)</li>
+<li>
+<strong>Load or Create a Qualification Plan</strong>: Start with an
+existing qualification plan JSON file, or create a new one from
+snapshots</li>
+<li>
+<strong>Convert to Excel</strong>: Use <code><a href="../reference/toExcelEditor.html">toExcelEditor()</a></code>
+to convert your qualification plan and data into an editable Excel
+workbook</li>
+<li>
+<strong>Edit in Excel</strong>: Review and modify the Excel file -
+add evaluations, configure plots, organize sections, etc.</li>
+<li>
+<strong>Convert Back to JSON</strong>: Use
+<code><a href="../reference/excelToQualificationPlan.html">excelToQualificationPlan()</a></code> to convert your edited Excel
+file back to a qualification plan JSON</li>
+<li>
+<strong>Run the Qualification</strong>: Execute the updated
+qualification plan using the OSP Suite Qualification Runner</li>
 </ol>
+<p>This approach allows you to leverage Excel’s familiar interface while
+maintaining the structured format required by the OSP Suite
+qualification framework.</p>
 </div>
 <div class="section level2">
-<h2 id="fetch-latest-release">Fetch latest release<a class="anchor" aria-label="anchor" href="#fetch-latest-release"></a>
+<h2 id="fetching-latest-release-versions">Fetching Latest Release Versions<a class="anchor" aria-label="anchor" href="#fetching-latest-release-versions"></a>
 </h2>
-<p>Steps 1 and 2 usually involve to use the latest release version of
-project snapshots, observed data and qualification plans. This can be
-done using the function <code><a href="../reference/getLatestReleasedPaths.html">getLatestReleasedPaths()</a></code> as
-illustrated below:</p>
+<p>Steps 1 and 2 of the workflow typically involve using the latest
+release versions of project snapshots, observed data, and qualification
+plans from GitHub repositories. The
+<code><a href="../reference/getLatestReleasedPaths.html">getLatestReleasedPaths()</a></code> function automates this process by
+checking GitHub releases and returning updated paths.</p>
+<div class="section level3">
+<h3 id="basic-usage">Basic Usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
+</h3>
+<p>The following example demonstrates how to fetch the latest released
+paths from an existing qualification plan:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get latest released paths from a qualification plan</span></span>
 <span><span class="va">latestPaths</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getLatestReleasedPaths.html">getLatestReleasedPaths</a></span><span class="op">(</span></span>
@@ -107,50 +142,106 @@ illustrated below:</p>
 <span></span>
 <span><span class="co"># Access the updated project and observed data paths</span></span>
 <span><span class="va">latestProjectPaths</span> <span class="op">&lt;-</span> <span class="va">latestPaths</span><span class="op">$</span><span class="va">projects</span></span>
-<span><span class="va">latestObservedDataPaths</span> <span class="op">&lt;-</span> <span class="va">latestPaths</span><span class="op">$</span><span class="va">observedData</span></span>
-<span></span>
-<span><span class="co"># You can also ignore specific projects or observed data</span></span>
+<span><span class="va">latestObservedDataPaths</span> <span class="op">&lt;-</span> <span class="va">latestPaths</span><span class="op">$</span><span class="va">observedData</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="advanced-options">Advanced Options<a class="anchor" aria-label="anchor" href="#advanced-options"></a>
+</h3>
+<p>You can customize the behavior with several options:</p>
+<p><strong>Ignore specific items:</strong></p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Exclude certain projects or observed datasets from updates</span></span>
 <span><span class="va">latestPaths</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getLatestReleasedPaths.html">getLatestReleasedPaths</a></span><span class="op">(</span></span>
 <span>  qualificationPlan <span class="op">=</span> <span class="st">"path/to/qualification_plan.json"</span>,</span>
 <span>  projectsToIgnore <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ProjectA"</span>, <span class="st">"ProjectB"</span><span class="op">)</span>,</span>
 <span>  observedDataToIgnore <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ObsData1"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Get all paths (not just updated ones)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><strong>Include pre-releases:</strong></p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Include pre-release versions (e.g., beta, rc)</span></span>
+<span><span class="va">latestPaths</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getLatestReleasedPaths.html">getLatestReleasedPaths</a></span><span class="op">(</span></span>
+<span>  qualificationPlan <span class="op">=</span> <span class="st">"path/to/qualification_plan.json"</span>,</span>
+<span>  includePreReleases <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><strong>Get all paths (not just updates):</strong></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Return all paths, even if they haven't changed</span></span>
 <span><span class="va">allPaths</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getLatestReleasedPaths.html">getLatestReleasedPaths</a></span><span class="op">(</span></span>
 <span>  qualificationPlan <span class="op">=</span> <span class="st">"path/to/qualification_plan.json"</span>,</span>
 <span>  returnUpdatedOnly <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p>This function is particularly useful when maintaining qualification
+plans that reference multiple GitHub repositories, as it ensures you’re
+always working with the most current versions.</p>
+</div>
 </div>
 <div class="section level2">
-<h2 id="excel-file-content">Excel file content<a class="anchor" aria-label="anchor" href="#excel-file-content"></a>
+<h2 id="understanding-the-excel-template">Understanding the Excel Template<a class="anchor" aria-label="anchor" href="#understanding-the-excel-template"></a>
 </h2>
-<p>The article <a href="./excel-template.html">Excel Template</a>
-describes the content of the Excel template file, its color and data
-validation conventions and how to edit before converting back to json
-format.</p>
-</div>
-<div class="section level2">
-<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
-</h2>
-<p>Below is a basic example with generic names showing how to include an
-updated project snapshot in your qualification plan:</p>
-<p>For more detailed examples, you can read the following articles:</p>
+<p>The Excel file generated by <code><a href="../reference/toExcelEditor.html">toExcelEditor()</a></code> contains
+multiple worksheets, each serving a specific purpose in the
+qualification plan. The sheets use a color-coding system to indicate the
+status of projects and data:</p>
 <ul>
-<li><a href="./update-qualification.html">Update my Qualification Plan
-Evaluations</a></li>
-<li><a href="./snapshot-qualification.html">Add a Snapshot to my
-Qualification Plan</a></li>
-<li><a href="./no-qualification.html">Snapshot without a Qualification
-Plan</a></li>
+<li>
+<strong>Green rows</strong>: New items to be added to the
+qualification plan</li>
+<li>
+<strong>Yellow rows</strong>: Items with updated versions or changed
+paths</li>
+<li>
+<strong>Grey rows</strong>: Unchanged items already in the
+qualification plan</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Load the ospsuite.qualificationplaneditor package</span></span>
+<p>The article <a href="./excel-template.html">Excel Template
+Documentation</a> provides comprehensive details about:</p>
+<ul>
+<li>The structure and purpose of each worksheet</li>
+<li>Color conventions for headers and data rows</li>
+<li>Data validation rules and dropdown lists</li>
+<li>Which sheets are editable vs. read-only</li>
+<li>Best practices for editing the Excel file</li>
+</ul>
+<p><strong>Note:</strong> Before editing the Excel file, we strongly
+recommend reading the Excel Template documentation to understand the
+worksheet structure and editing guidelines.</p>
+</div>
+<div class="section level2">
+<h2 id="detailed-examples-and-use-cases">Detailed Examples and Use Cases<a class="anchor" aria-label="anchor" href="#detailed-examples-and-use-cases"></a>
+</h2>
+<p>Below is a basic example showing how to work with project snapshots
+and qualification plans. For comprehensive, step-by-step tutorials
+covering specific scenarios, please refer to the following articles:</p>
+<ul>
+<li><p><strong><a href="./update-qualification.html">Update
+Qualification Plan Evaluations</a></strong>: Learn how to review and
+update existing evaluations in your qualification plan, including
+modifying plot configurations, sections, and building block
+references.</p></li>
+<li><p><strong><a href="./snapshot-qualification.html">Add a Snapshot to
+Qualification Plan</a></strong>: Step-by-step guide for integrating a
+new project snapshot into an existing qualification plan, including
+handling building block inheritance and simulation mappings.</p></li>
+<li><p><strong><a href="./no-qualification.html">Create Qualification
+from Snapshot</a></strong>: Complete tutorial for creating a new
+qualification plan from scratch using only project snapshots, ideal when
+starting a new qualification project.</p></li>
+</ul>
+<div class="section level3">
+<h3 id="quick-start-example">Quick Start Example<a class="anchor" aria-label="anchor" href="#quick-start-example"></a>
+</h3>
+<p>This example demonstrates the complete workflow for updating a
+qualification plan with new project snapshots and observed data:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## Load the package</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/open-systems-pharmacology/ospsuite.qualificationplaneditor" class="external-link">ospsuite.qualificationplaneditor</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Define GitHub base path (example uses OSP repositories)</span></span>
 <span><span class="va">ospPath</span> <span class="op">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/Open-Systems-Pharmacology"</span></span>
 <span><span class="va">excelQualification</span> <span class="op">&lt;-</span> <span class="st">"Updated-Qualification.xlsx"</span></span>
 <span></span>
 <span><span class="co"># List your updated snapshot projects</span></span>
+<span><span class="co"># These can be local file paths or GitHub URLs</span></span>
 <span><span class="va">snapshotPaths</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="st">"Compound A"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">ospPath</span>, <span class="st">"A-Model/vX.X/A-Model.json"</span><span class="op">)</span>,</span>
 <span>  <span class="st">"Compound B"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">ospPath</span>, <span class="st">"B-Model/vX.X/B-Model.json"</span><span class="op">)</span>,</span>
@@ -158,15 +249,21 @@ Plan</a></li>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># List your updated observed datasets</span></span>
-<span><span class="va">observedDataPaths</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"DDI Ratios"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span><span class="co"># Each dataset requires a Path and optionally a Type</span></span>
+<span><span class="va">observedDataPaths</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="st">"DDI Ratios"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    Path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">ospPath</span>, <span class="st">"Database-for-observed-data/vX.X/DDI.csv"</span><span class="op">)</span>,</span>
 <span>    Type <span class="op">=</span> <span class="st">"DDIRatio"</span></span>
-<span>    <span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Initial qualification plan</span></span>
-<span><span class="va">qualificationPlan</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">ospPath</span>, <span class="st">"A-Model/vY.Y/Qualification/qualification_plan.json"</span><span class="op">)</span></span>
+<span><span class="co"># Path to your initial qualification plan</span></span>
+<span><span class="va">qualificationPlan</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
+<span>  <span class="va">ospPath</span>,</span>
+<span>  <span class="st">"/A-Model/vY.Y/Qualification/qualification_plan.json"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># qualification plan converted to Excel</span></span>
+<span><span class="co"># Convert qualification plan to Excel for editing</span></span>
 <span><span class="fu"><a href="../reference/toExcelEditor.html">toExcelEditor</a></span><span class="op">(</span></span>
 <span>  fileName <span class="op">=</span> <span class="va">excelQualification</span>,</span>
 <span>  snapshotPaths <span class="op">=</span> <span class="va">snapshotPaths</span>, </span>
@@ -174,19 +271,118 @@ Plan</a></li>
 <span>  qualificationPlan <span class="op">=</span> <span class="va">qualificationPlan</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Tip: this will open Excel (or Libre office) with the created Excel workbook</span></span>
-<span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/browseURL.html" class="external-link">browseURL</a></span><span class="op">(</span><span class="va">excelQualification</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># Open the Excel file in your default spreadsheet application</span></span>
+<span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/browseURL.html" class="external-link">browseURL</a></span><span class="op">(</span><span class="va">excelQualification</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># After editing the Excel file, convert it back to JSON</span></span>
+<span><span class="fu"><a href="../reference/excelToQualificationPlan.html">excelToQualificationPlan</a></span><span class="op">(</span></span>
+<span>  excelFile <span class="op">=</span> <span class="va">excelQualification</span>,</span>
+<span>  qualificationPlan <span class="op">=</span> <span class="st">"updated-qualification_plan.json"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="understanding-the-parameters">Understanding the Parameters<a class="anchor" aria-label="anchor" href="#understanding-the-parameters"></a>
+</h3>
+<ul>
+<li>
+<strong>fileName</strong>: The output Excel file path. Can be
+relative or absolute.</li>
+<li>
+<strong>snapshotPaths</strong>: A named list of project snapshot
+JSON files. Names become project IDs.</li>
+<li>
+<strong>observedDataPaths</strong>: A named list of observed data
+files. Each entry should have <code>Path</code> and optionally
+<code>Type</code> fields.</li>
+<li>
+<strong>qualificationPlan</strong>: Path or URL to an existing
+qualification plan JSON file. Omit this to create a new plan from
+scratch.</li>
+<li>
+<strong>excelTemplate</strong>: (Optional) Path to a custom Excel
+template. Uses the built-in template if not specified.</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="common-use-cases">Common Use Cases<a class="anchor" aria-label="anchor" href="#common-use-cases"></a>
+</h3>
+<p><strong>Starting from scratch</strong>: Omit the
+<code>qualificationPlan</code> parameter to create a new qualification
+plan:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/toExcelEditor.html">toExcelEditor</a></span><span class="op">(</span></span>
+<span>  fileName <span class="op">=</span> <span class="st">"new-qualification.xlsx"</span>,</span>
+<span>  snapshotPaths <span class="op">=</span> <span class="va">snapshotPaths</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><strong>Only updating evaluations</strong>: Omit snapshots to just
+edit an existing plan:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/toExcelEditor.html">toExcelEditor</a></span><span class="op">(</span></span>
+<span>  fileName <span class="op">=</span> <span class="st">"updated-qualification.xlsx"</span>,</span>
+<span>  qualificationPlan <span class="op">=</span> <span class="va">qualificationPlan</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><strong>Local files</strong>: Use local file paths instead of
+URLs:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">snapshotPaths</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="st">"MyProject"</span> <span class="op">=</span> <span class="st">"C:/Projects/MyModel/snapshot.json"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
-<h2 id="testing-of-the-converted-qualification-plan">Testing of the converted Qualification Plan<a class="anchor" aria-label="anchor" href="#testing-of-the-converted-qualification-plan"></a>
+<h2 id="troubleshooting">Troubleshooting<a class="anchor" aria-label="anchor" href="#troubleshooting"></a>
 </h2>
-<p>To ensure that the converted qualification and evaluation plans
-provide appropriate evaluations, the following qualification plans are
-tested in the repo <a href="https://github.com/Open-Systems-Pharmacology/RE-Test-Reports" class="external-link">RE-Test-Reports</a></p>
+<div class="section level3">
+<h3 id="common-issues-and-solutions">Common Issues and Solutions<a class="anchor" aria-label="anchor" href="#common-issues-and-solutions"></a>
+</h3>
+<p><strong>Issue: “Cannot find file or URL”</strong> - Verify that file
+paths are correct and files exist - For GitHub URLs, ensure the
+repository, branch/tag, and file path are all correct - Check that you
+have internet connectivity for remote URLs</p>
+<p><strong>Issue: “Excel file won’t open after conversion”</strong> -
+Ensure you have Excel, LibreOffice Calc, or another compatible
+spreadsheet application installed - Try specifying the full path to the
+Excel file - Check that you have write permissions in the target
+directory</p>
+<p><strong>Issue: “Data validation dropdowns are empty”</strong> - This
+usually means required data is missing from validation sheets - Ensure
+all referenced projects and simulations exist in the
+<code>Projects</code>, <code>Simulations_Outputs</code>, and
+<code>Simulations_ObsData</code> sheets - Check that the Excel file was
+generated successfully without errors</p>
+<p><strong>Issue: “Conversion from Excel to JSON fails”</strong> -
+Verify that you haven’t modified the key sheets used for validation
+(<code>Projects</code>, <code>Simulations_Outputs</code>,
+<code>Simulations_ObsData</code>), as changes can break validation -
+Check that required columns haven’t been deleted or renamed - Ensure
+data validation rules are respected (don’t type free text where
+dropdowns are required) - Look for error messages in the R console for
+specific validation failures</p>
+<p><strong>Issue: “Building block inheritance not working”</strong> -
+Verify parent project names exactly match entries in the Projects sheet
+- Check that the building block exists in the parent project - Ensure
+building block names and types match exactly (case-sensitive)</p>
+</div>
+<div class="section level3">
+<h3 id="getting-help">Getting Help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
+</h3>
+<p>If you encounter issues not covered here:</p>
+<ol style="list-style-type: decimal">
+<li>Check the <a href="https://github.com/Open-Systems-Pharmacology/OSPSuite.QualificationPlanEditor/issues" class="external-link">GitHub
+Issues</a> page</li>
+<li>Review the function documentation with <code><a href="../reference/toExcelEditor.html">?toExcelEditor</a></code>
+or <code><a href="../reference/excelToQualificationPlan.html">?excelToQualificationPlan</a></code>
+</li>
+<li>Open a new issue with:
 <ul>
-<li><a href="https://github.com/Open-Systems-Pharmacology/Qualification-DDI-UGT" class="external-link">Qualification-DDI-UGT</a></li>
-<li>TBD</li>
+<li>Your R version and package version</li>
+<li>Minimal reproducible example</li>
+<li>Error messages and output</li>
+<li>Expected vs. actual behavior</li>
 </ul>
+</li>
+</ol>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

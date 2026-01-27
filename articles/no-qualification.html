@@ -71,97 +71,302 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/open-systems-pharmacology/ospsuite.qualificationplaneditor" class="external-link">ospsuite.qualificationplaneditor</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
-<h2 id="context">Context<a class="anchor" aria-label="anchor" href="#context"></a>
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>This article shows how to create a Qualification Plan from scratch
-using a project snapshot. The example used here is the <a href="https://github.com/Open-Systems-Pharmacology/Verapamil-Model" class="external-link">Verapamil-Model</a>
-available on GitHub.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">snapshotPaths</span> <span class="op">&lt;-</span> <span class="st">"Verapamil-Model.json"</span></span>
-<span><span class="va">qualificationPlan</span> <span class="op">&lt;-</span> <span class="st">"qualification-verapamil.json"</span></span>
-<span><span class="va">excelFile</span> <span class="op">&lt;-</span> <span class="st">"qualification-verapamil.xlsx"</span></span></code></pre></div>
+<p>This tutorial demonstrates how to create a new qualification plan
+from scratch using only project snapshots, without an existing
+qualification plan as a starting point. This is ideal when:</p>
+<ul>
+<li>Starting a completely new qualification project</li>
+<li>Creating a qualification plan for a newly developed model</li>
+<li>Building a qualification framework for a model that previously
+didn’t have one</li>
+</ul>
+<p>We’ll use the <a href="https://github.com/Open-Systems-Pharmacology/Verapamil-Model" class="external-link">Verapamil-Model</a>
+from the Open Systems Pharmacology GitHub repository as our example.</p>
 </div>
 <div class="section level2">
-<h2 id="conversion-to-excel">Conversion to Excel<a class="anchor" aria-label="anchor" href="#conversion-to-excel"></a>
+<h2 id="prerequisites">Prerequisites<a class="anchor" aria-label="anchor" href="#prerequisites"></a>
 </h2>
-<p>In order to assess and edit the qualification plan, the function
-<code><a href="../reference/toExcelEditor.html">toExcelEditor()</a></code> will convert it into Excel format as
-illustrated below.</p>
+<p>Before starting, ensure you have: - The
+<code>ospsuite.qualificationplaneditor</code> package installed - A
+project snapshot JSON file (locally or accessible via URL) - Basic
+understanding of the OSP Suite workflow</p>
+</div>
+<div class="section level2">
+<h2 id="workflow-overview">Workflow Overview<a class="anchor" aria-label="anchor" href="#workflow-overview"></a>
+</h2>
+<p>Creating a qualification plan from scratch involves three main
+steps:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Prepare your project snapshot</strong>: Identify the
+snapshot JSON file(s) you want to include</li>
+<li>
+<strong>Convert to Excel</strong>: Generate an Excel workbook from
+the snapshot</li>
+<li>
+<strong>Edit and convert back</strong>: Edit the Excel file to add
+evaluations, then convert to JSON</li>
+</ol>
+<p>Let’s walk through each step.</p>
+</div>
+<div class="section level2">
+<h2 id="step-1-define-your-project-files">Step 1: Define Your Project Files<a class="anchor" aria-label="anchor" href="#step-1-define-your-project-files"></a>
+</h2>
+<p>First, we define the paths to our input and output files. The
+snapshot can be a local file or a URL to a GitHub-hosted file.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Path to the project snapshot (included with the package for this example)</span></span>
+<span><span class="va">snapshotPaths</span> <span class="op">&lt;-</span> <span class="st">"Verapamil-Model.json"</span></span>
+<span></span>
+<span><span class="co"># Output file name for the qualification plan JSON</span></span>
+<span><span class="va">qualificationPlan</span> <span class="op">&lt;-</span> <span class="st">"qualification-verapamil.json"</span></span>
+<span></span>
+<span><span class="co"># Output file name for the Excel workbook</span></span>
+<span><span class="va">excelFile</span> <span class="op">&lt;-</span> <span class="st">"qualification-verapamil.xlsx"</span></span></code></pre></div>
+<p><strong>Note</strong>: For your own projects, replace
+<code>"Verapamil-Model.json"</code> with the path to your project
+snapshot file. This can be: - A local file path:
+<code>"C:/MyProjects/MyModel.json"</code> - A GitHub URL:
+<code>"https://raw.githubusercontent.com/Org/Repo/main/Model.json"</code></p>
+<p>For multiple projects, use a named list:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">snapshotPaths</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="st">"Project1"</span> <span class="op">=</span> <span class="st">"path/to/project1.json"</span>,</span>
+<span>  <span class="st">"Project2"</span> <span class="op">=</span> <span class="st">"path/to/project2.json"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="step-2-convert-snapshot-to-excel">Step 2: Convert Snapshot to Excel<a class="anchor" aria-label="anchor" href="#step-2-convert-snapshot-to-excel"></a>
+</h2>
+<p>Now we convert the project snapshot to Excel format. The key here is
+that we <strong>only</strong> provide <code>snapshotPaths</code> - we do
+<strong>not</strong> provide a <code>qualificationPlan</code> parameter,
+which tells the function to create a new qualification plan from
+scratch.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/toExcelEditor.html">toExcelEditor</a></span><span class="op">(</span></span>
 <span>  fileName <span class="op">=</span> <span class="va">excelFile</span>, </span>
 <span>  snapshotPaths <span class="op">=</span> <span class="va">snapshotPaths</span></span>
-<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Exporting to Excel Editor</span> <span style="color: #00BBBB;">───────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Copying Excel Template to <span style="color: #0000BB;">qualification-verapamil.xlsx</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Copying Excel Template to <span style="color: #0000BB;">qualification-verapamil.xlsx</span> <span style="color: #B2B2B2;">[187ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Copying Excel Template to <span style="color: #0000BB;">qualification-verapamil.xlsx</span> <span style="color: #B2B2B2;">[194ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Checking for Qualification Plan</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> <span style="font-weight: bold;">No</span> Qualification Plan input</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Checking for Qualification Plan<span style="color: #00BB00;">✔</span> Checking for Qualification Plan <span style="color: #B2B2B2;">[29ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Checking for Qualification Plan<span style="color: #00BB00;">✔</span> Checking for Qualification Plan <span style="color: #B2B2B2;">[31ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Projects</span> Data</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Projects</span> Data <span style="color: #B2B2B2;">[58ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Projects</span> Data <span style="color: #B2B2B2;">[63ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Simulation Outputs</span> Data</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Simulation Outputs</span> Data <span style="color: #B2B2B2;">[262ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Simulation Outputs</span> Data <span style="color: #B2B2B2;">[366ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Simulation Observed Data</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Simulation Observed Data</span> <span style="color: #B2B2B2;">[120ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Simulation Observed Data</span> <span style="color: #B2B2B2;">[50ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Observed Data</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Observed Data</span> <span style="color: #B2B2B2;">[29ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Observed Data</span> <span style="color: #B2B2B2;">[28ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Building Block</span> Data</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Building Block</span> Data── <span style="font-weight: bold;">Qualification Plan</span> ──</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Building Block</span> Data</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Building Block</span> Data<span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Building Block</span> Data <span style="color: #B2B2B2;">[105ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Building Block</span> Data<span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Building Block</span> Data <span style="color: #B2B2B2;">[90ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Schema</span> Data</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Schema</span> Data <span style="color: #B2B2B2;">[286ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Schema</span> Data <span style="color: #B2B2B2;">[318ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Sections</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Sections</span> <span style="color: #B2B2B2;">[18ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Sections</span> <span style="color: #B2B2B2;">[19ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Intro and Inputs</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Intro and Inputs</span> <span style="color: #B2B2B2;">[19ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Intro and Inputs</span> <span style="color: #B2B2B2;">[20ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Simulation Parameters</span> Settings</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Simulation Parameters</span> Settings <span style="color: #B2B2B2;">[19ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Simulation Parameters</span> Settings <span style="color: #B2B2B2;">[20ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">All Plots</span> Settings</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">All Plots</span> Settings <span style="color: #B2B2B2;">[29ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">All Plots</span> Settings <span style="color: #B2B2B2;">[34ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Comparison Time Profile</span> Plot Settings</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Comparison Time Profile</span> Plot Settings <span style="color: #B2B2B2;">[33ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Comparison Time Profile</span> Plot Settings <span style="color: #B2B2B2;">[31ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">GOF Merged</span> Plot Settings</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">GOF Merged</span> Plot Settings <span style="color: #B2B2B2;">[28ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">GOF Merged</span> Plot Settings <span style="color: #B2B2B2;">[31ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">DDI Ratio</span> Plot Settings</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">DDI Ratio</span> Plot Settings <span style="color: #B2B2B2;">[45ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">DDI Ratio</span> Plot Settings <span style="color: #B2B2B2;">[49ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Global Plot Settings</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Global Plot Settings</span> <span style="color: #B2B2B2;">[21ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Global Plot Settings</span> <span style="color: #B2B2B2;">[29ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Exporting <span style="color: #00BB00;">Global Axes Settings</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Global Axes Settings</span> <span style="color: #B2B2B2;">[23ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Exporting <span style="color: #00BB00;">Global Axes Settings</span> <span style="color: #B2B2B2;">[25ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Saving extracted data into <span style="color: #0000BB;">qualification-verapamil.xlsx</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Saving extracted data into <span style="color: #0000BB;">qualification-verapamil.xlsx</span> <span style="color: #B2B2B2;">[386ms]</span></span></span></code></pre></div>
-<p>Users can then open and edit the Excel file converted from the
-Qualification Plan. The code below will open the file using the default
-software reading <code>xlsx</code> files (such as Excel or Libre Office
-Calc).</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Saving extracted data into <span style="color: #0000BB;">qualification-verapamil.xlsx</span> <span style="color: #B2B2B2;">[371ms]</span></span></span></code></pre></div>
+<div class="section level3">
+<h3 id="what-happens-during-conversion">What Happens During Conversion<a class="anchor" aria-label="anchor" href="#what-happens-during-conversion"></a>
+</h3>
+<p>The <code><a href="../reference/toExcelEditor.html">toExcelEditor()</a></code> function performs several
+operations:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Reads the snapshot file</strong>: Parses the project JSON to
+extract all relevant information</li>
+<li>
+<strong>Extracts project data</strong>:
+<ul>
+<li>Project metadata (ID, path)</li>
+<li>Simulations and their outputs</li>
+<li>Building blocks (compounds, individuals, formulations, etc.)</li>
+<li>Observed data linked to simulations (if any)</li>
+</ul>
+</li>
+<li>
+<strong>Generates Excel worksheets</strong>:
+<ul>
+<li>
+<strong>Projects</strong>: Lists all projects and their paths</li>
+<li>
+<strong>Simulations_Outputs</strong>: All simulation outputs
+available for plotting</li>
+<li>
+<strong>Simulations_ObsData</strong>: Observed data linked to
+simulations</li>
+<li>
+<strong>BB</strong>: Building block structure for potential
+inheritance</li>
+<li>
+<strong>Sections</strong>: Template sections for organizing your
+report</li>
+<li>
+<strong>All_Plots</strong>: Individual plots from simulation
+outputs</li>
+<li>
+<strong>CT_Plots/GOF_Plots/DDIRatio_Plots/PKRatio_Plots</strong>:
+Empty templates for creating custom plots</li>
+<li>
+<strong>Inputs</strong>: Template for including building block
+documentation</li>
+<li>
+<strong>GlobalPlotSettings/GlobalAxesSettings</strong>: Default plot
+configuration</li>
+<li>
+<strong>Lookup</strong>: Reference tables for valid values</li>
+</ul>
+</li>
+<li>
+<strong>Applies formatting</strong>:
+<ul>
+<li>Color-coding (all new projects will be green since nothing existed
+before)</li>
+<li>Data validation dropdowns</li>
+<li>Cell protection for read-only sheets</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section level3">
+<h3 id="expected-output">Expected Output<a class="anchor" aria-label="anchor" href="#expected-output"></a>
+</h3>
+<p>After running this command, you should see a message confirming the
+Excel file was created. The file will be ready for editing.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="step-3-review-and-edit-the-excel-file">Step 3: Review and Edit the Excel File<a class="anchor" aria-label="anchor" href="#step-3-review-and-edit-the-excel-file"></a>
+</h2>
+<p>Once the Excel file is generated, you should open it to review and
+edit the content. The code below opens the file using your system’s
+default spreadsheet application (Excel, LibreOffice Calc, etc.):</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/browseURL.html" class="external-link">browseURL</a></span><span class="op">(</span><span class="va">excelFile</span><span class="op">)</span></span></code></pre></div>
-<p>The Excel file should include the content displayed below:</p>
+<div class="section level3">
+<h3 id="what-to-edit">What to Edit<a class="anchor" aria-label="anchor" href="#what-to-edit"></a>
+</h3>
+<p>When creating a qualification plan from scratch, you’ll typically
+want to:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Define Report Sections</strong> (Sections sheet):
+<ul>
+<li>Create a logical structure for your qualification report</li>
+<li>Add sections like “Introduction”, “Methods”, “Results”,
+“Discussion”</li>
+<li>Create subsections as needed (e.g., “Model Development” under
+“Methods”)</li>
+</ul>
+</li>
+<li>
+<strong>Configure Plot Evaluations</strong> (All_Plots sheet):
+<ul>
+<li>Review the automatically generated list of all possible plots</li>
+<li>Assign each plot to a report section using the Section Reference
+column</li>
+<li>Delete or leave blank rows for plots you don’t want to include</li>
+</ul>
+</li>
+<li>
+<strong>Create Comparison Time Profile Plots</strong> (CT_Plots and
+CT_Mapping sheets):
+<ul>
+<li>Define plots that compare simulation outputs with observed data</li>
+<li>Configure axes, titles, and other plot properties</li>
+<li>Map specific outputs and observed datasets to each plot</li>
+</ul>
+</li>
+<li>
+<strong>Configure Other Plot Types</strong> (GOF_Plots,
+DDIRatio_Plots, PKRatio_Plots):
+<ul>
+<li>Set up goodness-of-fit plots, DDI ratio plots, or PK ratio plots as
+needed</li>
+<li>Configure their mappings to show the comparisons you need</li>
+</ul>
+</li>
+<li>
+<strong>Add Building Block Documentation</strong> (Inputs sheet):
+<ul>
+<li>Specify which building blocks should be documented in the
+report</li>
+<li>This includes compound properties, individual parameters,
+formulations, etc.</li>
+</ul>
+</li>
+<li>
+<strong>Set Introduction</strong> (Intro sheet):
+<ul>
+<li>Provide a path to a Markdown file that will serve as your report
+introduction</li>
+<li>This should explain the purpose, methods, and context of your
+qualification</li>
+</ul>
+</li>
+<li>
+<strong>Adjust Plot Settings</strong> (GlobalPlotSettings and
+GlobalAxesSettings):
+<ul>
+<li>Customize figure dimensions, resolution, fonts</li>
+<li>Set default unit preferences and axis scales</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="section level3">
+<h3 id="excel-file-preview">Excel File Preview<a class="anchor" aria-label="anchor" href="#excel-file-preview"></a>
+</h3>
+<p>The Excel file structure will look like this:</p>
+</div>
 </div>
 <div class="section level2 tabset tabset-pills">
 <h2 class="tabset tabset-pills" id="excel-content">Excel Content<a class="anchor" aria-label="anchor" href="#excel-content"></a>
 </h2>
+
 
 
 
@@ -207,6 +412,7 @@ Calc).</p>
 <li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#globalplotsettings" id="globalplotsettings-tab" type="button" role="tab" aria-controls="globalplotsettings" aria-selected="false" class="nav-link">GlobalPlotSettings</button></li>
 <li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#globalaxessettings" id="globalaxessettings-tab" type="button" role="tab" aria-controls="globalaxessettings" aria-selected="false" class="nav-link">GlobalAxesSettings</button></li>
 <li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#lookup" id="lookup-tab" type="button" role="tab" aria-controls="lookup" aria-selected="false" class="nav-link">Lookup</button></li>
+<li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#tips-for-editing" id="tips-for-editing-tab" type="button" role="tab" aria-controls="tips-for-editing" aria-selected="false" class="nav-link">Tips for Editing</button></li>
 </ul>
 <div class="tab-content">
 <div class="active  tab-pane" id="metainfo" role="tabpanel" aria-labelledby="metainfo-tab">
@@ -16093,16 +16299,152 @@ NA
 </table>
 </div>
 </div>
+<div class="tab-pane" id="tips-for-editing" role="tabpanel" aria-labelledby="tips-for-editing-tab">
+
+<ul>
+<li>
+<strong>Start with sections</strong>: Define your report structure
+first, then assign evaluations to sections</li>
+<li>
+<strong>Use color coding</strong>: All rows should be green (new)
+since this is a fresh qualification plan</li>
+<li>
+<strong>Leverage data validation</strong>: Use the dropdown menus -
+don’t type free text where dropdowns exist</li>
+<li>
+<strong>Review read-only sheets</strong>: Check Projects,
+Simulations_Outputs, and Simulations_ObsData to understand what’s
+available</li>
+</ul>
+<p>For detailed information about each worksheet, see the <a href="./excel-template.html">Excel Template Documentation</a>.</p>
+</div>
 </div>
 </div>
 <div class="section level2">
-<h2 id="convert-back-to-json">Convert back to json<a class="anchor" aria-label="anchor" href="#convert-back-to-json"></a>
+<h2 id="step-4-convert-back-to-json">Step 4: Convert Back to JSON<a class="anchor" aria-label="anchor" href="#step-4-convert-back-to-json"></a>
 </h2>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<p>After editing the Excel file, convert it back to a JSON qualification
+plan using <code><a href="../reference/excelToQualificationPlan.html">excelToQualificationPlan()</a></code>:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/excelToQualificationPlan.html">excelToQualificationPlan</a></span><span class="op">(</span></span>
 <span>  excelFile <span class="op">=</span> <span class="va">excelFile</span>,</span>
 <span>  qualificationPlan <span class="op">=</span> <span class="va">qualificationPlan</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="what-happens-during-conversion-1">What Happens During Conversion<a class="anchor" aria-label="anchor" href="#what-happens-during-conversion-1"></a>
+</h3>
+<p>The function performs several validation and conversion steps:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Reads the Excel file</strong>: Loads all worksheets</li>
+<li>
+<strong>Validates the data</strong>:
+<ul>
+<li>Checks that required columns exist</li>
+<li>Verifies section references are valid</li>
+<li>Ensures project and simulation names match the definition
+sheets</li>
+<li>Validates against lookup tables</li>
+</ul>
+</li>
+<li>
+<strong>Constructs the JSON structure</strong>: Builds the
+hierarchical qualification plan structure</li>
+<li>
+<strong>Writes the output</strong>: Saves the qualification plan as
+a JSON file</li>
+</ol>
+</div>
+<div class="section level3">
+<h3 id="validation-errors">Validation Errors<a class="anchor" aria-label="anchor" href="#validation-errors"></a>
+</h3>
+<p>If there are errors in your Excel file, the function will report them
+in the console. Common errors include:</p>
+<ul>
+<li>
+<strong>Invalid section reference</strong>: You referenced a section
+that doesn’t exist in the Sections sheet</li>
+<li>
+<strong>Invalid project/simulation name</strong>: Names don’t match
+what’s in the Projects, Simulations_Outputs, or Simulations_ObsData
+sheets</li>
+<li>
+<strong>Missing required columns</strong>: You accidentally deleted
+a required column</li>
+<li>
+<strong>Invalid lookup values</strong>: You entered a value that’s
+not in the allowed list</li>
+</ul>
+<p>Fix any reported errors in the Excel file and run the conversion
+again.</p>
+</div>
+<div class="section level3">
+<h3 id="success">Success<a class="anchor" aria-label="anchor" href="#success"></a>
+</h3>
+<p>If the conversion succeeds, you’ll see a message confirming the
+qualification plan was created. The JSON file is now ready to be used
+with the OSP Suite Qualification Runner to generate your qualification
+report.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="next-steps">Next Steps<a class="anchor" aria-label="anchor" href="#next-steps"></a>
+</h2>
+<p>After creating your qualification plan:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Test the qualification plan</strong>: Run it with the OSP
+Suite Qualification Runner to ensure it works correctly</li>
+<li>
+<strong>Review the generated report</strong>: Check that plots,
+sections, and content appear as expected</li>
+<li>
+<strong>Iterate</strong>: If adjustments are needed, reconvert to
+Excel, edit, and convert back to JSON</li>
+</ol>
+</div>
+<div class="section level2">
+<h2 id="working-with-observed-data">Working with Observed Data<a class="anchor" aria-label="anchor" href="#working-with-observed-data"></a>
+</h2>
+<p>This example used only the project snapshot, which may include
+observed data linked to simulations. To add additional observed data
+files:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Define observed data</span></span>
+<span><span class="va">observedDataPaths</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="st">"Clinical PK Data"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    Path <span class="op">=</span> <span class="st">"path/to/observed_data.csv"</span>,</span>
+<span>    Type <span class="op">=</span> <span class="st">"TimeProfile"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="st">"DDI Ratios"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    Path <span class="op">=</span> <span class="st">"path/to/ddi_ratios.csv"</span>,</span>
+<span>    Type <span class="op">=</span> <span class="st">"DDIRatio"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Include in conversion</span></span>
+<span><span class="fu"><a href="../reference/toExcelEditor.html">toExcelEditor</a></span><span class="op">(</span></span>
+<span>  fileName <span class="op">=</span> <span class="va">excelFile</span>,</span>
+<span>  snapshotPaths <span class="op">=</span> <span class="va">snapshotPaths</span>,</span>
+<span>  observedDataPaths <span class="op">=</span> <span class="va">observedDataPaths</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The observed data will then be available for use in plot
+evaluations.</p>
+</div>
+<div class="section level2">
+<h2 id="related-articles">Related Articles<a class="anchor" aria-label="anchor" href="#related-articles"></a>
+</h2>
+<ul>
+<li>
+<a href="./excel-template.html">Excel Template Documentation</a>:
+Comprehensive guide to all Excel worksheets</li>
+<li>
+<a href="./snapshot-qualification.html">Add a Snapshot to
+Qualification Plan</a>: How to add projects to an existing plan</li>
+<li>
+<a href="./update-qualification.html">Update Qualification Plan
+Evaluations</a>: How to modify evaluations in an existing plan</li>
+</ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
