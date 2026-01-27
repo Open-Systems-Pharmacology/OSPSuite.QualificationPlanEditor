@@ -1,14 +1,14 @@
 # OSPSuite.QualificationPlanEditor
 
 Convert your qualification plan to Excel for easy editing, then convert
-back as a qualification plan with
+it back to a qualification plan with
 [ospsuite.qualificationplaneditor](https://github.com/open-systems-pharmacology/ospsuite.qualificationplaneditor).
 
 ## Installation
 
 You can install the development version of
 [ospsuite.qualificationplaneditor](https://github.com/open-systems-pharmacology/ospsuite.qualificationplaneditor)
-like so:
+like this:
 
 ``` r
 remotes::install_github("Open-Systems-Pharmacology/OSPSuite.QualificationPlanEditor")
@@ -17,7 +17,7 @@ remotes::install_github("Open-Systems-Pharmacology/OSPSuite.QualificationPlanEdi
 ## Example
 
 Here is a basic example showing how to include an updated project
-snapshot into your qualification plan:
+snapshot in your qualification plan:
 
 ``` r
 ## Load the ospsuite.qualificationplaneditor package
@@ -41,7 +41,7 @@ observedDataPaths <- list("DDI Ratios" = list(
 # Initial qualification plan
 qualificationPlan <- file.path(ospPath, "A-Model/vY.Y/Qualification/qualification_plan.json")
 
-# qualification plan converted to Excel
+# Qualification plan converted to Excel
 excelUI(
   fileName = excelQualification,
   snapshotPaths = snapshotPaths, 
