@@ -21,44 +21,219 @@ source(system.file("excel-display.R", package = "ospsuite.qualificationplanedito
 library(ospsuite.qualificationplaneditor)
 ```
 
-## Context
+## Overview
 
-This article shows how to add and integrate a project Snapshot (json) into a Qualification Plan.
-The example used here is the qualification plan for UGT1A1- and UGT1A9-mediated inhibition drug-drug interactions (DDI) available in the [Qualification-DDI-UGT](https://github.com/Open-Systems-Pharmacology/Qualification-DDI-UGT) GitHub repository and the project snapshot [Verapamil-Model](https://github.com/Open-Systems-Pharmacology/Verapamil-Model) also available on GitHub.
+This tutorial demonstrates how to integrate a new project snapshot into an existing qualification plan. This is a common scenario when:
 
+- You've developed a new model that should be added to an existing qualification framework
+- An existing model has been updated with a new version
+- You want to include additional projects in a multi-model qualification study
+
+We'll use a practical example: adding the [Verapamil-Model](https://github.com/Open-Systems-Pharmacology/Verapamil-Model) to an existing qualification plan for UGT1A1- and UGT1A9-mediated drug-drug interactions (DDI), which is available in the [Qualification-DDI-UGT](https://github.com/Open-Systems-Pharmacology/Qualification-DDI-UGT) repository.
+
+## Prerequisites
+
+Before starting, you should have:
+- The `ospsuite.qualificationplaneditor` package installed
+- An existing qualification plan JSON file
+- The new project snapshot JSON file you want to add
+- Understanding of the qualification plan structure
+
+## Workflow Overview
+
+Adding a snapshot to an existing qualification plan involves:
+
+1. **Identify your files**: Locate the existing qualification plan and new project snapshot
+2. **Convert to Excel**: Generate an Excel workbook that merges both sources
+3. **Review changes**: Use color-coding to identify what's new or changed
+4. **Edit and integrate**: Configure how the new project integrates with existing content
+5. **Convert back to JSON**: Generate the updated qualification plan
+
+
+## Step 1: Prepare Your Files
+
+First, define the paths to your project snapshot, existing qualification plan, and output files:
 
 ```{r}
+# New project snapshot to add (included with package for this example)
 snapshotPaths <- "Verapamil-Model.json"
+
+# Existing qualification plan (included with package for this example)
 qualificationPlan <- "qualification_ugt.json"
+
+# Output Excel file name
 excelFile <- "qualification_ugt.xlsx"
 ```
 
-## Conversion to Excel
+**Important Notes:**
 
-In order to assess and edit the qualification plan, the function `toExcelEditor()` will convert it into Excel format as illustrated below.
+- **snapshotPaths**: This is the NEW project you're adding. Can be a local path or GitHub URL.
+- **qualificationPlan**: This is your EXISTING qualification plan that you're extending.
+- For multiple new projects, use a named list:
+  ```r
+  snapshotPaths <- list(
+    "NewProject1" = "path/to/project1.json",
+    "NewProject2" = "path/to/project2.json"
+  )
+  ```
+
+## Step 2: Convert to Excel with Merged Content
+
+Now convert both the new snapshot(s) and existing qualification plan into a single Excel file. This is where the magic happens - the function merges content from both sources:
 
 ```{r}
 toExcelEditor(
   fileName = excelFile, 
   snapshotPaths = snapshotPaths,
   qualificationPlan = qualificationPlan
-  )
+)
 ```
 
-Users can then open and edit the Excel file converted from the Qualification Plan.
-The code below will open the file using the default software reading `xlsx` files (such as Excel or Libre Office Calc).
+### What Happens During Conversion
+
+The `toExcelEditor()` function performs intelligent merging:
+
+1. **Reads both sources**:
+   - Parses the new project snapshot(s)
+   - Parses the existing qualification plan
+
+2. **Merges project data**:
+   - Combines projects from both sources
+   - Identifies new projects (from snapshot)
+   - Identifies existing projects (from qualification plan)
+   - Detects changed projects (in both but with different versions/paths)
+
+3. **Applies color-coding**:
+   - **Green**: New projects from the snapshot that don't exist in the qualification plan
+   - **Yellow**: Projects that exist in both but have different versions or paths
+   - **Grey**: Unchanged projects (same in both or only in qualification plan)
+
+4. **Preserves existing evaluations**:
+   - All plot configurations from the qualification plan are retained
+   - Section structure is maintained
+   - Building block inheritance is preserved
+
+5. **Adds new possibilities**:
+   - New simulations and outputs from the added project appear in Simulations_Outputs
+   - New building blocks are available in the BB sheet
+   - New simulations can be used in plot mappings
+
+### Understanding the Merge
+
+The key insight is that this operation is **additive and highlighting**:
+- Nothing from your existing qualification plan is removed
+- New content from snapshots is clearly marked (green)
+- Changed content is highlighted (yellow)
+- You decide what to do with the new content by editing the Excel file
+
+## Step 3: Review and Edit the Excel File
+
+Open the generated Excel file to review the merged content:
 
 ```r
 utils::browseURL(excelFile)
 ```
 
-The Excel file should include the content displayed below:
+### Focus on Color-Coded Changes
+
+When integrating a new snapshot, pay special attention to:
+
+1. **Green rows** (New Projects):
+   - Review the **Projects** sheet to see the new project(s) added
+   - Check **Simulations_Outputs** to understand what outputs are available from the new project
+   - Look at **BB** sheet to see the building blocks in the new project
+
+2. **Yellow rows** (Changed Projects):
+   - If any existing projects have been updated (new versions), they'll be yellow
+   - Verify the path/version change is intentional
+   - Review if simulations or outputs have changed
+
+### Key Integration Tasks
+
+When adding a new project to an existing qualification plan, you'll typically need to:
+
+#### A. Configure Building Block Inheritance (BB sheet)
+
+If the new project should inherit building blocks from existing projects (or vice versa):
+
+```
+Project          | BB-Type    | BB-Name        | Parent-Project
+-----------------|------------|----------------|---------------
+Verapamil-Model  | Compound   | Verapamil      | ParentProject
+Verapamil-Model  | Individual | European       | Population-Model
+```
+
+This is useful when:
+- Projects share common compounds, individuals, or formulations
+- You want to ensure consistency across projects
+- Reducing duplication of building block definitions
+
+#### B. Add Plot Evaluations (All_Plots sheet)
+
+Assign the new project's simulation outputs to report sections:
+
+- Find rows with green background (new project outputs)
+- Fill the **Section Reference** column to include them in the report
+- Leave blank to exclude specific outputs
+
+#### C. Create Comparison Plots (CT_Plots, GOF_Plots, etc.)
+
+Integrate the new project into existing comparison plots or create new ones:
+
+**Example: Adding to a Comparison Time Profile plot**
+1. Go to **CT_Plots** sheet, identify or create a plot
+2. Go to **CT_Mapping** sheet
+3. Add rows mapping new simulation outputs and observed data to the plot
+
+```
+PlotId | Project         | Simulation      | Output          | ObservedData
+-------|-----------------|-----------------|-----------------|---------------
+CT-1   | Verapamil-Model | DDI-Scenario-1  | Concentration   | Clinical-PK
+```
+
+#### D. Configure Parameter Inheritance (SimParam sheet)
+
+If simulations in the new project should inherit parameters from existing projects:
+
+```
+Project         | TargetSimulation | Parent Project | Parent Simulation | Path
+----------------|------------------|----------------|-------------------|-----
+Verapamil-Model | Sim-1            | BaseModel      | Reference-Sim     | /Path/To/Parameter
+```
+
+#### E. Document Building Blocks (Inputs sheet)
+
+Include building block documentation for the new project in the report:
+
+```
+Project         | BB-Type    | BB-Name    | Section Reference
+----------------|------------|------------|------------------
+Verapamil-Model | Compound   | Verapamil  | 2.1-compounds
+Verapamil-Model | Individual | European   | 2.2-individuals
+```
+
+### Excel File Preview
+
+The Excel file will contain both existing and new content:
 
 ```{r, results='asis',echo=FALSE}
 cat(displayExcel(excelFile), sep = "\n")
 ```
 
-## Convert back to json
+### Best Practices for Integration
+
+- **Review green rows thoroughly**: These represent new content that will be added to your plan
+- **Verify yellow rows**: Ensure version/path changes are intentional
+- **Maintain section consistency**: Use existing section references for new content to maintain report organization
+- **Test building block inheritance**: Ensure parent-child relationships are correctly defined
+- **Check for duplicates**: Verify you're not accidentally duplicating content
+- **Preserve existing evaluations**: Don't delete or modify existing plot configurations unless intentional
+
+For detailed information about each worksheet and editing guidelines, see the [Excel Template Documentation](./excel-template.html).
+
+## Step 4: Convert Back to JSON
+
+After editing and integrating the new project, convert the Excel file back to JSON:
 
 ```r
 excelToQualificationPlan(
@@ -66,3 +241,113 @@ excelToQualificationPlan(
   qualificationPlan = paste0("updated-", qualificationPlan)
 )
 ```
+
+**Note**: We're using a new filename (`updated-` prefix) to preserve the original qualification plan. This is recommended for safety.
+
+### Validation
+
+The conversion function will validate your changes:
+- Section references must match sections defined in the Sections sheet
+- Project and simulation names must match those in the definition sheets
+- Building block parent references must point to valid projects
+- All required columns must be present
+
+If validation fails, error messages will guide you to fix the issues.
+
+### Result
+
+A successful conversion produces an updated qualification plan JSON file that includes:
+- The new project(s) from your snapshot(s)
+- All existing projects and evaluations
+- New evaluations and configurations you added for the new project
+- Updated building block and parameter inheritance relationships
+
+## Next Steps
+
+After integrating the snapshot:
+
+1. **Test the qualification plan**: Run it with the OSP Suite Qualification Runner
+2. **Review the report**: Verify the new project is properly integrated
+3. **Iterate if needed**: If adjustments are required, convert back to Excel and edit again
+4. **Update documentation**: Consider updating your qualification plan documentation to reflect the addition
+
+## Adding Multiple Projects
+
+To add multiple projects at once:
+
+```r
+snapshotPaths <- list(
+  "Project-A" = "path/to/project-a.json",
+  "Project-B" = "path/to/project-b.json",
+  "Project-C" = "https://raw.githubusercontent.com/Org/Repo/main/project-c.json"
+)
+
+toExcelEditor(
+  fileName = "updated-qualification.xlsx",
+  snapshotPaths = snapshotPaths,
+  qualificationPlan = "existing-qualification.json"
+)
+```
+
+All new projects will be highlighted in green, making it easy to review and integrate them.
+
+## Adding Observed Data
+
+You can also add new observed data files when integrating projects:
+
+```r
+observedDataPaths <- list(
+  "New Clinical Data" = list(
+    Path = "path/to/clinical_data.csv",
+    Type = "TimeProfile"
+  ),
+  "DDI Ratios" = list(
+    Path = "path/to/ddi_data.csv",
+    Type = "DDIRatio"
+  )
+)
+
+toExcelEditor(
+  fileName = excelFile,
+  snapshotPaths = snapshotPaths,
+  observedDataPaths = observedDataPaths,
+  qualificationPlan = qualificationPlan
+)
+```
+
+The new observed data will be available for use in plot mappings.
+
+## Common Integration Scenarios
+
+### Scenario 1: Adding a DDI Perpetrator Model
+
+When adding a perpetrator model to an existing victim model qualification:
+1. Add the perpetrator snapshot
+2. In BB sheet, configure building block inheritance so victim simulations use perpetrator compounds
+3. Create CT plots comparing perpetrator+victim simulations with DDI observed data
+4. Add DDIRatio plots to show interaction effects
+
+### Scenario 2: Adding a New Population
+
+When adding a new population (e.g., pediatric) to an adult model:
+1. Add the pediatric snapshot
+2. Configure individual building block inheritance from the adult model
+3. Create separate sections for pediatric results
+4. Add CT plots comparing pediatric simulations with pediatric observed data
+5. Optionally create comparison plots showing adult vs. pediatric predictions
+
+### Scenario 3: Model Version Update
+
+When replacing an old model version with a new one:
+1. Add the new version snapshot (it will be marked yellow if same project name)
+2. Review Simulations_Outputs to check for changes in available outputs
+3. Verify existing plot configurations still work with new version
+4. Update evaluations if simulation names or outputs changed
+
+## Related Articles
+
+- [Excel Template Documentation](./excel-template.html): Comprehensive guide to Excel worksheets
+- [Create Qualification from Snapshot](./no-qualification.html): Starting from scratch
+- [Update Qualification Plan Evaluations](./update-qualification.html): Modifying existing evaluations
+
+

@@ -21,25 +21,39 @@ source(system.file("excel-display.R", package = "ospsuite.qualificationplanedito
 library(ospsuite.qualificationplaneditor)
 ```
 
-The OSPSuite.QualificationPlanEditor package is designed to help you convert qualification plans from/into Excel format for easier editing.
+The **ospsuite.qualificationplaneditor** package is designed to help you convert qualification plans from/into Excel format for easier editing. This package bridges the gap between the JSON-based qualification plans used by the OSP Suite and user-friendly Excel spreadsheets.
 
-The package provides functionality to parse project snapshots, extract simulation data, and generate Excel workbooks with structured data sheets that can be edited and converted back to qualification plans.
+The package provides comprehensive functionality to:
 
-## Workflow
+- Parse project snapshots and extract simulation data
+- Generate Excel workbooks with structured, validated data sheets
+- Edit qualification plans in Excel with color-coded status indicators
+- Convert edited Excel files back to JSON qualification plans
+- Fetch the latest released versions of projects and observed data from GitHub repositories
 
-To create or update a qualification plan, the workflow is:
+This workflow enables easier collaboration, review, and updates to qualification plans without requiring direct JSON editing.
 
-1. Define a list of project snapshots and/or observed datasets
-2. Define a Qualification Plan
-3. Convert them to Excel
-4. Edit the Qualification Plan in Excel
-5. Convert back Qualification Plan to json format
-6. Run the updated Qualification
+## Typical Workflow
+
+The typical workflow for creating or updating a qualification plan involves the following steps:
+
+1. **Prepare Your Data**: Define a list of project snapshots (JSON files) and/or observed datasets (CSV files)
+2. **Load or Create a Qualification Plan**: Start with an existing qualification plan JSON file, or create a new one from snapshots
+3. **Convert to Excel**: Use `toExcelEditor()` to convert your qualification plan and data into an editable Excel workbook
+4. **Edit in Excel**: Review and modify the Excel file - add evaluations, configure plots, organize sections, etc.
+5. **Convert Back to JSON**: Use `excelToQualificationPlan()` to convert your edited Excel file back to a qualification plan JSON
+6. **Run the Qualification**: Execute the updated qualification plan using the OSP Suite Qualification Runner
+
+This approach allows you to leverage Excel's familiar interface while maintaining the structured format required by the OSP Suite qualification framework.
 
 
-## Fetch latest release
+## Fetching Latest Release Versions
 
-Steps 1 and 2 usually involve to use the latest release version of project snapshots, observed data and qualification plans. This can be done using the function `getLatestReleasedPaths()` as illustrated below:
+Steps 1 and 2 of the workflow typically involve using the latest release versions of project snapshots, observed data, and qualification plans from GitHub repositories. The `getLatestReleasedPaths()` function automates this process by checking GitHub releases and returning updated paths.
+
+### Basic Usage
+
+The following example demonstrates how to fetch the latest released paths from an existing qualification plan:
 
 ``` r
 # Get latest released paths from a qualification plan
@@ -52,43 +66,84 @@ latestPaths <- getLatestReleasedPaths(
 # Access the updated project and observed data paths
 latestProjectPaths <- latestPaths$projects
 latestObservedDataPaths <- latestPaths$observedData
+```
 
-# You can also ignore specific projects or observed data
+### Advanced Options
+
+You can customize the behavior with several options:
+
+**Ignore specific items:**
+``` r
+# Exclude certain projects or observed datasets from updates
 latestPaths <- getLatestReleasedPaths(
   qualificationPlan = "path/to/qualification_plan.json",
   projectsToIgnore = c("ProjectA", "ProjectB"),
   observedDataToIgnore = c("ObsData1")
 )
+```
 
-# Get all paths (not just updated ones)
+**Include pre-releases:**
+``` r
+# Include pre-release versions (e.g., beta, rc)
+latestPaths <- getLatestReleasedPaths(
+  qualificationPlan = "path/to/qualification_plan.json",
+  includePreReleases = TRUE
+)
+```
+
+**Get all paths (not just updates):**
+``` r
+# Return all paths, even if they haven't changed
 allPaths <- getLatestReleasedPaths(
   qualificationPlan = "path/to/qualification_plan.json",
   returnUpdatedOnly = FALSE
 )
 ```
 
-## Excel file content
+This function is particularly useful when maintaining qualification plans that reference multiple GitHub repositories, as it ensures you're always working with the most current versions.
 
-The article [Excel Template](./excel-template.html) describes the content of the Excel template file, its color and data validation conventions and how to edit before converting back to json format.
+## Understanding the Excel Template
 
-## Examples
+The Excel file generated by `toExcelEditor()` contains multiple worksheets, each serving a specific purpose in the qualification plan. The sheets use a color-coding system to indicate the status of projects and data:
 
-Below is a basic example with generic names showing how to include an updated project snapshot in your qualification plan:
+- **Green rows**: New items to be added to the qualification plan
+- **Yellow rows**: Items with updated versions or changed paths
+- **Grey rows**: Unchanged items already in the qualification plan
 
-For more detailed examples, you can read the following articles:
+The article [Excel Template Documentation](./excel-template.html) provides comprehensive details about:
 
-- [Update my Qualification Plan Evaluations](./update-qualification.html)
-- [Add a Snapshot to my Qualification Plan](./snapshot-qualification.html)
-- [Snapshot without a Qualification Plan](./no-qualification.html)
+- The structure and purpose of each worksheet
+- Color conventions for headers and data rows
+- Data validation rules and dropdown lists
+- Which sheets are editable vs. read-only
+- Best practices for editing the Excel file
 
+**Note:** Before editing the Excel file, we strongly recommend reading the Excel Template documentation to understand the worksheet structure and editing guidelines.
+
+## Detailed Examples and Use Cases
+
+Below is a basic example showing how to work with project snapshots and qualification plans. For comprehensive, step-by-step tutorials covering specific scenarios, please refer to the following articles:
+
+- **[Update Qualification Plan Evaluations](./update-qualification.html)**: Learn how to review and update existing evaluations in your qualification plan, including modifying plot configurations, sections, and building block references.
+
+- **[Add a Snapshot to Qualification Plan](./snapshot-qualification.html)**: Step-by-step guide for integrating a new project snapshot into an existing qualification plan, including handling building block inheritance and simulation mappings.
+
+- **[Create Qualification from Snapshot](./no-qualification.html)**: Complete tutorial for creating a new qualification plan from scratch using only project snapshots, ideal when starting a new qualification project.
+
+### Quick Start Example
+
+This example demonstrates the complete workflow for updating a qualification plan with new project snapshots and observed data:
 
 ``` r
-## Load the ospsuite.qualificationplaneditor package
+## Load the package
 library(ospsuite.qualificationplaneditor)
+
+# Define GitHub base path (example uses OSP repositories)
 ospPath <- "https://raw.githubusercontent.com/Open-Systems-Pharmacology"
 excelQualification <- "Updated-Qualification.xlsx"
 
 # List your updated snapshot projects
+# These can be local file paths or GitHub URLs
 snapshotPaths <- list(
   "Compound A" = file.path(ospPath, "A-Model/vX.X/A-Model.json"),
   "Compound B" = file.path(ospPath, "B-Model/vX.X/B-Model.json"),
@@ -96,15 +151,21 @@ snapshotPaths <- list(
 )
 
 # List your updated observed datasets
-observedDataPaths <- list("DDI Ratios" = list(
+# Each dataset requires a Path and optionally a Type
+observedDataPaths <- list(
+  "DDI Ratios" = list(
     Path = file.path(ospPath, "Database-for-observed-data/vX.X/DDI.csv"),
     Type = "DDIRatio"
-    ))
+  )
+)
 
-# Initial qualification plan
-qualificationPlan <- file.path(ospPath, "A-Model/vY.Y/Qualification/qualification_plan.json")
+# Path to your initial qualification plan
+qualificationPlan <- paste0(
+  ospPath,
+  "/A-Model/vY.Y/Qualification/qualification_plan.json"
+)
 
-# qualification plan converted to Excel
+# Convert qualification plan to Excel for editing
 toExcelEditor(
   fileName = excelQualification,
   snapshotPaths = snapshotPaths, 
@@ -112,14 +173,88 @@ toExcelEditor(
   qualificationPlan = qualificationPlan
 )
 
-# Tip: this will open Excel (or Libre office) with the created Excel workbook
+# Open the Excel file in your default spreadsheet application
 utils::browseURL(excelQualification)
 
+# After editing the Excel file, convert it back to JSON
+excelToQualificationPlan(
+  excelFile = excelQualification,
+  qualificationPlan = "updated-qualification_plan.json"
+)
 ```
 
-## Testing of the converted Qualification Plan
+### Understanding the Parameters
 
-To ensure that the converted qualification and evaluation plans provide appropriate evaluations, the following qualification plans are tested in the repo [RE-Test-Reports](https://github.com/Open-Systems-Pharmacology/RE-Test-Reports)
+- **fileName**: The output Excel file path. Can be relative or absolute.
+- **snapshotPaths**: A named list of project snapshot JSON files. Names become project IDs.
+- **observedDataPaths**: A named list of observed data files. Each entry should have `Path` and optionally `Type` fields.
+- **qualificationPlan**: Path or URL to an existing qualification plan JSON file. Omit this to create a new plan from scratch.
+- **excelTemplate**: (Optional) Path to a custom Excel template. Uses the built-in template if not specified.
 
-- [Qualification-DDI-UGT](https://github.com/Open-Systems-Pharmacology/Qualification-DDI-UGT)
-- TBD
+### Common Use Cases
+
+**Starting from scratch**: Omit the `qualificationPlan` parameter to create a new qualification plan:
+```r
+toExcelEditor(
+  fileName = "new-qualification.xlsx",
+  snapshotPaths = snapshotPaths
+)
+```
+
+**Only updating evaluations**: Omit snapshots to just edit an existing plan:
+```r
+toExcelEditor(
+  fileName = "updated-qualification.xlsx",
+  qualificationPlan = qualificationPlan
+)
+```
+
+**Local files**: Use local file paths instead of URLs:
+```r
+snapshotPaths <- list(
+  "MyProject" = "C:/Projects/MyModel/snapshot.json"
+)
+```
+
+## Troubleshooting
+
+### Common Issues and Solutions
+
+**Issue: "Cannot find file or URL"**
+- Verify that file paths are correct and files exist
+- For GitHub URLs, ensure the repository, branch/tag, and file path are all correct
+- Check that you have internet connectivity for remote URLs
+
+**Issue: "Excel file won't open after conversion"**
+- Ensure you have Excel, LibreOffice Calc, or another compatible spreadsheet application installed
+- Try specifying the full path to the Excel file
+- Check that you have write permissions in the target directory
+
+**Issue: "Data validation dropdowns are empty"**
+- This usually means required data is missing from validation sheets
+- Ensure all referenced projects and simulations exist in the `Projects`, `Simulations_Outputs`, and `Simulations_ObsData` sheets
+- Check that the Excel file was generated successfully without errors
+
+**Issue: "Conversion from Excel to JSON fails"**
+- Verify that you haven't modified the key sheets used for validation (`Projects`, `Simulations_Outputs`, `Simulations_ObsData`), as changes can break validation
+- Check that required columns haven't been deleted or renamed
+- Ensure data validation rules are respected (don't type free text where dropdowns are required)
+- Look for error messages in the R console for specific validation failures
+
+**Issue: "Building block inheritance not working"**
+- Verify parent project names exactly match entries in the Projects sheet
+- Check that the building block exists in the parent project
+- Ensure building block names and types match exactly (case-sensitive)
+
+### Getting Help
+
+If you encounter issues not covered here:
+
+1. Check the [GitHub Issues](https://github.com/Open-Systems-Pharmacology/OSPSuite.QualificationPlanEditor/issues) page
+2. Review the function documentation with `?toExcelEditor` or `?excelToQualificationPlan`
+3. Open a new issue with:
+   - Your R version and package version
+   - Minimal reproducible example
+   - Error messages and output
+   - Expected vs. actual behavior
+

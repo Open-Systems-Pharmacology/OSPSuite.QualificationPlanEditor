@@ -20,133 +20,360 @@ knitr::opts_chunk$set(
 library(ospsuite.qualificationplaneditor)
 ```
 
-## Context
+## Overview
 
-This article describes the Excel template to be edited to create or update a qualification plan.
+This article provides comprehensive documentation for the Excel template structure used by the `ospsuite.qualificationplaneditor` package. Understanding this structure is essential for effectively editing qualification plans in Excel format.
 
-## Color convention
+The Excel template consists of multiple worksheets, each serving a specific purpose in defining your qualification plan. Some sheets are automatically populated and should not be edited (informational sheets), while others are designed for user input (editable sheets).
 
-In the Excel template, many cells are filled with colors that follows the convention defined below:
+## Color Conventions
 
-### Header
+The Excel template uses background colors to convey important information about the status and purpose of data. Understanding these conventions will help you quickly identify what needs attention.
 
-Two background colors are used for headers:
+### Header Colors
 
-- <span style="background-color:#ADD8E6;">Blue</span>: data was found and corresponding Excel sheet was filled with project snapshots, observed datasets and/or qualification plan information
-- <span style="background-color:#ffff00;">Yellow</span>: no data was found to fill corresponding sheet
+Sheet tab and header colors indicate the data availability status:
 
-### Table rows
+- <span style="background-color:#ADD8E6;">**Light Blue**</span>: Data was successfully found and the corresponding Excel sheet has been populated with project snapshots, observed datasets, and/or qualification plan information. These sheets contain actionable data.
 
-- <span style="background-color:#A3FFA3;">Green</span>: project or observed dataset is not present in current qualification plan and assumed as to be **Added** to the qualification
-- <span style="background-color:#DDDDDD;">Grey</span>: project or observed dataset is present in current qualification plan and<br>either not present in the list of added snapshots/observed dataset<br>or present but version/path is the same as in the qualification plan
-- <span style="background-color:#FFFFBF;">Yellow</span>: project or observed dataset is present in current qualification plan and present in the list of added snapshots/observed dataset<br>while version/path is **Changed** between them
+- <span style="background-color:#ffff00;">**Yellow**</span>: No data was found to populate the corresponding sheet. This typically means the qualification plan doesn't contain this type of information yet, or no matching data was provided in the conversion process.
 
-## How to edit Excel sheets
+### Row Status Colors
 
-### MetaInfo
+Background colors in data rows indicate the status of projects, observed datasets, and other items relative to the existing qualification plan:
 
-Defines the version of the Qualification Plan Schema. The value should be formatted as `vX.Y`.
+- <span style="background-color:#A3FFA3;">**Green**</span>: This project or observed dataset is **new** - it does not exist in the current qualification plan and is assumed to be **added** to the qualification. Review these items carefully as they represent new content.
 
-You can check version tags on GitHub in  [QualificationPlan](https://github.com/Open-Systems-Pharmacology/QualificationPlan/tags) repository.
+- <span style="background-color:#DDDDDD;">**Grey**</span>: This project or observed dataset already exists in the current qualification plan, and either:
+  - It is not present in the list of newly provided snapshots/observed datasets, OR
+  - It is present but the version/path is identical to what's in the qualification plan
+  
+  These items are **unchanged** and typically don't require action.
 
-### Projects
+- <span style="background-color:#FFFFBF;">**Light Yellow**</span>: This project or observed dataset exists in both the current qualification plan and the newly provided snapshots/observed datasets, but the version or path has **changed**. These items represent updates and should be reviewed to ensure the changes are intentional.
 
-List project identifiers (`Id`) and their paths.
-The background use the color convention defined above.
+### Interpreting Colors
 
-This Excel sheet should not be edited.
+Use these color codes to prioritize your review:
+1. **Green items**: Verify these new additions are correct and intended
+2. **Yellow items**: Check that these updates reflect the desired changes
+3. **Grey items**: Generally no action needed unless you want to modify their usage in the plan
 
-### Simulations_Outputs
+## Worksheet Reference Guide
 
-List simulations and outputs for each project.
-The background use the color convention defined above.
+This section describes each worksheet in the Excel template, its purpose, and whether it should be edited.
 
-This Excel sheet should not be edited.
+### MetaInfo *(Editable)*
 
-### Simulations_ObsData
+**Purpose**: Defines the version of the Qualification Plan Schema used by your qualification plan.
 
-List simulations and observed data for each project.
-The background use the color convention defined above.
+**Format**: The value should be formatted as `X.Y` (e.g., `2.3`, `3.0`).
 
-This Excel sheet should not be edited.
+**How to edit**: You can check available version tags on the [QualificationPlan GitHub repository](https://github.com/Open-Systems-Pharmacology/QualificationPlan/tags).
 
-### ObsData
+---
 
-List Observed dataset identifiers (`Id`),  their paths and Type.
-The background use the color convention defined above.
+### Projects *(Read-Only)*
 
-You can edit the Type of Observed data.
+**Purpose**: Lists all project identifiers (`Id`) and their file paths or URLs.
 
-### BB
+**Content**: 
+- `Id`: Unique identifier for each project (typically the project name)
+- `Path`: File path or GitHub URL to the project snapshot JSON file
 
-List Building Blocks potential inheritance.
-Fill the **Parent-Project** column for a project to inherit the corresponding building block from a parent project.
+**Background**: Uses the row status color convention (green/yellow/grey) described above.
 
-An Excel data validation is set up to select from available projects.
+**Editing**: **DO NOT EDIT** this sheet. It is automatically populated from your project snapshots and qualification plan. Modifications may cause data inconsistencies.
 
-### SimParam
+---
 
-List Simulated Parameters potential inheritance.
-Fill the **Parent Project**, **Parent Simulation**, **Path** and **Target Simulation** columns for a project to inherit the corresponding simulated parameters from a parent project.
+### Simulations_Outputs *(Read-Only)*
 
-Excel data validations are set up to select from available projects and simulations.
+**Purpose**: Lists all simulations and their outputs for each project. This information is extracted from the project snapshot files.
 
-### All_Plots
+**Content**:
+- `Project`: Project identifier
+- `Simulation`: Simulation name within the project
+- `Output`: Output variable/observable from the simulation
 
-List all plots evaluations for each project and simulation.
+**Background**: Uses the row status color convention.
 
-Fill the **Section Reference** column to include the evaluation in the corresponding section.
-Excel data validations are set up to select from available sections.
+**Editing**: **DO NOT EDIT** this sheet. The simulation and output information must match what exists in the actual project files.
 
-### CT_Plots and CT_Mapping
+---
 
-Define and list Comparison Time Profile (CT) plots.
+### Simulations_ObsData *(Read-Only)*
 
-Excel data validations are set up to select from available sections, projects, simulations, observed data, etc.
+**Purpose**: Lists simulations and their associated observed data for each project.
 
-### GOF_Plots and GOF_Mapping
+**Content**:
+- `Project`: Project identifier
+- `Simulation`: Simulation name
+- `ObservedData`: Observed dataset identifier linked to this simulation
 
-Define and list Goodness of Fit (GOF) plots.
+**Background**: Uses the row status color convention.
 
-Excel data validations are set up to select from available sections, projects, simulations, observed data, etc.
+**Editing**: **DO NOT EDIT** this sheet. This information is extracted from project files and defines which observed data should be compared against each simulation.
 
-### DDIRatio_Plots and DDIRatio_Mapping
+---
 
-Define and list DDI Ratio plots.
+### ObsData *(Partially Editable)*
 
-Excel data validations are set up to select from available sections, projects, simulations, observed data, etc.
+**Purpose**: Lists all observed datasets with their identifiers, file paths, and data types.
 
-### PKRatio_Plots and PKRatio_Mapping
+**Content**:
+- `Id`: Unique identifier for the observed dataset
+- `Path`: File path or URL to the observed data CSV file
+- `Type`: Type of observed data (e.g., `TimeProfile`, `DDIRatio`, `PKRatio`)
 
-Define and list PK Ratio plots.
+**Background**: Uses the row status color convention.
 
-Excel data validations are set up to select from available sections, projects, simulations, observed data, etc.
+**Editing**: You **CAN** edit the `Type` column to change how the observed data is interpreted. Common types include:
+- `TimeProfile`: Time-course concentration data
+- `DDIRatio`: Drug-drug interaction ratio data
+- `PKRatio`: Pharmacokinetic parameter ratio data
 
-### Sections
+**DO NOT** edit the `Id` or `Path` columns as these must match the actual data files.
 
-Define and list Qualification Report sections.
+---
 
-Fill **Section Reference** tag to identify a section. 
-If section is a sub-section, fill the **Parent Section** column, Excel data validations are set up to select from available sections.
+### BB *(Editable)*
 
-### Intro
+**Purpose**: Defines Building Block inheritance relationships between projects.
 
-Define the path of the markdown file used as introduction of your qualification report.
+**Content**:
+- `Project`: Project identifier
+- `BB-Type`: Type of building block (e.g., `Compound`, `Individual`, `Formulation`)
+- `BB-Name`: Name of the building block
+- `Parent-Project`: Source project from which to inherit this building block
 
-### Inputs
+**How to edit**: Fill the **Parent-Project** column to specify that a project should inherit a building block from another project instead of defining it locally. 
 
-Fill the **Project**, **BB-Type**, **BB-Name** and **Section Reference** to include the Building Block definitions into the corresponding section of your qualification report.
-Excel data validations are set up to select from available building blocks and sections.
+**Data validation**: An Excel dropdown list is provided to select from available projects, ensuring you reference valid parent projects.
 
-### GlobalPlotSettings
+**Use case**: This is useful when multiple projects share common building blocks (e.g., the same compound definition), allowing you to avoid duplication and maintain consistency.
 
-Define the global settings of the exported figures including the size of the figure in pixels.
+---
 
-### GlobalAxesSettings
+### SimParam *(Editable)*
 
-Define the global axes settings of the exported figures corresponding to dimensions, units and scales of the plots.
+**Purpose**: Defines inheritance of simulated parameters between projects and simulations.
 
-### Lookup
+**Content**:
+- `Project`: Target project for which parameter inheritance is defined
+- `Parent Project`: Source project from which parameters are inherited
+- `Parent Simulation`: Source simulation within the parent project
+- `Path`: Parameter path to inherit
+- `TargetSimulation`: (Optional) alternative target simulation name within the target project
 
-Look up table defining allowed values for qualification plan properties.
+**How to edit**: Fill in the columns to specify parameter inheritance. For example, if Simulation B should use parameter values from Simulation A in a different project, specify the source project and simulation in `Parent Project` and `Parent Simulation`, and the target project (and optionally `TargetSimulation`) accordingly.
+
+**Data validation**: Excel dropdowns are provided for selecting available projects and simulations.
+
+**Use case**: Parameter inheritance is useful for ensuring consistency when similar simulations across projects should use the same parameter values.
+
+---
+
+### All_Plots *(Editable)*
+
+**Purpose**: Lists all individual plot evaluations for each project and simulation. These are plots generated directly from simulation outputs.
+
+**Content**:
+- Project and simulation information
+- Plot configuration details
+- `Section Reference`: The qualification report section where this plot should appear
+
+**How to edit**: Fill the **Section Reference** column to include the evaluation in the corresponding section of your qualification report. Leave empty to exclude a plot.
+
+**Data validation**: Dropdowns are provided to select from available sections (defined in the Sections sheet).
+
+**Use case**: Control which simulation outputs appear in your qualification report and organize them into appropriate sections.
+
+---
+
+### CT_Plots and CT_Mapping *(Editable)*
+
+**Purpose**: Define and configure Comparison Time Profile (CT) plots.
+
+**CT_Plots**: Defines the properties of each CT plot (title, axes, scaling, etc.)
+
+**CT_Mapping**: Maps specific simulation outputs and observed data to each CT plot
+
+**How to edit**: 
+1. Define your CT plots in the CT_Plots sheet with unique identifiers
+2. Use CT_Mapping to specify which outputs and observed data should appear on each plot
+3. Assign plots to report sections using the Section Reference column
+
+**Data validation**: Dropdowns help select from available sections, projects, simulations, observed data, etc.
+
+**Use case**: CT plots allow you to compare simulation outputs with observed data over time, useful for model validation.
+
+---
+
+### GOF_Plots and GOF_Mapping *(Editable)*
+
+**Purpose**: Define and configure Goodness of Fit (GOF) plots.
+
+**GOF_Plots**: Defines GOF plot properties
+
+**GOF_Mapping**: Maps data to GOF plots
+
+**How to edit**: Similar to CT plots - define plots in GOF_Plots and map data in GOF_Mapping.
+
+**Use case**: GOF plots provide statistical visualizations of how well simulations match observed data across multiple scenarios.
+
+---
+
+### DDIRatio_Plots and DDIRatio_Mapping *(Editable)*
+
+**Purpose**: Define and configure DDI Ratio plots for drug-drug interaction studies.
+
+**DDIRatio_Plots**: Defines DDI ratio plot properties
+
+**DDIRatio_Mapping**: Maps DDI ratio data to plots
+
+**How to edit**: Define plots and map your DDI ratio observed data to them.
+
+**Use case**: Specialized plots for visualizing perpetrator-victim drug-drug interactions as ratios.
+
+---
+
+### PKRatio_Plots and PKRatio_Mapping *(Editable)*
+
+**Purpose**: Define and configure PK Ratio plots for pharmacokinetic parameter ratios.
+
+**PKRatio_Plots**: Defines PK ratio plot properties
+
+**PKRatio_Mapping**: Maps PK ratio data to plots
+
+**Use case**: Compare predicted vs. observed pharmacokinetic parameters using ratio analysis.
+
+---
+
+### Sections *(Editable)*
+
+**Purpose**: Define the structure and organization of your qualification report.
+
+**Content**:
+- `Section Reference`: Unique tag/identifier for the section
+- `Section Title`: Display title for the section
+- `Parent Section`: (Optional) Parent section for creating subsections
+- `Section Description`: (Optional) Description or introduction for the section
+
+**How to edit**: 
+1. Create top-level sections by filling Section Reference and Title, leaving Parent Section empty
+2. Create subsections by filling Parent Section with an existing section reference
+3. Use section references in plot and evaluation sheets to assign content to sections
+
+**Data validation**: Parent Section dropdown shows available sections for creating hierarchies.
+
+**Use case**: Organize your qualification report with a logical structure (e.g., Introduction, Methods, Results, Discussion).
+
+---
+
+### Intro *(Editable)*
+
+**Purpose**: Specifies the path to a Markdown file used as the introduction to your qualification report.
+
+**Content**: File path or URL to a `.md` file
+
+**How to edit**: Enter the path to your introduction markdown file. This content will appear at the beginning of the generated qualification report.
+
+**Use case**: Provide context, objectives, and methodology overview for your qualification study.
+
+---
+
+### Inputs *(Editable)*
+
+**Purpose**: Specify which building block definitions should be included in the qualification report documentation.
+
+**Content**:
+- `Project`: Project containing the building block
+- `BB-Type`: Type of building block to document
+- `BB-Name`: Name of the building block
+- `Section Reference`: Report section where the building block documentation should appear
+
+**How to edit**: Fill rows to include building block details in your report. This is useful for documenting compound properties, individual parameters, formulations, etc.
+
+**Data validation**: Data validation dropdowns are provided for selecting from available building blocks and sections.
+
+**Use case**: Include detailed documentation of model building blocks (compounds, individuals, etc.) in your qualification report.
+
+---
+
+### GlobalPlotSettings *(Editable)*
+
+**Purpose**: Define global settings for all exported figures.
+
+**Content**: 
+- Figure dimensions (width, height in pixels)
+- Resolution (DPI)
+- Font sizes
+- Other visual properties
+
+**How to edit**: Modify values to control the appearance of all plots in your qualification report.
+
+**Use case**: Ensure consistent, publication-quality figures throughout your report.
+
+---
+
+### GlobalAxesSettings *(Editable)*
+
+**Purpose**: Define global axis settings for plots.
+
+**Content**:
+- Dimension mappings (e.g., Time, Concentration)
+- Unit preferences
+- Scale types (linear, logarithmic)
+
+**How to edit**: Configure default axis properties that apply to all plots unless overridden.
+
+**Use case**: Standardize axis formatting (units, scales) across all plots for consistency.
+
+---
+
+### Lookup *(Read-Only)*
+
+**Purpose**: Provides lookup tables defining allowed values for various qualification plan properties.
+
+**Content**: Reference tables for valid values used in data validation
+
+**Editing**: **DO NOT EDIT** this sheet. It defines the valid options used throughout the Excel file and ensures data consistency.
+
+---
+
+## Best Practices for Editing
+
+1. **Always start by reviewing the color-coded rows** to identify new (green), changed (yellow), and unchanged (grey) items
+
+2. **Do not edit read-only sheets** (Projects, Simulations_Outputs, Simulations_ObsData, Lookup) as this can cause data inconsistencies
+
+3. **Use the data validation dropdowns** wherever they appear - do not type free text as this may cause validation errors
+
+4. **Keep section references consistent** - ensure section references in plot sheets match those defined in the Sections sheet
+
+5. **Test incrementally** - after making significant edits, convert back to JSON and validate before making additional changes
+
+6. **Keep a backup** - save a copy of your Excel file before making major changes
+
+7. **Document your changes** - use Excel comments or a separate notes sheet to track why you made specific edits
+
+## Converting Back to JSON
+
+After editing the Excel file, use the `excelToQualificationPlan()` function to convert it back to a JSON qualification plan:
+
+```r
+excelToQualificationPlan(
+  excelFile = "path/to/your/edited_file.xlsx",
+  qualificationPlan = "path/to/output/qualification_plan.json"
+)
+```
+
+The function will validate your edits and report any errors. Common validation errors include:
+- Invalid section references (referencing sections that don't exist)
+- Invalid project or simulation names (not matching the Projects or simulation sheets such as `Simulations_Outputs` and `Simulations_ObsData`)
+- Missing required columns
+- Invalid values not matching lookup tables
+
+Always check the console output for error messages and fix any issues before running your qualification plan.
 
