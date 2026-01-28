@@ -5,7 +5,7 @@
 \alias{PLOT_SETTINGS}
 \title{PLOT_SETTINGS}
 \format{
-An object of class \code{list} of length 7.
+An object of class \code{list} of length 3.
 }
 \usage{
 PLOT_SETTINGS

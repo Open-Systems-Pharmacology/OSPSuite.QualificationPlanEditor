@@ -93,11 +93,13 @@ EXCEL_MAPPING <- read.csv( # nolint
 PLOT_SETTINGS <- list( # nolint
   ChartWidth = 500, 
   ChartHeight = 400,
-  AxisSize = 11, 
-  LegendSize = 9, 
-  OriginSize = 11, 
-  FontFamilyName = "Arial",
-  WatermarkSize = 40
+  Fonts = list(
+    AxisSize = 11, 
+    LegendSize = 9, 
+    OriginSize = 11, 
+    FontFamilyName = "Arial",
+    WatermarkSize = 40
+  )
 )
 
 #' @title AXES_SETTINGS

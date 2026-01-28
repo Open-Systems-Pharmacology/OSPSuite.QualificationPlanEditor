@@ -649,17 +649,22 @@ getQualificationPKRatioMapping <- function(qualificationContent) {
 #' @return A data.frame with plot settings information
 #' @keywords internal
 formatPlotSettings <- function(plotSettings, fillEmpty = FALSE) {
-  updatedPlotSettings <- sapply(
-    names(PLOT_SETTINGS),
-    function(fieldName){
-      settingField <- plotSettings[[fieldName]] %||% 
-        ifelse(fillEmpty, PLOT_SETTINGS[[fieldName]], NA)
-      return(settingField)
-    },
-    USE.NAMES = TRUE,
-    simplify = FALSE
+  updatedPlotSettings <- data.frame(
+    ChartWidth = plotSettings$ChartWidth %||% 
+      ifelse(fillEmpty, PLOT_SETTINGS$ChartWidth, NA), 
+    ChartHeight = plotSettings$ChartHeight %||% 
+      ifelse(fillEmpty, PLOT_SETTINGS$ChartHeight, NA), 
+    AxisSize = plotSettings$Fonts$AxisSize %||% 
+      ifelse(fillEmpty, PLOT_SETTINGS$Fonts$AxisSize, NA),
+    LegendSize = plotSettings$Fonts$LegendSize %||% 
+      ifelse(fillEmpty, PLOT_SETTINGS$Fonts$LegendSize, NA),
+    OriginSize = plotSettings$Fonts$OriginSize %||% 
+      ifelse(fillEmpty, PLOT_SETTINGS$Fonts$OriginSize, NA),
+    FontFamilyName = plotSettings$Fonts$FontFamilyName %||% 
+      ifelse(fillEmpty, PLOT_SETTINGS$Fonts$FontFamilyName, NA),
+    WatermarkSize = plotSettings$Fonts$WatermarkSize %||% 
+      ifelse(fillEmpty, PLOT_SETTINGS$Fonts$WatermarkSize, NA)
   )
-  updatedPlotSettings <- as.data.frame(updatedPlotSettings)
   return(updatedPlotSettings)
 }
 

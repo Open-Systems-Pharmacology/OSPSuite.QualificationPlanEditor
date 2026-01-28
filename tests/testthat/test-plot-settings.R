@@ -19,7 +19,7 @@ test_that("Default Global Plot Settings are exported as an appropriate data.fram
 })
 
 test_that("formatPlotSettings exports qualification data appropriately", {
-  testPlotSettings <- list(ChartWidth = 600, ChartHeight = 500, WatermarkSize = 28)
+  testPlotSettings <- list(ChartWidth = 600, ChartHeight = 500, Fonts = list(WatermarkSize = 28))
   excelPlotSetting <- ospsuite.qualificationplaneditor:::formatPlotSettings(plotSettings = testPlotSettings)
   expect_equal(
     excelPlotSetting,
