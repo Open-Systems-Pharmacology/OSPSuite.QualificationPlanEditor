@@ -86,6 +86,52 @@ EXCEL_MAPPING <- read.csv( # nolint
   stringsAsFactors = FALSE
 )
 
+#' @title PLOT_SETTINGS
+#' @description
+#' Default plot settings used by qualification plans
+#' @keywords internal
+PLOT_SETTINGS <- list(
+  ChartWidth = 500, 
+  ChartHeight = 400,
+  AxisSize = 11, 
+  LegendSize = 9, 
+  OriginSize = 11, 
+  FontFamilyName = "Arial",
+  WatermarkSize = 40
+)
+
+#' @title AXES_SETTINGS
+#' @description
+#' Default axes settings used by qualification plans
+#' @keywords internal
+AXES_SETTINGS <- list(
+  ComparisonTimeProfile = list(
+    list(Type = "X", Dimension = "Time", Unit = "h", GridLines = FALSE, Scaling = "Linear"),
+    list(Type = "Y", Dimension = "Concentration (mass)", Unit = "µg/l", GridLines = FALSE, Scaling = "Log")
+  ),
+  GOFMergedPlotsPredictedVsObserved = list(
+    list(Type = "X", Dimension = "Concentration (mass)", Unit = "µg/l", GridLines = FALSE, Scaling = "Log"),
+    list(Type = "Y", Unit = "µg/l", Dimension = "Concentration (mass)", GridLines = FALSE, Scaling = "Log")
+  ),
+  GOFMergedPlotsResidualsOverTime = list(
+    list(Type = "X", Dimension = "Time", Unit = "h", GridLines = FALSE, Scaling = "Linear"),
+    list(Type = "Y", Dimension = "Dimensionless", Unit = "", GridLines = FALSE, Scaling = "Linear")
+  ),
+  DDIRatioPlotsPredictedVsObserved = list(
+    list(Type = "X", Dimension = "Dimensionless", Unit = "", GridLines = FALSE, Scaling = "Log"),
+    list(Type = "Y", Dimension = "Dimensionless", Unit = "", GridLines = FALSE, Scaling = "Log")
+  ),
+  DDIRatioPlotsResidualsVsObserved = list(
+    list(Type = "X", Dimension = "Dimensionless", Unit = "", GridLines = FALSE, Scaling = "Log"),
+    list(Type = "Y", Dimension = "Dimensionless", Unit = "", GridLines = FALSE, Scaling = "Log")
+  ),
+  PKRatioPlots = list(
+    list(Type = "X", Dimension = "Age", Unit = "year(s)", GridLines = FALSE, Scaling = "Linear"),
+    list(Type = "Y", Dimension = "Dimensionless", Unit = "", GridLines = FALSE, Scaling = "Log")
+  )
+)
+
+
 #' @title excelOption
 #' @description
 #' Because `ospsuite.utils::validateColumns()` has been deprecated in favor of `ospsuite.utils::validateIsOption()`, 
