@@ -90,7 +90,7 @@ EXCEL_MAPPING <- read.csv( # nolint
 #' @description
 #' Default plot settings used by qualification plans
 #' @keywords internal
-PLOT_SETTINGS <- list(
+PLOT_SETTINGS <- list( # nolint
   ChartWidth = 500, 
   ChartHeight = 400,
   AxisSize = 11, 
@@ -104,7 +104,7 @@ PLOT_SETTINGS <- list(
 #' @description
 #' Default axes settings used by qualification plans
 #' @keywords internal
-AXES_SETTINGS <- list(
+AXES_SETTINGS <- list( # nolint
   ComparisonTimeProfile = list(
     list(Type = "X", Dimension = "Time", Unit = "h", GridLines = FALSE, Scaling = "Linear"),
     list(Type = "Y", Dimension = "Concentration (mass)", Unit = "µg/l", GridLines = FALSE, Scaling = "Log")
