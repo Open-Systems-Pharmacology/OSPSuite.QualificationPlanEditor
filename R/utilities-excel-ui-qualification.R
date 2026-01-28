@@ -115,12 +115,14 @@ getBBDataFromQualification <- function(qualificationContent) {
 #' @keywords internal
 getQualificationSections <- function(qualificationContent) {
   sectionsData <- parseSectionsToDataFrame(qualificationContent$Sections)
+  # If no qualification plan or the plan does not include any section
+  # provide a dummy example for users
   if (ospsuite.utils::isEmpty(sectionsData)) {
     sectionsData <- data.frame(
-      "Section Reference" = character(),
-      "Title" = character(),
-      "Content" = character(),
-      "Parent Section" = character(),
+      "Section Reference" = "tralala",
+      "Title" = "Tralala",
+      "Content" = NA,
+      "Parent Section" = NA,
       check.names = FALSE
     )
   }
@@ -642,29 +644,28 @@ getQualificationPKRatioMapping <- function(qualificationContent) {
 #' @description
 #' Format plot settings into a standardized data.frame for further processing or reporting
 #' @param plotSettings Content of a qualification plan
+#' @param fillEmpty Logical. If `FALSE`, empty values are replaced by `NA`.
+#' If `TRUE`, fill empty values with default qualification plan Plot Settings.
 #' @return A data.frame with plot settings information
 #' @keywords internal
-formatPlotSettings <- function(plotSettings) {
-  if (ospsuite.utils::isEmpty(plotSettings)) {
-    return(data.frame(
-      ChartWidth = NA,
-      ChartHeight = NA,
-      AxisSize = NA,
-      LegendSize = NA,
-      OriginSize = NA,
-      FontFamilyName = NA,
-      WatermarkSize = NA
-    ))
-  }
-  data.frame(
-    ChartWidth = plotSettings$ChartWidth %||% 500,
-    ChartHeight = plotSettings$ChartHeight %||% 400,
-    AxisSize = plotSettings$Fonts$AxisSize %||% 11,
-    LegendSize = plotSettings$Fonts$LegendSize %||% 9,
-    OriginSize = plotSettings$Fonts$OriginSize %||% 11,
-    FontFamilyName = plotSettings$Fonts$FontFamilyName %||% "Arial",
-    WatermarkSize = plotSettings$Fonts$WatermarkSize %||% 40
+formatPlotSettings <- function(plotSettings, fillEmpty = FALSE) {
+  updatedPlotSettings <- data.frame(
+    ChartWidth = plotSettings$ChartWidth %||% 
+      ifelse(fillEmpty, PLOT_SETTINGS$ChartWidth, NA), 
+    ChartHeight = plotSettings$ChartHeight %||% 
+      ifelse(fillEmpty, PLOT_SETTINGS$ChartHeight, NA), 
+    AxisSize = plotSettings$Fonts$AxisSize %||% 
+      ifelse(fillEmpty, PLOT_SETTINGS$Fonts$AxisSize, NA),
+    LegendSize = plotSettings$Fonts$LegendSize %||% 
+      ifelse(fillEmpty, PLOT_SETTINGS$Fonts$LegendSize, NA),
+    OriginSize = plotSettings$Fonts$OriginSize %||% 
+      ifelse(fillEmpty, PLOT_SETTINGS$Fonts$OriginSize, NA),
+    FontFamilyName = plotSettings$Fonts$FontFamilyName %||% 
+      ifelse(fillEmpty, PLOT_SETTINGS$Fonts$FontFamilyName, NA),
+    WatermarkSize = plotSettings$Fonts$WatermarkSize %||% 
+      ifelse(fillEmpty, PLOT_SETTINGS$Fonts$WatermarkSize, NA)
   )
+  return(updatedPlotSettings)
 }
 
 #' @title formatAxesSettings
@@ -711,21 +712,12 @@ formatAxesSettings <- function(axesSettings) {
 #' @return A data.frame with axes setting information
 #' @keywords internal
 formatGlobalAxesSettings <- function(axesSettings, plotName) {
+  # If no global axes settings, use qualification default values
   if (ospsuite.utils::isEmpty(axesSettings)) {
-    return(data.frame(
-      Plot = plotName,
-      Type = c("X", "Y"),
-      Dimension = NA,
-      Unit = NA,
-      GridLines = NA,
-      Scaling = NA
-    ))
+    axesSettings <- AXES_SETTINGS[[plotName]]
   }
   axesSettingsData <- dplyr::bind_rows(lapply(axesSettings, as.data.frame)) |>
-    dplyr::mutate(
-      Plot = plotName,
-      .before = dplyr::everything()
-    )
+    dplyr::mutate(Plot = plotName, .before = dplyr::everything())
   return(axesSettingsData)
 }
 

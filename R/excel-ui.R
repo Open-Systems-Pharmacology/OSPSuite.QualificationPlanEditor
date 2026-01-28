@@ -719,7 +719,7 @@ toExcelEditor <- function(fileName = "qualification.xlsx",
 
   # Global Plot Settings
   cli::cli_progress_step("Exporting {.field Global Plot Settings}")
-  globalPlotSettings <- formatPlotSettings(qualificationContent$Plots$PlotSettings)
+  globalPlotSettings <- formatPlotSettings(qualificationContent$Plots$PlotSettings, fillEmpty = TRUE)
   writeDataToSheet(data = globalPlotSettings, sheetName = "GlobalPlotSettings", excelObject = excelObject)
   # Drop down lists for FontFamilyName
   applyDataValidation(
@@ -730,9 +730,9 @@ toExcelEditor <- function(fileName = "qualification.xlsx",
     excelObject = excelObject
   )
 
-  # GlobalAxes DDI PreVsObs
+  # GlobalAxes
   cli::cli_progress_step("Exporting {.field Global Axes Settings}")
-  ddiAxesSettings <- lapply(
+  globalAxesSettings <- lapply(
     ALL_EXCEL_AXES,
     function(plotName) {
       formatGlobalAxesSettings(
@@ -741,26 +741,26 @@ toExcelEditor <- function(fileName = "qualification.xlsx",
       )
     }
   )
-  ddiAxesSettings <- do.call("rbind", ddiAxesSettings)
-  writeDataToSheet(data = ddiAxesSettings, sheetName = "GlobalAxesSettings", excelObject = excelObject)
+  globalAxesSettings <- do.call("rbind", globalAxesSettings)
+  writeDataToSheet(data = globalAxesSettings, sheetName = "GlobalAxesSettings", excelObject = excelObject)
   # Drop down lists for Dimension, GridLines, and Scaling
   applyDataValidation(
     value = excelListingValue(lookupData, "Dimension", "Lookup"),
-    data = ddiAxesSettings,
+    data = globalAxesSettings,
     sheetName = "GlobalAxesSettings",
     columnNames = "Dimension",
     excelObject = excelObject
   )
   applyDataValidation(
     value = excelListingValue(lookupData, "Boolean", "Lookup"),
-    data = ddiAxesSettings,
+    data = globalAxesSettings,
     sheetName = "GlobalAxesSettings",
     columnNames = "GridLines",
     excelObject = excelObject
   )
   applyDataValidation(
     value = excelListingValue(lookupData, "Scaling", "Lookup"),
-    data = ddiAxesSettings,
+    data = globalAxesSettings,
     sheetName = "GlobalAxesSettings",
     columnNames = "Scaling",
     excelObject = excelObject

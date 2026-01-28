@@ -4,10 +4,13 @@
 \alias{formatPlotSettings}
 \title{formatPlotSettings}
 \usage{
-formatPlotSettings(plotSettings)
+formatPlotSettings(plotSettings, fillEmpty = FALSE)
 }
 \arguments{
 \item{plotSettings}{Content of a qualification plan}
+
+\item{fillEmpty}{Logical. If `FALSE`, empty values are replaced by `NA`.
+If `TRUE`, fill empty values with default qualification plan Plot Settings.}
 }
 \value{
 A data.frame with plot settings information
