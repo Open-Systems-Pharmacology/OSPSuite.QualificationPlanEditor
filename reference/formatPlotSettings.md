@@ -6,7 +6,7 @@ processing or reporting
 ## Usage
 
 ``` r
-formatPlotSettings(plotSettings)
+formatPlotSettings(plotSettings, fillEmpty = FALSE)
 ```
 
 ## Arguments
@@ -14,6 +14,12 @@ formatPlotSettings(plotSettings)
 - plotSettings:
 
   Content of a qualification plan
+
+- fillEmpty:
+
+  Logical. If \`FALSE\`, empty values are replaced by \`NA\`. If
+  \`TRUE\`, fill empty values with default qualification plan Plot
+  Settings.
 
 ## Value
 

@@ -91,62 +91,62 @@ toExcelEditor(
 #> 
 #> ── Exporting to Excel Editor ───────────────────────────────────────────────────
 #> ℹ Copying Excel Template to qualification_ugt.xlsx
-#> ✔ Copying Excel Template to qualification_ugt.xlsx [189ms]
+#> ✔ Copying Excel Template to qualification_ugt.xlsx [194ms]
 #> 
 #> ℹ Checking for Qualification Plan
 #> ℹ Qualification Plan: qualification_ugt.json
-#> ℹ Checking for Qualification Plan✔ Checking for Qualification Plan [31ms]
+#> ℹ Checking for Qualification Plan✔ Checking for Qualification Plan [32ms]
 #> 
 #> ℹ Exporting Projects Data
-#> ✔ Exporting Projects Data [62ms]
+#> ✔ Exporting Projects Data [65ms]
 #> 
 #> ℹ Exporting Simulation Outputs Data
-#> ✔ Exporting Simulation Outputs Data [1.9s]
+#> ✔ Exporting Simulation Outputs Data [2.2s]
 #> 
 #> ℹ Exporting Simulation Observed Data
-#> ✔ Exporting Simulation Observed Data [455ms]
+#> ✔ Exporting Simulation Observed Data [1s]
 #> 
 #> ℹ Exporting Observed Data
-#> ✔ Exporting Observed Data [34ms]
+#> ✔ Exporting Observed Data [39ms]
 #> 
 #> ℹ Exporting Building Block Data
 #> 
 #> ℹ Exporting Building Block Data── Qualification Plan ──
 #> ℹ Exporting Building Block Data
-#> ℹ Exporting Building Block Data✔ Exporting Building Block Data [503ms]
+#> ℹ Exporting Building Block Data✔ Exporting Building Block Data [1.5s]
 #> 
 #> ℹ Exporting Schema Data
-#> ✔ Exporting Schema Data [20ms]
+#> ✔ Exporting Schema Data [21ms]
 #> 
 #> ℹ Exporting Sections
-#> ✔ Exporting Sections [24ms]
+#> ✔ Exporting Sections [26ms]
 #> 
 #> ℹ Exporting Intro and Inputs
-#> ✔ Exporting Intro and Inputs [22ms]
+#> ✔ Exporting Intro and Inputs [24ms]
 #> 
 #> ℹ Exporting Simulation Parameters Settings
-#> ✔ Exporting Simulation Parameters Settings [22ms]
+#> ✔ Exporting Simulation Parameters Settings [25ms]
 #> 
 #> ℹ Exporting All Plots Settings
-#> ✔ Exporting All Plots Settings [29ms]
+#> ✔ Exporting All Plots Settings [32ms]
 #> 
 #> ℹ Exporting Comparison Time Profile Plot Settings
-#> ✔ Exporting Comparison Time Profile Plot Settings [60ms]
+#> ✔ Exporting Comparison Time Profile Plot Settings [65ms]
 #> 
 #> ℹ Exporting GOF Merged Plot Settings
-#> ✔ Exporting GOF Merged Plot Settings [29ms]
+#> ✔ Exporting GOF Merged Plot Settings [31ms]
 #> 
 #> ℹ Exporting DDI Ratio Plot Settings
-#> ✔ Exporting DDI Ratio Plot Settings [61ms]
+#> ✔ Exporting DDI Ratio Plot Settings [63ms]
 #> 
 #> ℹ Exporting Global Plot Settings
-#> ✔ Exporting Global Plot Settings [24ms]
+#> ✔ Exporting Global Plot Settings [25ms]
 #> 
 #> ℹ Exporting Global Axes Settings
-#> ✔ Exporting Global Axes Settings [32ms]
+#> ✔ Exporting Global Axes Settings [39ms]
 #> 
 #> ℹ Saving extracted data into qualification_ugt.xlsx
-#> ✔ Saving extracted data into qualification_ugt.xlsx [426ms]
+#> ✔ Saving extracted data into qualification_ugt.xlsx [435ms]
 ```
 
 ### What Happens During Conversion
@@ -1928,20 +1928,20 @@ The Excel file will contain both existing and new content:
 |-----------:|------------:|---------:|-----------:|-----------:|:---------------|--------------:|
 |        500 |         400 |       11 |          9 |          9 | Arial          |            40 |
 
-| Plot                              | Type | Dimension            | Unit  | GridLines | Scaling |
-|:----------------------------------|:-----|:---------------------|:------|:---------:|:--------|
-| GOFMergedPlotsPredictedVsObserved | X    | NA                   | NA    |    NA     | NA      |
-| GOFMergedPlotsPredictedVsObserved | Y    | NA                   | NA    |    NA     | NA      |
-| GOFMergedPlotsResidualsOverTime   | X    | NA                   | NA    |    NA     | NA      |
-| GOFMergedPlotsResidualsOverTime   | Y    | NA                   | NA    |    NA     | NA      |
-| DDIRatioPlotsPredictedVsObserved  | X    | Dimensionless        |       |   FALSE   | Log     |
-| DDIRatioPlotsPredictedVsObserved  | Y    | Dimensionless        |       |   FALSE   | Log     |
-| DDIRatioPlotsResidualsVsObserved  | X    | Dimensionless        |       |   FALSE   | Log     |
-| DDIRatioPlotsResidualsVsObserved  | Y    | Dimensionless        |       |   FALSE   | Log     |
-| ComparisonTimeProfile             | X    | Time                 | h     |   FALSE   | Linear  |
-| ComparisonTimeProfile             | Y    | Concentration (mass) | ng/ml |   FALSE   | Log     |
-| PKRatioPlots                      | X    | NA                   | NA    |    NA     | NA      |
-| PKRatioPlots                      | Y    | NA                   | NA    |    NA     | NA      |
+| Plot                              | Type | Dimension            | Unit    | GridLines | Scaling |
+|:----------------------------------|:-----|:---------------------|:--------|:---------:|:--------|
+| GOFMergedPlotsPredictedVsObserved | X    | Concentration (mass) | µg/l    |   FALSE   | Log     |
+| GOFMergedPlotsPredictedVsObserved | Y    | Concentration (mass) | µg/l    |   FALSE   | Log     |
+| GOFMergedPlotsResidualsOverTime   | X    | Time                 | h       |   FALSE   | Linear  |
+| GOFMergedPlotsResidualsOverTime   | Y    | Dimensionless        |         |   FALSE   | Linear  |
+| DDIRatioPlotsPredictedVsObserved  | X    | Dimensionless        |         |   FALSE   | Log     |
+| DDIRatioPlotsPredictedVsObserved  | Y    | Dimensionless        |         |   FALSE   | Log     |
+| DDIRatioPlotsResidualsVsObserved  | X    | Dimensionless        |         |   FALSE   | Log     |
+| DDIRatioPlotsResidualsVsObserved  | Y    | Dimensionless        |         |   FALSE   | Log     |
+| ComparisonTimeProfile             | X    | Time                 | h       |   FALSE   | Linear  |
+| ComparisonTimeProfile             | Y    | Concentration (mass) | ng/ml   |   FALSE   | Log     |
+| PKRatioPlots                      | X    | Age                  | year(s) |   FALSE   | Linear  |
+| PKRatioPlots                      | Y    | Dimensionless        |         |   FALSE   | Log     |
 
 | BuildingBlock     | BuildingBlockOrSimulation | TimeUnit | Symbol               | Color    | Dimension             | Scaling | FontFamilyName     | ArtifactsRatioPlots | ArtifactsGOFPlots | subunitsDDIRatioPlots | PK.Parameter                   | ObservedDataType | GOFMergedPlotType   | DDIRatioPlotType    | Treatment | Boolean | AxesSettingsPlots                 |
 |:------------------|:--------------------------|:---------|:---------------------|:---------|:----------------------|:--------|:-------------------|:--------------------|:------------------|:----------------------|:-------------------------------|:-----------------|:--------------------|:--------------------|:----------|:-------:|:----------------------------------|
