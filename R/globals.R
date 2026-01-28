@@ -113,7 +113,7 @@ AXES_SETTINGS <- list( # nolint
   ),
   GOFMergedPlotsPredictedVsObserved = list(
     list(Type = "X", Dimension = "Concentration (mass)", Unit = "µg/l", GridLines = FALSE, Scaling = "Log"),
-    list(Type = "Y", Unit = "µg/l", Dimension = "Concentration (mass)", GridLines = FALSE, Scaling = "Log")
+    list(Type = "Y", Dimension = "Concentration (mass)", Unit = "µg/l", GridLines = FALSE, Scaling = "Log")
   ),
   GOFMergedPlotsResidualsOverTime = list(
     list(Type = "X", Dimension = "Time", Unit = "h", GridLines = FALSE, Scaling = "Linear"),
