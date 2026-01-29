@@ -735,6 +735,7 @@ getSchemaVersion <- function(qualificationContent) {
       "QualificationPlan",
       includePreReleases = TRUE
     )
+    schemaVersion <- gsub(pattern = "v", replacement = "", schemaVersion)
     return(data.frame("Qualification plan schema version" = schemaVersion, check.names = FALSE))
   }
   # Otherwise, parse qualification plan schema
