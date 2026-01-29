@@ -735,13 +735,13 @@ getSchemaVersion <- function(qualificationContent) {
       "QualificationPlan",
       includePreReleases = TRUE
     )
-    schemaVersion <- gsub(pattern = "v", replacement = "", schemaVersion)
+    schemaVersion <- gsub(pattern = "^v", replacement = "", schemaVersion)
     return(data.frame("Qualification plan schema version" = schemaVersion, check.names = FALSE))
   }
   # Otherwise, parse qualification plan schema
   qualificationSchema <- unlist(strsplit(qualificationContent[["$schema"]], "/"))
   schemaVersion <- grep("^v\\d+\\.\\d+", qualificationSchema, value = TRUE)
-  schemaVersion <- gsub(pattern = "v", replacement = "", schemaVersion)
+  schemaVersion <- gsub(pattern = "^v", replacement = "", schemaVersion)
   schemaData <- data.frame("Qualification plan schema version" = schemaVersion, check.names = FALSE)
   return(schemaData)
 }
