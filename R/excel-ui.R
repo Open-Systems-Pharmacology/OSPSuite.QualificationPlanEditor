@@ -170,7 +170,7 @@ toExcelEditor <- function(fileName = "qualification.xlsx",
   sectionsData <- getQualificationSections(qualificationContent)
   writeDataToSheet(data = sectionsData, sheetName = "Sections", excelObject = excelObject)
   # Drop down list for Parent Section column
-  sectionReferenceListing <- excelListingValue(sectionsData, "Section Reference", "Sections")
+  sectionReferenceListing <- excelListingValue(sectionsData, "Section Reference", "Sections", additionalRows = 100)
   applyDataValidation(
     value = sectionReferenceListing,
     data = sectionsData,

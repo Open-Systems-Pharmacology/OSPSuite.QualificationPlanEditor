@@ -4,7 +4,7 @@
 \alias{excelListingValue}
 \title{excelListingValue}
 \usage{
-excelListingValue(data, columnName, sheetName)
+excelListingValue(data, columnName, sheetName, additionalRows = 0)
 }
 \arguments{
 \item{data}{A data.frame}
@@ -12,6 +12,8 @@ excelListingValue(data, columnName, sheetName)
 \item{columnName}{Character string. Name of column variable from which to get listing}
 
 \item{sheetName}{Character string. Name of the sheet from which to get listing}
+
+\item{additionalRows}{Integer. Additional rows to apply dataValidation}
 }
 \value{
 Character string corresponding to Excel expression
