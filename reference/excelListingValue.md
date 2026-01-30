@@ -5,7 +5,7 @@ Create an Excel expression for listing values used in dataValidation
 ## Usage
 
 ``` r
-excelListingValue(data, columnName, sheetName)
+excelListingValue(data, columnName, sheetName, additionalRows = 0)
 ```
 
 ## Arguments
@@ -21,6 +21,10 @@ excelListingValue(data, columnName, sheetName)
 - sheetName:
 
   Character string. Name of the sheet from which to get listing
+
+- additionalRows:
+
+  Integer. Additional rows to apply dataValidation
 
 ## Value
 
