@@ -101,15 +101,17 @@ applyDataValidation <- function(value, data, sheetName, columnNames, excelObject
 #' @param data A data.frame
 #' @param columnName Character string. Name of column variable from which to get listing
 #' @param sheetName Character string. Name of the sheet from which to get listing
+#' @param additionalRows Integer. Additional rows to apply dataValidation
 #' @return Character string corresponding to Excel expression
 #' @import openxlsx
 #' @export
 #' @keywords Excel
-excelListingValue <- function(data, columnName, sheetName) {
+excelListingValue <- function(data, columnName, sheetName, additionalRows = 0) {
   ospsuite.utils::validateIsOfType(data, "data.frame")
   ospsuite.utils::validateIsIncluded(columnName, names(data))
   columnValue <- openxlsx::int2col(which(names(data) %in% columnName))
-  listingValue <- paste0("='", sheetName, "'!$", columnValue, "$2:$", columnValue, "$", 1 + max(1, nrow(data)))
+  rowValue <- 1 + max(1, nrow(data)) + additionalRows
+  listingValue <- paste0("='", sheetName, "'!$", columnValue, "$2:$", columnValue, "$", rowValue)
   return(listingValue)
 }
 
