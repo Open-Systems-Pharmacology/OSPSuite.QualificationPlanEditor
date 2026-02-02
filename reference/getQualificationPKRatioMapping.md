@@ -6,7 +6,7 @@ fields
 ## Usage
 
 ``` r
-getQualificationPKRatioMapping(qualificationContent)
+getQualificationPKRatioMapping(qualificationContent, simulationsOutputs)
 ```
 
 ## Arguments
@@ -14,6 +14,10 @@ getQualificationPKRatioMapping(qualificationContent)
 - qualificationContent:
 
   Content of a qualification plan
+
+- simulationsOutputs:
+
+  A data.frame of Project, Simulation and Output
 
 ## Value
 

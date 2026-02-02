@@ -6,7 +6,7 @@ Get a data.frame of qualification inputs with columns 'Project',
 ## Usage
 
 ``` r
-getQualificationInputs(qualificationContent)
+getQualificationInputs(qualificationContent, bbData)
 ```
 
 ## Arguments
@@ -14,6 +14,10 @@ getQualificationInputs(qualificationContent)
 - qualificationContent:
 
   Content of a qualification plan
+
+- bbData:
+
+  A data.frame of Project, BB-Type, BB-Name and Parent-Project
 
 ## Value
 

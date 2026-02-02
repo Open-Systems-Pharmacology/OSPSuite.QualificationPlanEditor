@@ -6,7 +6,11 @@ returning a data.frame with mapping information for CT analysis.
 ## Usage
 
 ``` r
-getQualificationCTMapping(qualificationContent)
+getQualificationCTMapping(
+  qualificationContent,
+  simulationsOutputs,
+  simulationsObsData
+)
 ```
 
 ## Arguments
@@ -14,6 +18,14 @@ getQualificationCTMapping(qualificationContent)
 - qualificationContent:
 
   Content of a qualification plan
+
+- simulationsOutputs:
+
+  A data.frame of Project, Simulation and Output
+
+- simulationsObsData:
+
+  A data.frame of Project, Simulation and ObservedData
 
 ## Value
 
