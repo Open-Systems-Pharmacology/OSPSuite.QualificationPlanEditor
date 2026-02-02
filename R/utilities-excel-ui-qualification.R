@@ -177,19 +177,16 @@ getQualificationIntro <- function(qualificationContent) {
 #' @description
 #' Get a data.frame of qualification inputs with columns 'Project', 'BB-Type', 'BB-Name', and 'Section Reference'
 #' @param qualificationContent Content of a qualification plan
+#' @param bbData A data.frame of Project, BB-Type, BB-Name and Parent-Project
 #' @return data.frame with columns 'Project', 'BB-Type', 'BB-Name', and 'Section Reference'
 #' @keywords internal
-getQualificationInputs <- function(qualificationContent) {
+getQualificationInputs <- function(qualificationContent, bbData) {
+  newInputsData <- bbData |>
+    dplyr::select(-dplyr::matches("Parent-Project")) |>
+    dplyr::mutate(`Section Reference` = NA)
   qualificationInputs <- qualificationContent$Inputs
   if (ospsuite.utils::isEmpty(qualificationInputs)) {
-    inputsData <- data.frame(
-      "Project" = character(),
-      "BB-Type" = character(),
-      "BB-Name" = character(),
-      "Section Reference" = character(),
-      check.names = FALSE
-    )
-    return(inputsData)
+    return(newInputsData)
   }
   inputsData <- lapply(
     qualificationInputs,
@@ -205,6 +202,8 @@ getQualificationInputs <- function(qualificationContent) {
     }
   )
   inputsData <- do.call("rbind", inputsData)
+  inputsData <- dplyr::bind_rows(inputsData, newInputsData) |>
+    dplyr::arrange(.data[["Project"]], .data[["BB-Type"]], .data[["BB-Name"]])
   return(inputsData)
 }
 
@@ -323,10 +322,12 @@ getQualificationCTPlots <- function(qualificationContent) {
 #' Extract the comparison time (CT) mapping from a qualification plan,
 #' returning a data.frame with mapping information for CT analysis.
 #' @param qualificationContent Content of a qualification plan
+#' @param simulationsOutputs A data.frame of Project, Simulation and Output
+#' @param simulationsObsData A data.frame of Project, Simulation and ObservedData
 #' @return A data.frame with columns
 #' `Project`, `Simulation`, `Output` and relevant CT fields
 #' @keywords internal
-getQualificationCTMapping <- function(qualificationContent) {
+getQualificationCTMapping <- function(qualificationContent, simulationsOutputs, simulationsObsData) {
   ctMappings <- data.frame(
     Project = character(),
     Simulation = character(),
@@ -358,6 +359,24 @@ getQualificationCTMapping <- function(qualificationContent) {
       ctMappings <- rbind(ctMappings, ctMapping)
     }
   }
+  # Fill the columns Project, Simulation, Output, Observed data with
+  # all available combinations of those
+  newCTMappings <- dplyr::full_join(
+    simulationsOutputs,
+    # Rename observed data to match mappings
+    simulationsObsData |>
+      dplyr::mutate(`Observed data` = .data[["ObservedData"]]) |>
+      dplyr::select(-dplyr::matches("ObservedData")),
+    by = c("Project", "Simulation"),
+    relationship = "many-to-many"
+  ) |>
+    dplyr::filter(
+      !(paste(.data[["Project"]], .data[["Simulation"]], .data[["Output"]], .data[["Observed data"]]) %in%
+        paste(ctMappings$Project, ctMappings$Simulation, ctMappings$Output, ctMappings$`Observed data`))
+    )
+
+  ctMappings <- dplyr::bind_rows(ctMappings, newCTMappings) |>
+    dplyr::arrange(.data[["Project"]], .data[["Simulation"]], .data[["Output"]], .data[["Observed data"]])
   return(ctMappings)
 }
 
@@ -414,10 +433,12 @@ getQualificationGOFPlots <- function(qualificationContent) {
 #' Extract the goodness of fit (GOF) mapping from a qualification plan,
 #' returning a data.frame with mapping information for GOF analysis.
 #' @param qualificationContent Content of a qualification plan
+#' @param simulationsOutputs A data.frame of Project, Simulation and Output
+#' @param simulationsObsData A data.frame of Project, Simulation and ObservedData
 #' @return A data.frame with columns
 #' `Project`, `Simulation`, `Output` and relevant GOF fields
 #' @keywords internal
-getQualificationGOFMapping <- function(qualificationContent) {
+getQualificationGOFMapping <- function(qualificationContent, simulationsOutputs, simulationsObsData) {
   gofMappings <- data.frame(
     Project = character(),
     Simulation = character(),
@@ -446,6 +467,24 @@ getQualificationGOFMapping <- function(qualificationContent) {
       }
     }
   }
+  # Fill the columns Project, Simulation, Output, Observed data with
+  # all available combinations of those
+  newGOFMappings <- dplyr::full_join(
+    simulationsOutputs,
+    # Rename observed data to match mappings
+    simulationsObsData |>
+      dplyr::mutate(`Observed data` = .data[["ObservedData"]]) |>
+      dplyr::select(-dplyr::matches("ObservedData")),
+    by = c("Project", "Simulation"),
+    relationship = "many-to-many"
+  ) |>
+    dplyr::filter(
+      !(paste(.data[["Project"]], .data[["Simulation"]], .data[["Output"]], .data[["Observed data"]]) %in%
+        paste(gofMappings$Project, gofMappings$Simulation, gofMappings$Output, gofMappings$`Observed data`))
+    )
+
+  gofMappings <- dplyr::bind_rows(gofMappings, newGOFMappings) |>
+    dplyr::arrange(.data[["Project"]], .data[["Simulation"]], .data[["Output"]], .data[["Observed data"]])
   return(gofMappings)
 }
 
@@ -605,10 +644,11 @@ getQualificationPKRatio <- function(qualificationContent) {
 #' @description
 #' Extract a data.frame mapping PK ratio identifiers to relevant PK Ratio fields
 #' @param qualificationContent Content of a qualification plan
+#' @param simulationsOutputs A data.frame of Project, Simulation and Output
 #' @return A data.frame with the following columns:
 #' `Project`, `Simulation`, `Output`, `Plot Title`, `Group Title`, `Observed data`, and `ObservedDataRecordId`
 #' @keywords internal
-getQualificationPKRatioMapping <- function(qualificationContent) {
+getQualificationPKRatioMapping <- function(qualificationContent, simulationsOutputs) {
   pkMappings <- data.frame(
     Project = character(),
     Simulation = character(),
@@ -636,9 +676,16 @@ getQualificationPKRatioMapping <- function(qualificationContent) {
       }
     }
   }
+
+  newPKMappings <- simulationsOutputs |>
+    dplyr::filter(
+      !(paste(.data[["Project"]], .data[["Simulation"]], .data[["Output"]]) %in% paste(pkMappings$Project, pkMappings$Simulation, pkMappings$Output))
+    )
+
+  pkMappings <- dplyr::bind_rows(pkMappings, newPKMappings) |>
+    dplyr::arrange(.data[["Project"]], .data[["Simulation"]], .data[["Output"]])
   return(pkMappings)
 }
-
 
 #' @title formatPlotSettings
 #' @description
@@ -650,19 +697,19 @@ getQualificationPKRatioMapping <- function(qualificationContent) {
 #' @keywords internal
 formatPlotSettings <- function(plotSettings, fillEmpty = FALSE) {
   updatedPlotSettings <- data.frame(
-    ChartWidth = plotSettings$ChartWidth %||% 
-      ifelse(fillEmpty, PLOT_SETTINGS$ChartWidth, NA), 
-    ChartHeight = plotSettings$ChartHeight %||% 
-      ifelse(fillEmpty, PLOT_SETTINGS$ChartHeight, NA), 
-    AxisSize = plotSettings$Fonts$AxisSize %||% 
+    ChartWidth = plotSettings$ChartWidth %||%
+      ifelse(fillEmpty, PLOT_SETTINGS$ChartWidth, NA),
+    ChartHeight = plotSettings$ChartHeight %||%
+      ifelse(fillEmpty, PLOT_SETTINGS$ChartHeight, NA),
+    AxisSize = plotSettings$Fonts$AxisSize %||%
       ifelse(fillEmpty, PLOT_SETTINGS$Fonts$AxisSize, NA),
-    LegendSize = plotSettings$Fonts$LegendSize %||% 
+    LegendSize = plotSettings$Fonts$LegendSize %||%
       ifelse(fillEmpty, PLOT_SETTINGS$Fonts$LegendSize, NA),
-    OriginSize = plotSettings$Fonts$OriginSize %||% 
+    OriginSize = plotSettings$Fonts$OriginSize %||%
       ifelse(fillEmpty, PLOT_SETTINGS$Fonts$OriginSize, NA),
-    FontFamilyName = plotSettings$Fonts$FontFamilyName %||% 
+    FontFamilyName = plotSettings$Fonts$FontFamilyName %||%
       ifelse(fillEmpty, PLOT_SETTINGS$Fonts$FontFamilyName, NA),
-    WatermarkSize = plotSettings$Fonts$WatermarkSize %||% 
+    WatermarkSize = plotSettings$Fonts$WatermarkSize %||%
       ifelse(fillEmpty, PLOT_SETTINGS$Fonts$WatermarkSize, NA)
   )
   return(updatedPlotSettings)

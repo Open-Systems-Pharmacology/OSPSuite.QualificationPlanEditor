@@ -4,10 +4,12 @@
 \alias{getQualificationInputs}
 \title{getQualificationInputs}
 \usage{
-getQualificationInputs(qualificationContent)
+getQualificationInputs(qualificationContent, bbData)
 }
 \arguments{
 \item{qualificationContent}{Content of a qualification plan}
+
+\item{bbData}{A data.frame of Project, BB-Type, BB-Name and Parent-Project}
 }
 \value{
 data.frame with columns 'Project', 'BB-Type', 'BB-Name', and 'Section Reference'
