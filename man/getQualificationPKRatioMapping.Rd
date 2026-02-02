@@ -4,10 +4,12 @@
 \alias{getQualificationPKRatioMapping}
 \title{getQualificationPKRatioMapping}
 \usage{
-getQualificationPKRatioMapping(qualificationContent)
+getQualificationPKRatioMapping(qualificationContent, simulationsOutputs)
 }
 \arguments{
 \item{qualificationContent}{Content of a qualification plan}
+
+\item{simulationsOutputs}{A data.frame of Project, Simulation and Output}
 }
 \value{
 A data.frame with the following columns:

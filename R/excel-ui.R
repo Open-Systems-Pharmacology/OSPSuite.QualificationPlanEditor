@@ -187,7 +187,7 @@ toExcelEditor <- function(fileName = "qualification.xlsx",
     excelObject = excelObject
   )
   # Inputs
-  inputsData <- getQualificationInputs(qualificationContent)
+  inputsData <- getQualificationInputs(qualificationContent, bbData)
   writeDataToSheet(data = inputsData, sheetName = "Inputs", excelObject = excelObject)
   # Drop down list for Project, BB-Type, BB-Name, Section Reference columns
   applyDataValidation(
@@ -307,7 +307,7 @@ toExcelEditor <- function(fileName = "qualification.xlsx",
     excelObject = excelObject
   )
   # CT Mapping
-  ctMapping <- getQualificationCTMapping(qualificationContent)
+  ctMapping <- getQualificationCTMapping(qualificationContent, simulationsOutputs, simulationsObsData)
   writeDataToSheet(data = ctMapping, sheetName = "CT_Mapping", excelObject = excelObject)
   styleProjectStatus(
     projectIds = ctMapping$Project,
@@ -411,7 +411,7 @@ toExcelEditor <- function(fileName = "qualification.xlsx",
     excelObject = excelObject
   )
   # GOF Mapping
-  gofMapping <- getQualificationGOFMapping(qualificationContent)
+  gofMapping <- getQualificationGOFMapping(qualificationContent, simulationsOutputs, simulationsObsData)
   writeDataToSheet(data = gofMapping, sheetName = "GOF_Mapping", excelObject = excelObject)
   styleProjectStatus(
     projectIds = gofMapping$Project,
@@ -656,7 +656,7 @@ toExcelEditor <- function(fileName = "qualification.xlsx",
   )
 
   # PK Ratio Mapping
-  pkRatioMapping <- getQualificationPKRatioMapping(qualificationContent)
+  pkRatioMapping <- getQualificationPKRatioMapping(qualificationContent, simulationsOutputs)
   writeDataToSheet(data = pkRatioMapping, sheetName = "PKRatio_Mapping", excelObject = excelObject)
   styleProjectStatus(
     projectIds = pkRatioMapping$Project,

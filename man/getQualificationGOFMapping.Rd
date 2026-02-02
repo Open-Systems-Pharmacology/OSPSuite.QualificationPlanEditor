@@ -4,10 +4,18 @@
 \alias{getQualificationGOFMapping}
 \title{getQualificationGOFMapping}
 \usage{
-getQualificationGOFMapping(qualificationContent)
+getQualificationGOFMapping(
+  qualificationContent,
+  simulationsOutputs,
+  simulationsObsData
+)
 }
 \arguments{
 \item{qualificationContent}{Content of a qualification plan}
+
+\item{simulationsOutputs}{A data.frame of Project, Simulation and Output}
+
+\item{simulationsObsData}{A data.frame of Project, Simulation and ObservedData}
 }
 \value{
 A data.frame with columns

@@ -585,6 +585,8 @@ getPKPlotsFromExcel <- function(data, mapping) {
 #' @return A list of Inputs
 #' @keywords internal
 getInputsFromExcel <- function(data) {
+  data <- data |>
+    dplyr::filter(!is.na(.data[["Section Reference"]]))
   if (nrow(data) == 0) {
     return(list())
   }
