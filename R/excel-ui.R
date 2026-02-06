@@ -390,14 +390,14 @@ toExcelEditor <- function(fileName = "qualification.xlsx",
     excelObject = excelObject
   )
   applyDataValidation(
-    value = excelListingValue(lookupData, "ArtifactsGOFPlots", "Lookup"),
+    value = excelListingValue(lookupData, "GOFMergedPlotType", "Lookup"),
     data = gofPlotsData,
     sheetName = "GOF_Plots",
     columnNames = "Plot Type",
     excelObject = excelObject
   )
   applyDataValidation(
-    value = excelListingValue(lookupData, "GOFMergedPlotType", "Lookup"),
+    value = excelListingValue(lookupData, "ArtifactsGOFPlots", "Lookup"),
     data = gofPlotsData,
     sheetName = "GOF_Plots",
     columnNames = "Artifacts",
