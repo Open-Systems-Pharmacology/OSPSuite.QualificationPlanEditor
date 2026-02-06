@@ -170,7 +170,7 @@ toExcelEditor <- function(fileName = "qualification.xlsx",
   sectionsData <- getQualificationSections(qualificationContent)
   writeDataToSheet(data = sectionsData, sheetName = "Sections", excelObject = excelObject)
   # Drop down list for Parent Section column
-  sectionReferenceListing <- excelListingValue(sectionsData, "Section Reference", "Sections", additionalRows = 100)
+  sectionReferenceListing <- excelListingValue(sectionsData, "Section Reference", "Sections", additionalRows = 1000)
   applyDataValidation(
     value = sectionReferenceListing,
     data = sectionsData,
@@ -349,7 +349,7 @@ toExcelEditor <- function(fileName = "qualification.xlsx",
     excelObject = excelObject
   )
   applyDataValidation(
-    value = excelListingValue(ctPlotsData, "Title", "CT_Plots"),
+    value = excelListingValue(ctPlotsData, "Title", "CT_Plots", additionalRows = 1000),
     data = ctMapping,
     sheetName = "CT_Mapping",
     columnNames = "Plot Title",
@@ -452,14 +452,14 @@ toExcelEditor <- function(fileName = "qualification.xlsx",
     excelObject = excelObject
   )
   applyDataValidation(
-    value = excelListingValue(gofPlotsData, "Title", "GOF_Plots"),
+    value = excelListingValue(gofPlotsData, "Title", "GOF_Plots", additionalRows = 1000),
     data = gofMapping,
     sheetName = "GOF_Mapping",
     columnNames = "Plot Title",
     excelObject = excelObject
   )
   applyDataValidation(
-    value = excelListingValue(gofPlotsData, "Group Caption", "GOF_Plots"),
+    value = excelListingValue(gofPlotsData, "Group Caption", "GOF_Plots", additionalRows = 1000),
     data = gofMapping,
     sheetName = "GOF_Mapping",
     columnNames = "Group Title",
@@ -578,21 +578,21 @@ toExcelEditor <- function(fileName = "qualification.xlsx",
     excelObject = excelObject
   )
   applyDataValidation(
-    value = excelListingValue(ddiRatioPlotsData, "Title", "DDIRatio_Plots"),
+    value = excelListingValue(ddiRatioPlotsData, "Title", "DDIRatio_Plots", additionalRows = 1000),
     data = ddiRatioMapping,
     sheetName = "DDIRatio_Mapping",
     columnNames = "Plot Title",
     excelObject = excelObject
   )
   applyDataValidation(
-    value = excelListingValue(ddiRatioPlotsData, "Group Caption", "DDIRatio_Plots"),
+    value = excelListingValue(ddiRatioPlotsData, "Group Caption", "DDIRatio_Plots", additionalRows = 1000),
     data = ddiRatioMapping,
     sheetName = "DDIRatio_Mapping",
     columnNames = "Group Title",
     excelObject = excelObject
   )
   applyDataValidation(
-    value = excelListingValue(observedData, "Id", "ObsData"),
+    value = excelListingValue(observedData, "Id", "ObsData", additionalRows = 1000),
     data = ddiRatioMapping,
     sheetName = "DDIRatio_Mapping",
     columnNames = "Observed data",
@@ -696,21 +696,21 @@ toExcelEditor <- function(fileName = "qualification.xlsx",
     excelObject = excelObject
   )
   applyDataValidation(
-    value = excelListingValue(pkRatioPlotsData, "Title", "PKRatio_Plots"),
+    value = excelListingValue(pkRatioPlotsData, "Title", "PKRatio_Plots", additionalRows = 1000),
     data = pkRatioMapping,
     sheetName = "PKRatio_Mapping",
     columnNames = "Plot Title",
     excelObject = excelObject
   )
   applyDataValidation(
-    value = excelListingValue(pkRatioPlotsData, "Group Caption", "PKRatio_Plots"),
+    value = excelListingValue(pkRatioPlotsData, "Group Caption", "PKRatio_Plots", additionalRows = 1000),
     data = pkRatioMapping,
     sheetName = "PKRatio_Mapping",
     columnNames = "Group Title",
     excelObject = excelObject
   )
   applyDataValidation(
-    value = excelListingValue(observedData, "Id", "ObsData"),
+    value = excelListingValue(observedData, "Id", "ObsData", additionalRows = 1000),
     data = pkRatioMapping,
     sheetName = "PKRatio_Mapping",
     columnNames = "Observed data",
