@@ -83,62 +83,62 @@ toExcelEditor(
 #> 
 #> ── Exporting to Excel Editor ───────────────────────────────────────────────────
 #> ℹ Copying Excel Template to qualification-verapamil.xlsx
-#> ✔ Copying Excel Template to qualification-verapamil.xlsx [191ms]
+#> ✔ Copying Excel Template to qualification-verapamil.xlsx [189ms]
 #> 
 #> ℹ Checking for Qualification Plan
 #> ℹ No Qualification Plan input
 #> ℹ Checking for Qualification Plan✔ Checking for Qualification Plan [30ms]
 #> 
 #> ℹ Exporting Projects Data
-#> ✔ Exporting Projects Data [60ms]
+#> ✔ Exporting Projects Data [58ms]
 #> 
 #> ℹ Exporting Simulation Outputs Data
-#> ✔ Exporting Simulation Outputs Data [358ms]
+#> ✔ Exporting Simulation Outputs Data [337ms]
 #> 
 #> ℹ Exporting Simulation Observed Data
-#> ✔ Exporting Simulation Observed Data [48ms]
+#> ✔ Exporting Simulation Observed Data [57ms]
 #> 
 #> ℹ Exporting Observed Data
-#> ✔ Exporting Observed Data [27ms]
+#> ✔ Exporting Observed Data [33ms]
 #> 
 #> ℹ Exporting Building Block Data
 #> 
 #> ℹ Exporting Building Block Data── Qualification Plan ──
 #> ℹ Exporting Building Block Data
-#> ℹ Exporting Building Block Data✔ Exporting Building Block Data [87ms]
+#> ℹ Exporting Building Block Data✔ Exporting Building Block Data [89ms]
 #> 
 #> ℹ Exporting Schema Data
-#> ✔ Exporting Schema Data [322ms]
+#> ✔ Exporting Schema Data [295ms]
 #> 
 #> ℹ Exporting Sections
 #> ✔ Exporting Sections [21ms]
 #> 
 #> ℹ Exporting Intro and Inputs
-#> ✔ Exporting Intro and Inputs [25ms]
+#> ✔ Exporting Intro and Inputs [33ms]
 #> 
 #> ℹ Exporting Simulation Parameters Settings
-#> ✔ Exporting Simulation Parameters Settings [23ms]
+#> ✔ Exporting Simulation Parameters Settings [19ms]
 #> 
 #> ℹ Exporting All Plots Settings
 #> ✔ Exporting All Plots Settings [28ms]
 #> 
 #> ℹ Exporting Comparison Time Profile Plot Settings
-#> ✔ Exporting Comparison Time Profile Plot Settings [52ms]
+#> ✔ Exporting Comparison Time Profile Plot Settings [53ms]
 #> 
 #> ℹ Exporting GOF Merged Plot Settings
-#> ✔ Exporting GOF Merged Plot Settings [53ms]
+#> ✔ Exporting GOF Merged Plot Settings [54ms]
 #> 
 #> ℹ Exporting DDI Ratio Plot Settings
-#> ✔ Exporting DDI Ratio Plot Settings [61ms]
+#> ✔ Exporting DDI Ratio Plot Settings [55ms]
 #> 
 #> ℹ Exporting Global Plot Settings
 #> ✔ Exporting Global Plot Settings [21ms]
 #> 
 #> ℹ Exporting Global Axes Settings
-#> ✔ Exporting Global Axes Settings [39ms]
+#> ✔ Exporting Global Axes Settings [42ms]
 #> 
 #> ℹ Saving extracted data into qualification-verapamil.xlsx
-#> ✔ Saving extracted data into qualification-verapamil.xlsx [419ms]
+#> ✔ Saving extracted data into qualification-verapamil.xlsx [438ms]
 ```
 
 ### What Happens During Conversion
