@@ -91,53 +91,53 @@ toExcelEditor(
 #> 
 #> ── Exporting to Excel Editor ───────────────────────────────────────────────────
 #> ℹ Copying Excel Template to qualification_ugt.xlsx
-#> ✔ Copying Excel Template to qualification_ugt.xlsx [196ms]
+#> ✔ Copying Excel Template to qualification_ugt.xlsx [190ms]
 #> 
 #> ℹ Checking for Qualification Plan
 #> ℹ Qualification Plan: qualification_ugt.json
-#> ℹ Checking for Qualification Plan✔ Checking for Qualification Plan [33ms]
+#> ℹ Checking for Qualification Plan✔ Checking for Qualification Plan [32ms]
 #> 
 #> ℹ Exporting Projects Data
-#> ✔ Exporting Projects Data [63ms]
+#> ✔ Exporting Projects Data [62ms]
 #> 
 #> ℹ Exporting Simulation Outputs Data
-#> ✔ Exporting Simulation Outputs Data [948ms]
+#> ✔ Exporting Simulation Outputs Data [1.7s]
 #> 
 #> ℹ Exporting Simulation Observed Data
-#> ✔ Exporting Simulation Observed Data [278ms]
+#> ✔ Exporting Simulation Observed Data [1.1s]
 #> 
 #> ℹ Exporting Observed Data
-#> ✔ Exporting Observed Data [35ms]
+#> ✔ Exporting Observed Data [33ms]
 #> 
 #> ℹ Exporting Building Block Data
 #> 
 #> ℹ Exporting Building Block Data── Qualification Plan ──
 #> ℹ Exporting Building Block Data
-#> ℹ Exporting Building Block Data✔ Exporting Building Block Data [327ms]
+#> ℹ Exporting Building Block Data✔ Exporting Building Block Data [997ms]
 #> 
 #> ℹ Exporting Schema Data
-#> ✔ Exporting Schema Data [23ms]
+#> ✔ Exporting Schema Data [22ms]
 #> 
 #> ℹ Exporting Sections
 #> ✔ Exporting Sections [24ms]
 #> 
 #> ℹ Exporting Intro and Inputs
-#> ✔ Exporting Intro and Inputs [28ms]
+#> ✔ Exporting Intro and Inputs [29ms]
 #> 
 #> ℹ Exporting Simulation Parameters Settings
 #> ✔ Exporting Simulation Parameters Settings [23ms]
 #> 
 #> ℹ Exporting All Plots Settings
-#> ✔ Exporting All Plots Settings [30ms]
+#> ✔ Exporting All Plots Settings [29ms]
 #> 
 #> ℹ Exporting Comparison Time Profile Plot Settings
-#> ✔ Exporting Comparison Time Profile Plot Settings [87ms]
+#> ✔ Exporting Comparison Time Profile Plot Settings [88ms]
 #> 
 #> ℹ Exporting GOF Merged Plot Settings
 #> ✔ Exporting GOF Merged Plot Settings [57ms]
 #> 
 #> ℹ Exporting DDI Ratio Plot Settings
-#> ✔ Exporting DDI Ratio Plot Settings [75ms]
+#> ✔ Exporting DDI Ratio Plot Settings [74ms]
 #> 
 #> ℹ Exporting Global Plot Settings
 #> ✔ Exporting Global Plot Settings [22ms]
@@ -146,7 +146,7 @@ toExcelEditor(
 #> ✔ Exporting Global Axes Settings [40ms]
 #> 
 #> ℹ Saving extracted data into qualification_ugt.xlsx
-#> ✔ Saving extracted data into qualification_ugt.xlsx [490ms]
+#> ✔ Saving extracted data into qualification_ugt.xlsx [480ms]
 ```
 
 ### What Happens During Conversion
@@ -2782,7 +2782,7 @@ The Excel file will contain both existing and new content:
 | Verapamil                        | po_Verapamil 80mg SD, Wing 1985, n=1                                   | Organism\|PeripheralVenousBlood\|S-Norverapamil\|Plasma (Peripheral Venous Blood)                  | Wing et al. 1985 - 80mg Verapamil without cimetidine, PO - Verapamil - PO - 80 mg - Plasma - indiv.                                                                 | NA                  |        NA | NA       | NA       | NA                               | NA     |
 | Verapamil                        | po_Verapamil 80mg SD, Wing 1985, n=1                                   | Organism\|PeripheralVenousBlood\|S-Verapamil\|Plasma (Peripheral Venous Blood)                     | Wing et al. 1985 - 80mg Verapamil without cimetidine, PO - Verapamil - PO - 80 mg - Plasma - indiv.                                                                 | NA                  |        NA | NA       | NA       | NA                               | NA     |
 
-| Title | Section.Reference | Plot.Type | Artifacts | Group.Caption | Group.Symbol | ChartWidth | ChartHeight | AxisSize | LegendSize | OriginSize | FontFamilyName | WatermarkSize | X_Dimension | X_GridLines | X_Scaling | Y_Dimension | Y_GridLines | Y_Scaling |
+| Title | Section.Reference | Artifacts | Plot.Type | Group.Caption | Group.Symbol | ChartWidth | ChartHeight | AxisSize | LegendSize | OriginSize | FontFamilyName | WatermarkSize | X_Dimension | X_GridLines | X_Scaling | Y_Dimension | Y_GridLines | Y_Scaling |
 |-------|-------------------|-----------|-----------|---------------|--------------|------------|-------------|----------|------------|------------|----------------|---------------|-------------|-------------|-----------|-------------|-------------|-----------|
 
 | Project                          | Simulation                                                             | Output                                                                                             | Observed.data                                                                                                                                                       | Plot.Title | Group.Title | Color |

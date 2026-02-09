@@ -83,32 +83,32 @@ toExcelEditor(
 #> 
 #> ── Exporting to Excel Editor ───────────────────────────────────────────────────
 #> ℹ Copying Excel Template to qualification-verapamil.xlsx
-#> ✔ Copying Excel Template to qualification-verapamil.xlsx [189ms]
+#> ✔ Copying Excel Template to qualification-verapamil.xlsx [194ms]
 #> 
 #> ℹ Checking for Qualification Plan
 #> ℹ No Qualification Plan input
-#> ℹ Checking for Qualification Plan✔ Checking for Qualification Plan [30ms]
+#> ℹ Checking for Qualification Plan✔ Checking for Qualification Plan [31ms]
 #> 
 #> ℹ Exporting Projects Data
-#> ✔ Exporting Projects Data [58ms]
+#> ✔ Exporting Projects Data [76ms]
 #> 
 #> ℹ Exporting Simulation Outputs Data
-#> ✔ Exporting Simulation Outputs Data [337ms]
+#> ✔ Exporting Simulation Outputs Data [393ms]
 #> 
 #> ℹ Exporting Simulation Observed Data
-#> ✔ Exporting Simulation Observed Data [57ms]
+#> ✔ Exporting Simulation Observed Data [59ms]
 #> 
 #> ℹ Exporting Observed Data
-#> ✔ Exporting Observed Data [33ms]
+#> ✔ Exporting Observed Data [34ms]
 #> 
 #> ℹ Exporting Building Block Data
 #> 
 #> ℹ Exporting Building Block Data── Qualification Plan ──
 #> ℹ Exporting Building Block Data
-#> ℹ Exporting Building Block Data✔ Exporting Building Block Data [89ms]
+#> ℹ Exporting Building Block Data✔ Exporting Building Block Data [90ms]
 #> 
 #> ℹ Exporting Schema Data
-#> ✔ Exporting Schema Data [295ms]
+#> ✔ Exporting Schema Data [344ms]
 #> 
 #> ℹ Exporting Sections
 #> ✔ Exporting Sections [21ms]
@@ -117,7 +117,7 @@ toExcelEditor(
 #> ✔ Exporting Intro and Inputs [33ms]
 #> 
 #> ℹ Exporting Simulation Parameters Settings
-#> ✔ Exporting Simulation Parameters Settings [19ms]
+#> ✔ Exporting Simulation Parameters Settings [20ms]
 #> 
 #> ℹ Exporting All Plots Settings
 #> ✔ Exporting All Plots Settings [28ms]
@@ -126,19 +126,19 @@ toExcelEditor(
 #> ✔ Exporting Comparison Time Profile Plot Settings [53ms]
 #> 
 #> ℹ Exporting GOF Merged Plot Settings
-#> ✔ Exporting GOF Merged Plot Settings [54ms]
+#> ✔ Exporting GOF Merged Plot Settings [71ms]
 #> 
 #> ℹ Exporting DDI Ratio Plot Settings
-#> ✔ Exporting DDI Ratio Plot Settings [55ms]
+#> ✔ Exporting DDI Ratio Plot Settings [54ms]
 #> 
 #> ℹ Exporting Global Plot Settings
 #> ✔ Exporting Global Plot Settings [21ms]
 #> 
 #> ℹ Exporting Global Axes Settings
-#> ✔ Exporting Global Axes Settings [42ms]
+#> ✔ Exporting Global Axes Settings [43ms]
 #> 
 #> ℹ Saving extracted data into qualification-verapamil.xlsx
-#> ✔ Saving extracted data into qualification-verapamil.xlsx [438ms]
+#> ✔ Saving extracted data into qualification-verapamil.xlsx [421ms]
 ```
 
 ### What Happens During Conversion
@@ -2115,7 +2115,7 @@ The Excel file structure will look like this:
 | Verapamil | po_Verapamil 80mg SD, Wing 1985, n=1                                   | Organism\|PeripheralVenousBlood\|S-Norverapamil\|Plasma (Peripheral Venous Blood)                  | Wing et al. 1985 - 80mg Verapamil without cimetidine, PO - Verapamil - PO - 80 mg - Plasma - indiv.                           |         NA |        NA |       NA |    NA |      NA |     NA |
 | Verapamil | po_Verapamil 80mg SD, Wing 1985, n=1                                   | Organism\|PeripheralVenousBlood\|S-Verapamil\|Plasma (Peripheral Venous Blood)                     | Wing et al. 1985 - 80mg Verapamil without cimetidine, PO - Verapamil - PO - 80 mg - Plasma - indiv.                           |         NA |        NA |       NA |    NA |      NA |     NA |
 
-| Title | Section.Reference | Plot.Type | Artifacts | Group.Caption | Group.Symbol | ChartWidth | ChartHeight | AxisSize | LegendSize | OriginSize | FontFamilyName | WatermarkSize | X_Dimension | X_GridLines | X_Scaling | Y_Dimension | Y_GridLines | Y_Scaling |
+| Title | Section.Reference | Artifacts | Plot.Type | Group.Caption | Group.Symbol | ChartWidth | ChartHeight | AxisSize | LegendSize | OriginSize | FontFamilyName | WatermarkSize | X_Dimension | X_GridLines | X_Scaling | Y_Dimension | Y_GridLines | Y_Scaling |
 |-------|-------------------|-----------|-----------|---------------|--------------|------------|-------------|----------|------------|------------|----------------|---------------|-------------|-------------|-----------|-------------|-------------|-----------|
 
 | Project   | Simulation                                                             | Output                                                                                             | Observed.data                                                                                                                 | Plot.Title | Group.Title | Color |
